@@ -178,7 +178,33 @@ body.compact #info{flex-shrink:0}
 body.portrait #info .btns{width:100%;flex-wrap:nowrap}
 body.portrait #info .btns button.mut{flex:1 1 0;min-width:0;max-width:none}
 body.portrait #info .btns #bSell{flex:0 0 74px}
-#splat{position:absolute;inset:0;pointer-events:none}
+#story{background:radial-gradient(ellipse at center,rgba(60,20,10,.88),rgba(8,4,2,.96));z-index:22}
+.stChap{font-weight:900;font-size:clamp(20px,5.5vw,34px);color:#ffd36b;text-shadow:0 0 12px #ff5c3c,0 3px 0 #000;margin-bottom:14px;letter-spacing:.04em}
+.stChap.in{animation:chapIn .7s cubic-bezier(.2,1.6,.4,1)}
+@keyframes chapIn{0%{transform:scale(2.4) rotate(-6deg);opacity:0;filter:blur(6px)}60%{transform:scale(.92) rotate(1deg);opacity:1}100%{transform:none}}
+.stBox{position:relative;width:min(640px,100%);background:linear-gradient(#2e2016,#1a120c);border:3px solid #ff7a50;border-radius:16px;padding:14px;box-shadow:0 0 30px #ff5c3c55,inset 0 0 20px #00000088;cursor:pointer;touch-action:manipulation;overflow:hidden;text-align:left}
+.stBox.narr{border-color:#8a7a5a;box-shadow:0 0 20px #0008}
+.stBox.pop{animation:stPop .25s ease-out}
+.stBox.hot1.pop{animation:stPop .25s ease-out,stShake .35s .05s}
+.stBox.hot2.pop{animation:stPop .25s ease-out,stShake .5s .05s;border-color:#ff3c8a;box-shadow:0 0 40px #ff3c8a88}
+@keyframes stPop{0%{transform:translateY(10px) scale(.97);opacity:.4}100%{transform:none;opacity:1}}
+@keyframes stShake{0%,100%{translate:0}20%{translate:-6px 2px}40%{translate:5px -3px}60%{translate:-4px 1px}80%{translate:3px 0}}
+.stRow{display:flex;gap:12px;align-items:flex-start}
+#stImg{width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid #ffd36b;flex:none;background:#000}
+.stBox.narr #stImg{opacity:.55;border-color:#8a7a5a}
+.stTxt{min-width:0;flex:1}
+#stName{font-weight:900;color:#ff9a6a;font-size:15px;margin-bottom:4px}
+.stBox.narr #stName{color:#c9b894}
+#stText{font-size:clamp(15px,4.2vw,19px);line-height:1.55;color:#fff3e0;font-weight:700}
+.stBox.narr #stText{font-weight:400;font-style:italic;color:#e8dcc0}
+.stBox.hot2 #stText{font-size:clamp(17px,4.8vw,22px);color:#ffe08a;text-shadow:0 2px 0 #000}
+.stBtns{display:flex;gap:10px;justify-content:flex-end;margin-top:12px}
+.stBtns button{min-height:44px;min-width:96px}
+#stSweat{position:absolute;inset:0;pointer-events:none}
+#stSweat span{position:absolute;top:-24px;font-size:20px;animation:sweatFall 1.1s ease-in forwards}
+@keyframes sweatFall{0%{transform:translateY(0) rotate(-10deg);opacity:1}100%{transform:translateY(240px) rotate(20deg);opacity:0}}
+body.portrait #stImg,body.compact #stImg{width:64px;height:64px}
+body.compact .stChap{margin-bottom:6px}body.compact .stBox{padding:10px}
 </style>
 </head>
 <body>
@@ -221,7 +247,15 @@ body.portrait #info .btns #bSell{flex:0 0 74px}
   <div class="sub">～ 迫真TD部・下北沢防衛の裏技 ～</div>
   <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！14種のタワー（電撃・毒ガス・狙撃・銀行・応援団・視線・集金・道に置く<b>バリケード</b>と<b>地雷</b>…）を置き、Lv4で<b>覚醒A/B</b>に分岐。開始時に<b>シチュエーション</b>を選び、クリア毎に<b>ドラフトカード</b>で戦術を盛れ。盾・回復・分裂・たかり・透明・跳躍・妨害の後輩、さらに<b>エリート（汗だく・硬派・再生・くさい・巨漢・透け透け）</b>、5・10・15 ウェーブには<b>迫真ボス</b>。コンボを繋げてイキスギろ。15 ウェーブ突破でクリア。<br><span id="ctlHelp"></span></div>
   <button class="go" id="bStart">はじめる（いいよ！こいよ！）</button>
+  <button id="bStory" style="margin-top:8px;min-height:44px">ストーリー：ON</button>
   <div class="help" id="best" style="margin-top:8px"></div>
+</div>
+<div class="ov" id="story">
+  <div class="stChap" id="stChap"></div>
+  <div class="stBox" id="stBox"><div id="stSweat"></div>
+   <div class="stRow"><img id="stImg" alt=""><div class="stTxt"><div id="stName"></div><div id="stText"></div></div></div>
+   <div class="stBtns"><button id="stSkip">スキップ</button><button class="go" id="stNext">次へ ▶</button></div>
+  </div>
 </div>
 <div class="ov" id="draft">
   <h2 id="dTitle">ウェーブクリア！</h2>
@@ -439,7 +473,7 @@ function newStats(){const z=()=>Object.fromEntries(TKEYS.map(k=>[k,0]));return{g
  interest:0,sellRate:.7,eSpeed:1,eHp:1,eCount:1,eHeal:1,critStack:0,comboMul:1,comboT:1.5,poisonSpread:0,poisonMul:1,chainAdd:0,wallHp:0,wallThorn:0,wallCost:1,wallMax:6,reveal:0,critKB:0,bankMul:1,noSteal:0,
  chainPois:0,wallPois:0,critPois:0,boomPois:0,markAdd:0,sniperMark:0,hypeAdd:0,mineDmg:0,mineRe:1,mineMax:8,mineCost:1,comboRate:0,mutLvl:4,mutCost:1,sipAdd:0,sipCap:0,slowVuln:0,lowHp:0,lifeRegen:0,eliteHunt:0,mutDmg:0,eliteMul:1,towerMax:99,night:0,debt:0};}
 function reset(){game={gold:300,lives:20,wave:0,maxWave:15,inWave:false,over:false,won:false,endless:false,stats:newStats(),perks:[],kills:0,t:0,lastCritToast:-9,lastFlavor:-9,
- free:0,combo:0,comboT:0,maxCombo:0,shake:0,big:null,situ:'',stolen:0,elites:0,gibs:0,banT:6,hypeD:0,hypeR:0};
+ free:0,combo:0,comboT:0,maxCombo:0,shake:0,big:null,situ:'',stolen:0,seen:{},elites:0,gibs:0,banT:6,hypeD:0,hypeR:0};
  towers=[];enemies=[];projs=[];fx=[];floats=[];spawnQ=[];fires=[];decals=[];gibs=[];splats=[];sel=null;picked=null;pending=null;statsDirty=true;$('wmax').textContent='15';$('bossbar').style.display='none';buildShop();updHud();renderInfo();renderPerks();}
 const S=()=>game.stats;
 function shake(v){game.shake=Math.min(14,Math.max(game.shake,RM?v*.3:v));}
@@ -466,7 +500,7 @@ function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math
  for(let i=L2.length-1;i>0;i--){if(ENEMIES[L2[i].k].boss)continue;const j=Math.floor(Math.random()*(i+1));if(ENEMIES[L2[j].k].boss)continue;[L2[i],L2[j]]=[L2[j],L2[i]];}
  return L2;}
 function hpScale(w){return Math.pow(1+.32*(w-1),1.5);}
-function startWave(){if(game.inWave||game.over)return;game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;
+function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.wave+1);if(STORY[bk]&&!(game.seen&&game.seen[bk])&&storyOn){playStory(bk,startWave);return;}}game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;
  if(game.wave%5===0)toast(`迫真ボス襲来！ウェーブ ${game.wave}（逃げるんだよォ！）`,'collar_card','boss shake',3200);else toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);
  snd(220,.25,'sawtooth',.05,220);updHud();}
 function spawn(k,dist=0,noAff){const d=ENEMIES[k];let aff=null;
@@ -671,7 +705,10 @@ function waveClear(){const s=S();game.inWave=false;let inc=20+game.wave*5,lifeUp
  if(s.debt){if(game.gold>=s.debt){game.gold-=s.debt;toast(`借金返済 -${s.debt}G（やめてくれよ…）`,'navy_left_face','bad',1600);}else{game.lives-=1;toast('借金払えずライフ-1（取り立て汁まみれ）','navy_left_face','bad shake',1600);if(game.lives<=0){game.lives=0;gameOver();return;}}}
  toast(`ウェーブ ${game.wave} クリア！ +${inc}G${intr?`・利息+${intr}G`:''}${lifeUp?`・おごりライフ+${lifeUp}`:''}　${pick(L.waveClear)}`,'senpai_face','',2200);
  snd(523,.1,'triangle',.06);setTimeout(()=>snd(784,.15,'triangle',.06),110);hudDirty=true;
- if(game.wave>=game.maxWave&&!game.endless){win();}else openDraft();}
+ if(game.wave>=game.maxWave&&!game.endless){win();}
+ else if(STORY['w'+game.wave])playStory('w'+game.wave,openDraft);
+ else if(game.endless&&game.wave%5===3)playScene(`外伝 第${game.wave}夜「まだ汗だく」`,pick(ENDLESS_POOL),openDraft);
+ else openDraft();}
 
 // ---------- card overlay (draft / situation) ----------
 function openCards(title,sub,items,onPick,reroll){paused=true;$('dTitle').textContent=title;$('dSub').textContent=sub;const box=$('cards');box.innerHTML='';
@@ -683,7 +720,7 @@ function openCards(title,sub,items,onPick,reroll){paused=true;$('dTitle').textCo
 function openDraft(){const pool=PERKS.filter(p=>!(p.max&&game.perks.filter(x=>x===p.t).length>=p.max));const ch=[];while(ch.length<3&&pool.length)ch.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
  openCards(`ウェーブ ${game.wave} クリア！`,'ドラフト：カードを1枚選べ（やりますねぇ）',ch,p=>{p.ap(S());game.perks.push(p.t);toast(p.t+'！（いいゾ〜これ）',p.img.split('#')[0],'',1400);snd(700,.12,'triangle',.06,300);},1);}
 function openSitu(){const pool=SITU.slice(),ch=[];while(ch.length<3)ch.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
- openCards('シチュエーションを選べ','今回のラン全体のルールが変わる（迫真）',ch,p=>{p.ap(S());game.situ=p.t;toast(`シチュ：${p.t}（そうだよ）`,p.img.split('#')[0],'combo',2000);big(p.t,'#ffd36b',1.3);});}
+ openCards('シチュエーションを選べ','今回のラン全体のルールが変わる（迫真）',ch,p=>{p.ap(S());game.situ=p.t;toast(`シチュ：${p.t}（そうだよ）`,p.img.split('#')[0],'combo',2000);big(p.t,'#ffd36b',1.3);setTimeout(()=>playStory('pro'),30);});}
 function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;const ks=Object.keys(m);$('perks').innerHTML=(game.situ?`<span style="color:#ffd36b">シチュ：${game.situ}</span><br>`:'')+(ks.length?ks.map(k=>`・${k}${m[k]>1?' x'+m[k]:''}`).join('<br>'):'まだなし');}
 
 // ---------- end ----------
@@ -693,9 +730,9 @@ function buildName(){const c={};for(const t of towers)c[t.k]=(c[t.k]||0)+t.lvl;c
  const tags={};for(const p of game.perks){const q=PERKS.find(x=>x.t===p);if(q&&q.tag)tags[q.tag]=(tags[q.tag]||0)+1;}const tg=Object.keys(tags).sort((a,b)=>tags[b]-tags[a])[0];
  return `${tg?tg+'型':'脳筋'}・${top?TOWERS[top].short+'過多':'素手'}（汗だく）`;}
 function gameOver(){if(game.over)return;game.over=true;game.inWave=false;saveBest();$('eTitle').textContent=pick(L.lose);$('eImg').src=ASSETS.grimace_face;
- $('eText').innerHTML=`ウェーブ ${game.wave} で力尽きた（${pick(L.loseSub)}）<br>${endStats()}<br><small>${pick(L.loseTip)}</small>`;for(let i=0;i<6;i++)splat(i%2?'#c9b08a':'#e8f4ff');$('bEndless').style.display='none';$('end').classList.add('on');snd(110,.8,'sawtooth',.08,-60);shake(14);}
+ $('eText').innerHTML=`ウェーブ ${game.wave} で力尽きた（${pick(L.loseSub)}）<br>${endStats()}<br><small>${pick(L.loseTip)}</small>`;for(let i=0;i<6;i++)splat(i%2?'#c9b08a':'#e8f4ff');$('bEndless').style.display='none';const ls=pick(LOSE_STORY);setTimeout(()=>playScene('BAD END「床上浸水」',ls,()=>$('end').classList.add('on')),900);snd(110,.8,'sawtooth',.08,-60);shake(14);}
 function win(){game.over=true;game.won=true;saveBest();$('eTitle').textContent=pick(L.win);$('eImg').src=ASSETS.senpai_face;
- $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}・${endStats()}<br><small>ビルド：${buildName()}</small>`;for(let i=0;i<8;i++)splat(i%2?'#ffffff':'#ffd36b');$('bEndless').style.display='';$('end').classList.add('on');}
+ $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}・${endStats()}<br><small>ビルド：${buildName()}</small>`;for(let i=0;i<8;i++)splat(i%2?'#ffffff':'#ffd36b');$('bEndless').style.display='';const ek=epiKey(),ep=EPI[ek];$('eText').innerHTML+=`<br><b style="color:#ffd36b">${ep.t}</b>`;playScene(ep.t,ep.L.concat(EPI_END),()=>$('end').classList.add('on'));}
 $('bRetry').onclick=()=>{$('end').classList.remove('on');reset();openSitu();};
 $('bEndless').onclick=()=>{$('end').classList.remove('on');game.over=false;game.endless=true;game.maxWave=999;$('wmax').textContent='∞';openDraft();};
 
@@ -741,10 +778,114 @@ function setPaused(v){paused=v;$('bPause').textContent=paused?'▶':'⏸';}
 $('bStart').onclick=()=>{$('title').classList.remove('on');reset();snd(523,.1,'triangle',.06);toast('おっすお願いしまーす','senpai_face','',1800);openSitu();};
 $('bWave').onclick=startWave;
 $('bSpeed').onclick=()=>{speed=speed===1?2:speed===2?3:1;$('bSpeed').textContent=`▶x${speed}`;};
-$('bPause').onclick=()=>{if($('draft').classList.contains('on'))return;setPaused(!paused);};
+$('bPause').onclick=()=>{if($('draft').classList.contains('on')||$('story').classList.contains('on'))return;setPaused(!paused);};
 $('bMute').onclick=()=>{muted=!muted;$('bMute').textContent=muted?'🔇':'🔊';};
 try{const best=+localStorage.getItem('yajuuTD_best')||0;if(best)$('best').textContent=`ベスト記録：ウェーブ ${best}`;}catch(e){}
-document.addEventListener('visibilitychange',()=>{if(document.hidden&&game&&!game.over&&!$('title').classList.contains('on')&&!$('draft').classList.contains('on'))setPaused(true);});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&game&&!game.over&&!$('title').classList.contains('on')&&!$('draft').classList.contains('on')&&!stQ)setPaused(true);});
+
+// ---------- story (v5: 暑苦しい物語) ----------
+const CH={senpai:['先輩','senpai_face'],kohai:['後輩','navy_center_face'],trio:['部室トリオ','navy_trio_card'],collar:['胸ぐら先輩','collar_face'],
+ taka:['たかり後輩','navy_right_face#gold'],narr:['ナレーション','title_senpai#gray'],boss:['迫真ボス','grimace_face'],boss2:['部室の主・真','locker_left_face#red'],
+ boss3:['野獣の眼光','grimace_face#purple'],boss4:['迫真の淫獣','grimace_face#gold'],sepia:['部室の三人','trio_sepia_card'],locker:['ロッカーの後輩','locker_right_face']};
+// line: [who,text,hot?]  hot: 1=shake 2=big sweat
+const STORY={
+ pro:{ch:'第1章「真夏の下北沢、汗だくの開戦」',L:[
+  ['narr','真夏の夜。気温34℃、湿度114514%。下北沢のとあるアパートに、汗くさい足音が迫っていた…'],
+  ['senpai','おいゴルァ！ 俺の部屋に何人押しかけてくんだよ！（迫真）',1],
+  ['kohai','先輩！ 後輩軍団が「部屋で涼ませろ」ってエアコン目当てで来ました！'],
+  ['senpai','ふざけんな！ 電気代払ってんのは俺だぞ！ 守るぞこの部屋を…汗の一滴まで！！',2],
+  ['trio','（ユニフォームの汗を絞りながら）そうだよ（便乗）'],
+  ['narr','今回のシチュ：「{situ}」。…暑苦しい戦いが、今はじまる。']]},
+ w2:{ch:'第2章「汗と涙と冷蔵庫」',L:[
+  ['kohai','先輩！ 冷蔵庫の麦茶、もう一滴もありません！'],
+  ['senpai','汗で水分補給しろ！（無理）',1],
+  ['collar','甘えんな！ 胸ぐら掴んで気合い注入したるわ！ オラッ！（ユニフォームがビチャッ）',2],
+  ['kohai','ありがとうございます！！（なぜか泣いてる）']]},
+ b5:{ch:'第3章「顔がうるさい男」',L:[
+  ['narr','地響き。網戸が震え、扇風機が勝手に首を振り始めた。'],
+  ['boss','ファッ！？ お前らの部屋のエアコン、俺が一番涼む（宣言）',1],
+  ['senpai','顔がうるさいんだよ！ 帰って、どうぞ！！',2],
+  ['boss','帰らねぇよ（迫真）。汗くっさい部屋ごとイキスギさせてやる']]},
+ w5:{ch:'第4章「勝利の汗、敗北の臭い」',L:[
+  ['kohai','やりましたね先輩！ 迫真ボス、顔面から床にペチャっていきました！'],
+  ['senpai','まだだ…部室の方から、ロッカーが開く音がした…（汗ダラダラ）'],
+  ['narr','この時、先輩のTシャツはすでに3回絞れるほど濡れていた。']]},
+ w7:{ch:'第5章「後輩、裏切りの夜」',L:[
+  ['taka','すいません先輩…財布、ちょっとだけ借りますね…'],
+  ['senpai','お前もかよォ！？ ブルータスお前もかよォ！！',1],
+  ['taka','エアコンの誘惑には…勝てなかったんです…（号泣）'],
+  ['senpai','泣くな！ 涙は汗と一緒に流せ！ そして戻ってこい！！',2],
+  ['taka','せ、先輩…！（駆け寄って床の汗で滑って顔面ペチャ）'],
+  ['narr','財布は戻ってきた。ちょっと湿っていた。']]},
+ b10:{ch:'第6章「部室の主・真、覚醒」',L:[
+  ['boss2','ぬわああん、後輩の数が足りないもおおん…全員呼ぶぞ！',1],
+  ['locker','主「ロッカー開けたら汗が雪崩れてきた」って言ってます！'],
+  ['senpai','来いよ！ 俺の部屋のフローリングは汗でヌルヌルだ！ 地の利はこっちにある！！',2],
+  ['boss2','…それ、お前も滑るやつだろ（冷静）']]},
+ w10:{ch:'第7章「汗は嘘をつかない」',L:[
+  ['senpai','…なあ後輩。なんで俺たち、こんなに暑苦しいんだろうな'],
+  ['kohai','それは…先輩が熱いからですよ！（物理的にも）'],
+  ['senpai','お前…（汗か涙かわからない液体が頬をつたう）',2],
+  ['narr','二人は無言で拳を合わせた。拳もヌルヌルだった。']]},
+ w12:{ch:'第8章「眼光の噂」',L:[
+  ['collar','おい、次に来る奴はヤバいぞ。目が…目が鋭すぎる'],
+  ['sepia','眼光だけでクーラーが止まったって噂です（そうだよ）'],
+  ['senpai','じゃあ…俺の汗で部屋を冷やすしかねぇな（気化熱）',1],
+  ['kohai','先輩、それ理科で習ったやつだ！（感動）']]},
+ b15:{ch:'最終章「野獣の眼光」',L:[
+  ['narr','部屋の温度が10℃上がった。眼光が、来る。'],
+  ['boss3','この部屋のエアコンは…俺のものだ（眼光）',1],
+  ['senpai','ふざけんな！ ここは俺と…汗だくの仲間たちの部屋だ！！',2],
+  ['trio','いいよ！こいよ！（全員汗だく）',2],
+  ['boss3','…お前のことが好きだったんだよ！（部屋が）']]},
+ b20:{ch:'外伝「迫真の淫獣」',L:[
+  ['narr','エンドレスの奥地。汗が蒸発して雲になり、雲から汗が降り始めた。'],
+  ['boss4','ンアッー！ 待たせたな。この夏は終わらせねぇ',1],
+  ['senpai','季節ごと終わらせてやるよ！（秋を呼ぶ）',2]]},
+};
+const ENDLESS_POOL=[
+ [['kohai','先輩、もう16ウェーブ以上戦ってます！ 部屋の湿度が測定不能です！'],['senpai','湿度計ごとイキスギたか…（迫真）',1]],
+ [['narr','先輩のTシャツは塩を吹いていた。もはや岩塩だった。'],['senpai','しょっぱい夏だぜ…',2]],
+ [['trio','先輩、近所から「汗の匂いがする」って苦情が！'],['senpai','言わせとけ！ これは努力の匂いだ！！',1]],
+ [['collar','エアコン…直ったらしいぞ'],['senpai','今さら冷やされても困るんだよ（もう汗が止まらない）',2]],
+];
+const EPI={
+ poison:{t:'エンディング：くさい王者',L:[['narr','部屋は守られた。ただし毒ガスが染みついて、誰も住めなくなった。'],['senpai','勝ったのに…くっさ！！（鼻をつまみながら勝利のポーズ）',2]]},
+ chain:{t:'エンディング：電撃結婚',L:[['narr','電撃塔は最後までビリビリだった。電気代の請求は114514円。'],['senpai','エアコン代を守るために電気代で破産した…やめてくれよ…',1]]},
+ econ:{t:'エンディング：下北沢の成金',L:[['narr','銀行と集金で、先輩は下北沢一の金持ちになった。'],['senpai','エアコン10台買ったぞ！（全部うるさい）',2],['kohai','先輩、でも結局みんな先輩の部屋に集まってますよ']]},
+ fort:{t:'エンディング：汗の要塞',L:[['narr','バリケードと地雷で、部屋は難攻不落の要塞になった。'],['senpai','…あれ？ 俺も出られねぇ！ コンビニ行けねぇ！',1]]},
+ crit:{t:'エンディング：迫真空手部OB',L:[['narr','クリティカルの嵐。先輩は「一撃の汗」として空手部の伝説になった。'],['senpai','押忍！（汗が飛んで後輩の顔面に直撃）',2]]},
+ hype:{t:'エンディング：応援団長',L:[['narr','応援と視線の圧で勝った。声がでかすぎて近所の窓ガラスが割れた。'],['trio','ホラホラホラホラ！（まだ叫んでる）',2]]},
+ none:{t:'エンディング：普通だな！',L:[['narr','バランスよく戦って、普通に勝った。'],['senpai','普通だな！（汗だく）',1]]},
+};
+const EPI_END=[['kohai','先輩…来年の夏も、この部屋で…'],['senpai','やめてくれよ…（まんざらでもない顔）',2],['narr','― 完 ―　真夏の夜の汗だく防衛戦　（エアコンは最後まで直らなかった）']];
+const LOSE_STORY=[
+ [['senpai','ぬわああん負けたもおおん！！',2],['trio','エアコン最高〜（部屋を占拠）'],['narr','先輩の部屋は後輩の汗で床上浸水した。']],
+ [['senpai','俺の部屋が…汗くさい後輩だらけに…',1],['kohai','先輩、とりあえず麦茶飲みましょう（もう無い）'],['narr','その夜、下北沢の不快指数は過去最高を記録した。']],
+ [['boss','やりますねぇ（勝ち誇り）'],['senpai','顔がうるさい…（力尽きる）',2],['narr','先輩はベランダで夜風に当たりながら、次の夏への復讐を誓った。']],
+];
+let storyOn=true;try{storyOn=localStorage.getItem('yajuuTD_story')!=='0';}catch(e){}
+let stQ=null;
+function epiKey(){const sc={poison:0,chain:0,econ:0,fort:0,crit:0,hype:0},m={poison:'poison',chain:'chain',bank:'econ',siphon:'econ',wall:'fort',mine:'fort',sniper:'crit',senpai:'crit',cannon:'crit',hype:'hype',gaze:'hype',trio:'hype'};
+ for(const t of towers){const c=m[t.k];if(c)sc[c]+=TOWERS[t.k].cost*t.lvl;}const tm={'毒':'poison','電撃':'chain','経済':'econ','壁':'fort','地雷':'fort','クリ':'crit','狙撃':'crit','応援':'hype','視線':'hype'};
+ for(const p of game.perks){const q=PERKS.find(x=>x.t===p);if(q&&tm[q.tag])sc[tm[q.tag]]+=150;}
+ const best=Object.keys(sc).sort((a,b)=>sc[b]-sc[a])[0];return sc[best]>0?best:'none';}
+function playScene(title,lines,done){if(!storyOn||!lines||!lines.length){done&&done();return;}
+ stQ={lines,i:0,done,wasPaused:paused};paused=true;$('stChap').textContent=title||'';$('stChap').classList.remove('in');void $('stChap').offsetWidth;$('stChap').classList.add('in');
+ $('story').classList.add('on');showLine();snd(330,.15,'sawtooth',.04,-120);}
+function playStory(key,done){const s=STORY[key];if(!s||(game.seen&&game.seen[key])){done&&done();return;}(game.seen||(game.seen={}))[key]=1;playScene(s.ch,s.L,done);}
+function showLine(){const [who,txt,hot]=stQ.lines[stQ.i];const c=CH[who]||CH.narr;$('stImg').src=src(c[1]);$('stImg').style.cssText=cssf(c[1]);$('stName').textContent=c[0];
+ $('stText').textContent=txt.replace('{situ}',game.situ||'普通だな！');const box=$('stBox');box.className='stBox'+(who==='narr'?' narr':'')+(hot?' hot'+hot:'');void box.offsetWidth;box.classList.add('pop');
+ $('stNext').textContent=stQ.i>=stQ.lines.length-1?'閉じる（おかのした）':'次へ ▶';
+ const sw=$('stSweat');sw.innerHTML='';if(hot&&!RM){for(let i=0;i<(hot===2?9:4);i++){const d=document.createElement('span');d.textContent=i%3?'💦':'💧';d.style.left=(8+Math.random()*84)+'%';d.style.animationDelay=(Math.random()*.4)+'s';sw.appendChild(d);}
+  if(hot===2)snd(180,.12,'square',.04,-60);if(navigator.vibrate&&TOUCH)try{navigator.vibrate(hot===2?40:15)}catch(_){}}}
+function stAdvance(){if(!stQ)return;stQ.i++;if(stQ.i<stQ.lines.length){showLine();snd(520,.03,'triangle',.03);return;}stClose();}
+function stClose(){if(!stQ)return;const q=stQ;stQ=null;$('story').classList.remove('on');paused=q.wasPaused;$('bPause').textContent=paused?'▶':'⏸';q.done&&q.done();}
+$('stBox').addEventListener('click',ev=>{if(ev.target.id==='stSkip')return;stAdvance();});
+$('stNext').onclick=ev=>{ev.stopPropagation();stAdvance();};
+$('stSkip').onclick=ev=>{ev.stopPropagation();stClose();};
+function updStoryBtn(){$('bStory').textContent=`ストーリー：${storyOn?'ON（暑苦しい）':'OFF（さっぱり）'}`;}
+$('bStory').onclick=()=>{storyOn=!storyOn;try{localStorage.setItem('yajuuTD_story',storyOn?'1':'0')}catch(e){}updStoryBtn();};updStoryBtn();
 // ---------- responsive layout & canvas ----------
 const cv=$('cv'),ctx=cv.getContext('2d');
 let portrait=false,view={k:1,dpr:1,cw:W,ch:H};
@@ -777,6 +918,7 @@ cv.addEventListener('pointerup',ev=>{if(!game||game.over||ev.button>0)return;con
   pending=null;showTapHint(false);if(!ok){if(TOWERS[sel].onPath)toast(TOWERS[sel].name+'は道の上に置くんだよ（迫真）','collar_face','bad',1200);return;}place(sel,tx,ty);if(isTouch)hover=null;if(game.gold<cost(sel))sel=null;updShop();renderInfo();}
  else{picked=null;pending=null;renderInfo();}});
 addEventListener('keydown',ev=>{if($('title').classList.contains('on'))return;const k=ev.key;
+ if(stQ){if(k===' '||k==='Enter'){ev.preventDefault();stAdvance();}else if(k==='Escape')stClose();return;}
  if(HOTKEYS.includes(k.toLowerCase())&&!(k==='e'&&false)){const i=HOTKEYS.indexOf(k.toLowerCase());if(TKEYS[i])selectShop(TKEYS[i]);}else if(k===' '){ev.preventDefault();startWave();}else if(k==='Escape'){sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
  else if(k==='f'||k==='F')$('bSpeed').click();else if(k==='p'||k==='P')$('bPause').click();else if(k==='m'||k==='M')$('bMute').click();
  else if((k==='u'||k==='U')&&picked)$('bUp')&&$('bUp').click();});
@@ -867,7 +1009,7 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);
  if(game.combo>=50&&!RM){const a=.12+.08*Math.sin(game.t*8);ctx.strokeStyle=`rgba(255,60,138,${a})`;ctx.lineWidth=18;ctx.strokeRect(0,0,VW(),VH());}
  if(game.combo>=5){ctx.font=`bold ${fs(game.combo>=25?22:16)} sans-serif`;ctx.textAlign='right';ctx.strokeStyle='#000';ctx.lineWidth=4;const tx=`${game.combo} COMBO`;ctx.strokeText(tx,VW()-10,VH()-12);ctx.fillStyle=game.combo>=100?`hsl(${(game.t*360)%360},100%,65%)`:game.combo>=50?'#ff3c8a':game.combo>=25?'#ff8a5c':'#ffd36b';ctx.fillText(tx,VW()-10,VH()-12);}
  if(game.big){const b=game.big,k=b.t/b.T,scl=1+(1-k)*.3+(k>.85?(k-.85)*4:0);ctx.save();ctx.translate(VW()/2,VH()/2);ctx.scale(scl,scl);ctx.globalAlpha=Math.min(1,b.t*2.5);ctx.font=`900 ${fs(54)} sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=8;ctx.strokeStyle='#000';ctx.strokeText(b.txt,0,0);ctx.fillStyle=b.c;ctx.fillText(b.txt,0,0);ctx.restore();ctx.textBaseline='alphabetic';ctx.globalAlpha=1;}
- if(paused&&!$('draft').classList.contains('on')&&!game.over){ctx.fillStyle='#0008';ctx.fillRect(0,0,VW(),VH());ctx.fillStyle='#ffd36b';ctx.font=`bold ${fs(36)} sans-serif`;ctx.textAlign='center';ctx.fillText('一時停止（休憩）',VW()/2,VH()/2);}}
+ if(paused&&!$('draft').classList.contains('on')&&!stQ&&!game.over){ctx.fillStyle='#0008';ctx.fillRect(0,0,VW(),VH());ctx.fillStyle='#ffd36b';ctx.font=`bold ${fs(36)} sans-serif`;ctx.textAlign='center';ctx.fillText('一時停止（休憩）',VW()/2,VH()/2);}}
 
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
@@ -876,7 +1018,7 @@ function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!$('title').classList.contains('on'))draw();
  requestAnimationFrame(loop);}
 layout();reset();requestAnimationFrame(loop);
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,mutate,upgrade,canPlace,sell,splat,AFFIX,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get portrait(){return portrait},pathTiles};
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,upgrade,canPlace,sell,splat,AFFIX,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get portrait(){return portrait},pathTiles};
 })();
 </script>
 </body>
