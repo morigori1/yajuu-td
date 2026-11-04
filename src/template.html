@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#1d1712">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>野獣先輩タワーディフェンス ～迫真TD部～</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;background:#14110f;color:#f3ead8;font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;overflow:hidden;overscroll-behavior:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;-webkit-text-size-adjust:100%;touch-action:manipulation}
+#app{position:fixed;inset:0;display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);height:100vh;height:100dvh}
+button{font-family:inherit;cursor:pointer;border:2px solid #6b4b25;background:#3a2c1d;color:#f3ead8;border-radius:10px;padding:6px 12px;font-weight:700;font-size:15px;min-height:44px;min-width:44px;touch-action:manipulation}
+button:active:not(:disabled){transform:scale(.96)}
+@media (hover:hover){button:hover:not(:disabled){background:#57401f;border-color:#ffd36b}}
+button:disabled{opacity:.45;cursor:default}
+button.go{background:#8a2a1a;border-color:#ff8a5c}
+@media (hover:hover){button.go:hover:not(:disabled){background:#b2381f}}
+/* HUD */
+#hud{flex:none;display:flex;align-items:center;gap:10px;padding:4px 10px;background:linear-gradient(#2b2219,#1d1712);border-bottom:2px solid #6b4b25;flex-wrap:wrap}
+#hud .stats{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+#hud .stat{font-weight:800;font-size:18px;display:flex;align-items:center;gap:4px;white-space:nowrap}
+#hud .stat b{color:#ffd36b}
+#hud .avatar{width:40px;height:40px;border-radius:50%;border:2px solid #ffd36b;object-fit:cover;flex:none}
+#nextinfo{font-size:13px;color:#c9b894;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#hud .ctl{display:flex;gap:6px;align-items:center}
+#bWave{min-width:120px}
+/* main */
+#main{flex:1;min-height:0;display:flex}
+#stage{flex:1;min-width:0;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;background:#0f0c0a;overflow:hidden}
+#cv{display:block;touch-action:none;cursor:crosshair;border-radius:4px}
+#side{flex:none;width:224px;background:#1d1712;border-left:2px solid #6b4b25;padding:8px;display:flex;flex-direction:column;gap:6px;overflow-y:auto}
+#side h3{margin:2px 0;font-size:14px;color:#ffd36b}
+#shop{display:flex;flex-direction:column;gap:6px}
+.shop{display:flex;align-items:center;gap:8px;padding:5px;border:2px solid #4a3720;border-radius:12px;background:#2a2017;cursor:pointer;position:relative;min-height:56px;touch-action:manipulation}
+@media (hover:hover){.shop:hover{border-color:#c49a52}}
+.shop.sel{border-color:#ffd36b;background:#4a3720;box-shadow:0 0 8px #ffd36b88}
+.shop.poor{opacity:.5}
+.shop img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:3px solid var(--rc);flex:none}
+.shop .nm{font-size:13px;font-weight:700;line-height:1.15;padding-right:34px}
+.shop .ds{font-size:11px;color:#c9b894;line-height:1.25}
+.shop .cost{position:absolute;right:6px;top:4px;font-size:12px;color:#ffd36b;font-weight:800}
+.shop .key{position:absolute;right:6px;bottom:3px;font-size:10px;color:#8d7b5d}
+#info{border:2px solid #4a3720;border-radius:12px;padding:8px;background:#241b13;font-size:13px;min-height:120px}
+#info .row{display:flex;gap:8px;align-items:center}
+#info img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:3px solid #ffd36b;flex:none}
+#info .st{line-height:1.5;margin-top:4px}
+#info .btns{display:flex;gap:6px;margin-top:8px}
+#info .btns button{flex:1;font-size:14px;padding:5px}
+#info .hint{color:#a8977b;margin-top:4px}
+#perksBox{margin-top:auto}
+#perks{font-size:12px;color:#c9b894;max-height:110px;overflow:auto;border-top:1px dashed #4a3720;padding-top:4px;line-height:1.5}
+#foot{flex:none;font-size:12px;color:#a8977b;padding:6px 12px;background:#1a1511}
+/* overlays */
+.ov{position:fixed;inset:0;background:rgba(10,8,6,.9);display:none;align-items:center;justify-content:center;justify-content:safe center;flex-direction:column;z-index:20;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:calc(12px + env(safe-area-inset-top)) calc(12px + env(safe-area-inset-right)) calc(12px + env(safe-area-inset-bottom)) calc(12px + env(safe-area-inset-left));text-align:center}
+.ov.on{display:flex}
+#title .logo{font-size:clamp(26px,7vw,44px);font-weight:900;color:#ffd36b;text-shadow:0 3px 0 #8a2a1a,0 0 20px #ff8a5c88;letter-spacing:1px;margin:8px 0 0;line-height:1.2}
+#title .sub{font-size:clamp(14px,4vw,18px);margin-bottom:8px}
+#title .imgs{display:flex;gap:12px;align-items:flex-end;justify-content:center}
+#title .imgs img{border:4px solid #6b4b25;border-radius:12px;box-shadow:0 6px 24px #000}
+#title .hero{width:clamp(130px,36vw,250px);aspect-ratio:1;object-fit:cover;transform:rotate(-3deg)}
+#title .side{width:clamp(120px,32vw,230px);aspect-ratio:1.42;object-fit:cover;transform:rotate(4deg)}
+.help{font-size:14px;color:#c9b894;max-width:720px;line-height:1.6;margin:10px 0}
+#bStart{font-size:22px;padding:12px 34px;min-height:56px}
+#draft h2,#end h2{margin:0 0 4px;font-size:clamp(22px,6vw,30px);color:#ffd36b}
+#draft .cards{display:flex;gap:16px;margin-top:14px;justify-content:center}
+.card{width:230px;border:3px solid #6b4b25;border-radius:14px;background:#2a2017;overflow:hidden;cursor:pointer;transition:transform .12s;text-align:left;touch-action:manipulation}
+@media (hover:hover){.card:hover{transform:translateY(-6px) rotate(-1deg);border-color:#ffd36b;box-shadow:0 0 18px #ffd36b66}}
+.card:active{transform:scale(.97);border-color:#ffd36b}
+.card img{width:100%;height:140px;object-fit:cover;object-position:center 30%;display:block;border-bottom:3px solid #6b4b25}
+.card .t{font-weight:900;font-size:18px;padding:8px 10px 2px;color:#ffd36b}
+.card .d{font-size:14px;padding:2px 10px 10px;line-height:1.4}
+.card .r{font-size:11px;padding:0 10px 8px;color:#a8977b}
+#end img{width:min(200px,45vw);aspect-ratio:1;object-fit:cover;border-radius:50%;border:5px solid #ffd36b;margin:8px}
+#end .eb{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+/* toasts & boss bar live in stage */
+#toasts{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:15;pointer-events:none;max-width:calc(100% - 16px)}
+.toast{display:flex;align-items:center;gap:8px;background:rgba(30,22,15,.92);border:2px solid #ffd36b;border-radius:30px;padding:3px 14px 3px 3px;font-weight:900;font-size:16px;animation:tin .25s ease-out;box-shadow:0 4px 12px #000a;width:max-content;max-width:100%}
+.toast img{width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #fff;flex:none}
+.toast.bad{border-color:#ff6b5c}
+.toast.boss{border-color:#c46bff;font-size:18px}
+.toast.out{opacity:0;transition:opacity .4s}
+@keyframes tin{from{transform:translateX(-40px);opacity:0}to{transform:none;opacity:1}}
+#bossbar{position:absolute;left:50%;transform:translateX(-50%);bottom:8px;width:min(360px,80%);display:none;z-index:14;pointer-events:none;align-items:center;gap:6px}
+#bossbar img{width:36px;height:36px;border-radius:50%;border:2px solid #c46bff;object-fit:cover}
+#bossbar .bar{flex:1;height:14px;background:#000a;border:2px solid #c46bff;border-radius:8px;overflow:hidden}
+#bossbar .fill{height:100%;background:linear-gradient(90deg,#ff3c6e,#c46bff);width:100%}
+#tapHint{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:#000c;border:2px solid #ffd36b;border-radius:20px;padding:4px 12px;font-size:13px;font-weight:700;display:none;z-index:16;pointer-events:none;white-space:nowrap}
+
+/* ---- compact landscape (phones sideways) ---- */
+body.compact #hud{padding:2px 8px;gap:8px}
+body.compact #hud .avatar{width:32px;height:32px}
+body.compact #hud .stat{font-size:15px}
+body.compact #foot{display:none}
+body.compact #side{width:150px;padding:4px;gap:4px}
+body.compact #side h3,body.compact .shop .ds,body.compact .shop .key{display:none}
+body.compact .shop{min-height:48px;padding:3px;gap:5px}
+body.compact .shop img{width:38px;height:38px}
+body.compact .shop .nm{font-size:11px;padding-right:0;margin-top:12px}
+body.compact .shop .cost{font-size:11px;top:2px}
+body.compact #info{min-height:0;padding:5px;font-size:11px}
+body.compact #info img{width:34px;height:34px}
+body.compact #info .btns{flex-direction:column;gap:4px;margin-top:4px}
+body.compact #info .btns button{font-size:12px;min-height:44px}
+body.compact #perksBox{display:none}
+body.compact .toast{font-size:13px}
+body.compact .toast img{width:30px;height:30px}
+
+/* ---- portrait (phones upright) ---- */
+body.portrait #hud{padding:4px 8px;gap:6px}
+body.portrait #hud .stats{flex-basis:100%;gap:10px}
+body.portrait #hud .avatar{width:34px;height:34px}
+body.portrait #hud .stat{font-size:16px}
+body.portrait #nextinfo{flex:1;text-align:right}
+body.portrait #hud .ctl{flex-basis:100%}
+body.portrait #bWave{flex:1;font-size:16px}
+body.portrait #main{flex-direction:column}
+body.portrait #foot{display:none}
+body.portrait #side{width:auto;border-left:0;border-top:2px solid #6b4b25;padding:6px;gap:6px;overflow:visible}
+body.portrait #side h3,body.portrait #perksBox{display:none}
+body.portrait #shop{flex-direction:row;gap:5px}
+body.portrait .shop{flex:1;flex-direction:column;gap:2px;padding:4px 2px 3px;min-height:0;min-width:0}
+body.portrait .shop img{width:42px;height:42px}
+body.portrait .shop .ds,body.portrait .shop .key{display:none}
+body.portrait .shop .nm{font-size:10px;padding:0;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+body.portrait .shop .cost{position:static;font-size:12px}
+body.portrait #info{min-height:66px;padding:6px;font-size:12.5px;display:flex;align-items:center}
+body.portrait #info>.wrapI{display:flex;gap:8px;align-items:center;width:100%}
+body.portrait #info .st{margin-top:0;line-height:1.35}
+body.portrait #info .btns{margin-top:0;flex:none}
+body.portrait #info .btns button{min-width:76px;font-size:13px;padding:4px 6px}
+body.portrait #info .hint{margin-top:2px}
+body.portrait .toast{font-size:13px}
+body.portrait .toast img{width:30px;height:30px}
+body.portrait #draft .cards{flex-direction:column;gap:10px;width:100%;max-width:440px;align-items:stretch}
+body.portrait .card{width:100%;display:grid;grid-template-columns:110px 1fr;grid-template-rows:auto 1fr auto;min-height:100px}
+body.portrait .card img{grid-row:1/4;height:100%;border-bottom:0;border-right:3px solid #6b4b25}
+body.portrait .card .t{font-size:17px}
+body.portrait .help{font-size:13px}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="hud">
+    <div class="stats">
+      <img class="avatar" id="avatar" alt="">
+      <div class="stat">💰<b id="gold">0</b></div>
+      <div class="stat">❤️<b id="lives">0</b></div>
+      <div class="stat">🌊<b id="wave">0</b>/<span id="wmax">15</span></div>
+      <div id="nextinfo"></div>
+    </div>
+    <div class="ctl">
+      <button id="bSpeed" title="速度 (F)">▶x1</button>
+      <button id="bPause" title="一時停止 (P)">⏸</button>
+      <button id="bMute" title="音 (M)">🔊</button>
+      <button id="bWave" class="go" title="次のウェーブ (Space)">ウェーブ開始</button>
+    </div>
+  </div>
+  <div id="main">
+    <div id="stage">
+      <canvas id="cv"></canvas>
+      <div id="toasts"></div>
+      <div id="tapHint">もう一度タップで設置</div>
+      <div id="bossbar"><img id="bossimg" alt=""><div class="bar"><div class="fill" id="bossfill"></div></div></div>
+    </div>
+    <div id="side">
+      <h3>🏗 タワー（先輩部室）</h3>
+      <div id="shop"></div>
+      <div id="info"></div>
+      <div id="perksBox"><h3>🃏 獲得パーク</h3><div id="perks">まだなし</div></div>
+    </div>
+  </div>
+  <div id="foot">クリック/タップで設置 ・ タワーを選んで強化・売却 ・ 1-5 選択 / Space 開始 / Esc 解除 / F 速度 / P 停止 — 下北沢（ゴール）を守れ！</div>
+</div>
+<div class="ov on" id="title">
+  <div class="imgs"><img class="hero" id="tHero" alt=""><img class="side" id="tSide" alt=""></div>
+  <div class="logo">野獣先輩<br class="pbr">タワーディフェンス</div>
+  <div class="sub">～ 迫真TD部・下北沢防衛の裏技 ～</div>
+  <div class="help">押し寄せる後輩軍団から<b>下北沢</b>を守れ！タワーを置いてウェーブを凌ぎ、クリア毎に<b>ドラフトカード</b>を1枚獲得。クリティカルで「ファッ！？」、5・10・15 ウェーブには<b>迫真ボス</b>が襲来。15 ウェーブ突破でクリア（その後エンドレス）。<br><span id="ctlHelp"></span></div>
+  <button class="go" id="bStart">はじめる（いいよ！こいよ！）</button>
+  <div class="help" id="best" style="margin-top:8px"></div>
+</div>
+<div class="ov" id="draft">
+  <h2 id="dTitle">ウェーブクリア！</h2>
+  <div style="color:#c9b894">ドラフト：カードを1枚選べ（やりますねぇ）</div>
+  <div class="cards" id="cards"></div>
+</div>
+<div class="ov" id="end">
+  <h2 id="eTitle"></h2>
+  <img id="eImg" alt="">
+  <div id="eText" style="font-size:16px;margin:6px 0 14px"></div>
+  <div class="eb"><button class="go" id="bRetry">もう一回（まだやるの？）</button><button id="bEndless" style="display:none">エンドレス続行</button></div>
+</div>
+<script>
+const ASSETS = /*ASSETS*/;
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const TOUCH=matchMedia('(pointer:coarse)').matches||('ontouchstart' in window);
+$('ctlHelp').textContent=TOUCH?'操作：タワーを選んでマップを2回タップで設置／タワーをタップで強化・売却':'操作：クリックで設置／タワーをクリックで強化・売却／1-5・Space・F・P・Esc';
+
+// ---------- images & sprite cache ----------
+const IMG={};
+for(const k in ASSETS){const im=new Image();im.src=ASSETS[k];IMG[k]=im;}
+$('avatar').src=ASSETS.senpai_face;$('tHero').src=ASSETS.title_senpai;$('tSide').src=ASSETS.navy_trio_card;$('bossimg').src=ASSETS.grimace_face;
+// pre-render round sprites once (no per-frame clip/filter; ctx.filter is unsupported on older iOS Safari)
+const SPR={};const SPR_SZ=96;
+function makeSprite(key,src,tint){const c=document.createElement('canvas');c.width=c.height=SPR_SZ;const g=c.getContext('2d');
+ g.beginPath();g.arc(SPR_SZ/2,SPR_SZ/2,SPR_SZ/2,0,7);g.closePath();g.fillStyle='#000';g.fill();g.save();g.clip();g.drawImage(src,0,0,SPR_SZ,SPR_SZ);
+ if(tint){g.globalCompositeOperation='multiply';g.fillStyle=tint;g.fillRect(0,0,SPR_SZ,SPR_SZ);g.globalCompositeOperation='source-over';}g.restore();SPR[key]=c;}
+function sprite(key){if(SPR[key])return SPR[key];const base=key.replace(/#.*/,''),im=IMG[base];if(!im||!im.complete||!im.naturalWidth)return null;
+ makeSprite(key,im,key.endsWith('#red')?'#ff7a50':null);return SPR[key];}
+
+// ---------- audio ----------
+let AC=null,muted=false;
+function snd(f=440,d=.06,type='square',v=.05,slide=0){if(muted)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,f+slide),AC.currentTime+d);g.gain.value=v;g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
+let lastShot=0;function shotSnd(f){const n=performance.now();if(n-lastShot<45)return;lastShot=n;snd(f,.04,'square',.022);} // throttle so rapid fire doesn't spam audio nodes
+
+// ---------- map (logical world is always 960x576 landscape; portrait view = transposed) ----------
+const T=48,COLS=20,ROWS=12,W=960,H=576;
+const WP=[[-1,2],[4,2],[4,8],[9,8],[9,3],[14,3],[14,9],[18,9],[18,5],[20.5,5]].map(([x,y])=>({x:x*T+T/2,y:y*T+T/2}));
+const pathTiles=new Set();
+for(let i=0;i<WP.length-1;i++){const a=WP[i],b=WP[i+1];const ax=Math.floor(a.x/T),ay=Math.floor(a.y/T),bx=Math.floor(b.x/T),by=Math.floor(b.y/T);for(let x=Math.min(ax,bx);x<=Math.max(ax,bx);x++)for(let y=Math.min(ay,by);y<=Math.max(ay,by);y++)pathTiles.add(x+','+y);}
+const segLen=[];let pathTotal=0;for(let i=0;i<WP.length-1;i++){const l=Math.hypot(WP[i+1].x-WP[i].x,WP[i+1].y-WP[i].y);segLen.push(l);pathTotal+=l;}
+function posAt(d){for(let i=0;i<segLen.length;i++){if(d<=segLen[i]){const t=d/segLen[i];return{x:WP[i].x+(WP[i+1].x-WP[i].x)*t,y:WP[i].y+(WP[i+1].y-WP[i].y)*t};}d-=segLen[i];}return{...WP[WP.length-1]};}
+let seed=114514;const rnd=()=>((seed=(seed*16807)%2147483647)/2147483647);
+const deco=[];for(let i=0;i<46;i++){const x=Math.floor(rnd()*COLS),y=Math.floor(rnd()*ROWS);if(!pathTiles.has(x+','+y))deco.push({x:x*T+rnd()*T,y:y*T+rnd()*T,r:2+rnd()*4,c:rnd()<.5?'#2f4026':'#344a2a'});}
+
+// ---------- defs ----------
+const TOWERS={
+ senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',desc:'単体攻撃。クリティカルで「ファッ！？」',crit:.15,proj:'#ffd36b'},
+ navy:{name:'サムライブルー連射塔',short:'連射塔',img:'navy_center_face',cost:150,range:115,dmg:7,rate:.22,ring:'#3d7bff',desc:'高速連射。数で押す',crit:.05,proj:'#8fb4ff'},
+ trio:{name:'部室トリオ',short:'トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',desc:'オーラ支援：範囲内タワー攻撃+25%・速度+15%',aura:true},
+ collar:{name:'胸ぐらスネア',short:'スネア',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',desc:'範囲パルス。敵を減速させる（指導）',pulse:true,slow:.45,slowT:1.2},
+ cannon:{name:'114514砲',short:'114514砲',img:'senpai_face',spr:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',desc:'爆風範囲攻撃。迫真の一撃',splash:62,crit:.1,proj:'#ff8a5c'},
+};
+const TKEYS=Object.keys(TOWERS);
+const ENEMIES={
+ kohai:{name:'後輩',img:'navy_left_face',hp:42,speed:55,bounty:7,r:15,col:'#3d7bff'},
+ sprint:{name:'俊足後輩',img:'navy_right_face',hp:28,speed:100,bounty:8,r:13,col:'#7fe0ff'},
+ bushitsu:{name:'部室の主',img:'locker_left_face',hp:130,speed:38,bounty:14,r:19,col:'#c49a52'},
+ armor:{name:'鉄壁の見学者',img:'locker_right_face',hp:95,speed:48,bounty:13,r:17,col:'#9aa0a8',armor:5},
+ boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:30,bounty:150,r:34,col:'#c46bff',armor:3,boss:true},
+};
+const PERKS=[
+ {id:'iizo',t:'いいゾ～これ',d:'全タワーの攻撃力 +15%',img:'senpai_face',ap:s=>s.gDmg+=.15},
+ {id:'fa',t:'ファッ！？',d:'全タワーのクリ率 +8%、クリ倍率 +0.5',img:'grimace_face',ap:s=>{s.gCrit+=.08;s.critMul+=.5}},
+ {id:'yarimasu',t:'やりますねぇ',d:'先輩砲台の攻撃速度 +25%',img:'title_senpai',ap:s=>s.tRate.senpai+=.25},
+ {id:'binjou',t:'そうだよ（便乗）',d:'部室トリオのオーラ効果 +50%・範囲 +25%',img:'trio_sepia_card',ap:s=>{s.auraMul+=.5;s.auraRange+=.25}},
+ {id:'blue',t:'サムライブルー魂',d:'連射塔のダメージ +40%',img:'navy_trio_card',ap:s=>s.tDmg.navy+=.4},
+ {id:'shidou',t:'胸ぐら指導',d:'スネアの減速 +15%・効果時間 +0.6秒',img:'collar_card',ap:s=>{s.slowAdd+=.15;s.slowT+=.6}},
+ {id:'b114',t:'114514',d:'114514砲の爆風範囲 +30%・ダメージ +20%',img:'senpai_face',ap:s=>{s.splashMul+=.3;s.tDmg.cannon+=.2}},
+ {id:'omatase',t:'おまたせ（セール）',d:'タワー設置・強化コスト -12%',img:'navy_trio_card',ap:s=>s.costMul*=.88},
+ {id:'kyuukei',t:'ぬわああん疲れたもおおん',d:'休憩してライフ +5',img:'locker_left_face',ap:s=>{game.lives+=5}},
+ {id:'rinji',t:'臨時収入（810）',d:'即座に 💰 +(150 + 20×ウェーブ)',img:'title_senpai',ap:s=>{game.gold+=150+20*game.wave}},
+ {id:'range',t:'見とけよ見とけよ～',d:'全タワーの射程 +12%',img:'collar_card',ap:s=>s.gRange+=.12},
+ {id:'bounty',t:'ありますねぇ！',d:'撃破報酬 +20%',img:'trio_sepia_card',ap:s=>s.bounty+=.2},
+];
+
+// ---------- state ----------
+let game,towers,enemies,projs,fx,floats,spawnQ,sel=null,hover=null,picked=null,pending=null,speed=1,paused=false,statsDirty=true;
+function newStats(){return{gDmg:0,gCrit:0,critMul:3,gRange:0,tRate:{senpai:0,navy:0,trio:0,collar:0,cannon:0},tDmg:{senpai:0,navy:0,trio:0,collar:0,cannon:0},auraMul:1,auraRange:0,slowAdd:0,slowT:0,splashMul:1,costMul:1,bounty:0};}
+function reset(){game={gold:300,lives:20,wave:0,maxWave:15,inWave:false,over:false,won:false,endless:false,stats:newStats(),perks:[],kills:0,t:0,lastCritToast:-9};towers=[];enemies=[];projs=[];fx=[];floats=[];spawnQ=[];sel=null;picked=null;pending=null;statsDirty=true;$('wmax').textContent='15';$('bossbar').style.display='none';buildShop();updHud();renderInfo();renderPerks();}
+
+// ---------- waves ----------
+function waveList(w){const L=[];const add=(k,n,gap)=>{for(let i=0;i<n;i++)L.push({k,gap});};
+ add('kohai',6+Math.floor(w*1.6),.9-Math.min(.45,w*.03));
+ if(w>=2)add('sprint',3+w,.55);
+ if(w>=3)add('bushitsu',Math.floor(w/2)+1,1.4);
+ if(w>=4)add('armor',Math.floor(w/2),1.1);
+ if(w>=7)add('sprint',w,.35);
+ if(w%5===0){add('boss',w>=15?2:1,3.5);add('kohai',4+w,.4);}
+ for(let i=L.length-1;i>0;i--){if(L[i].k==='boss')continue;const j=Math.floor(Math.random()*(i+1));if(L[j].k==='boss')continue;[L[i],L[j]]=[L[j],L[i]];}
+ return L;}
+function hpScale(w){return Math.pow(1+.32*(w-1),1.5);}
+function startWave(){if(game.inWave||game.over)return;game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;
+ if(game.wave%5===0)toast(`迫真ボス襲来！ウェーブ ${game.wave}`,'collar_card','boss',3200);else toast(`ウェーブ ${game.wave}　おまたせ！`,'navy_trio_card','',1600);
+ snd(220,.25,'sawtooth',.05,220);updHud();}
+function spawn(k){const d=ENEMIES[k];const hp=d.hp*hpScale(game.wave)*(game.endless?1+(game.wave-15)*.12:1);
+ enemies.push({k,d,hp,maxHp:hp,dist:0,slowT:0,slow:0,x:WP[0].x,y:WP[0].y,hitT:0,id:Math.random()});
+ if(d.boss){$('bossbar').style.display='flex';snd(90,.6,'sawtooth',.08,-40);}}
+
+// ---------- towers ----------
+function cost(k){return Math.round(TOWERS[k].cost*game.stats.costMul);}
+function upCost(t){return Math.round(TOWERS[t.k].cost*t.lvl*game.stats.costMul);}
+function auraFor(t){let m=0;for(const o of towers){if(o.k!=='trio'||o===t)continue;const r=TOWERS.trio.range*(1+.1*(o.lvl-1))*(1+game.stats.auraRange);if(Math.hypot(o.x-t.x,o.y-t.y)<=r)m=Math.max(m,(.25+.1*(o.lvl-1))*game.stats.auraMul);}return m;}
+function calcStats(t){const d=TOWERS[t.k],s=game.stats,a=auraFor(t);
+ return{range:d.range*(1+.1*(t.lvl-1))*(1+s.gRange)*(d.aura?1+s.auraRange:1),
+ dmg:d.dmg*Math.pow(1.55,t.lvl-1)*(1+s.gDmg+s.tDmg[t.k])*(1+a),
+ rate:d.rate/((1+.12*(t.lvl-1))*(1+s.tRate[t.k])*(1+a*.6)),
+ crit:(d.crit||0)+(d.crit!=null?s.gCrit:0),aura:a};}
+// cached: recomputed only when towers/levels/perks change (was per-hit before)
+function tStats(t){if(statsDirty){for(const o of towers)o.st=calcStats(o);statsDirty=false;}return t.st||(t.st=calcStats(t));}
+function place(k,tx,ty){const c=cost(k);if(game.gold<c){toast('お金が足りないですよ！','navy_left_face','bad',1200);snd(120,.15);return false;}
+ if(pathTiles.has(tx+','+ty)||towers.some(t=>t.tx===tx&&t.ty===ty)||tx<0||ty<0||tx>=COLS||ty>=ROWS)return false;
+ game.gold-=c;const t={k,tx,ty,x:tx*T+T/2,y:ty*T+T/2,lvl:1,cd:0,spent:c,ang:0,pulseT:0,kills:0};towers.push(t);statsDirty=true;picked=null;snd(660,.08,'triangle',.06,200);
+ if(navigator.vibrate&&TOUCH)try{navigator.vibrate(15)}catch(e){}
+ updHud();renderInfo();return true;}
+
+// ---------- toasts ----------
+function toast(text,img,cls='',ms=1800){const box=$('toasts');const el=document.createElement('div');el.className='toast '+cls;el.innerHTML=`<img src="${ASSETS[img]}"><span></span>`;el.querySelector('span').textContent=text;box.appendChild(el);const max=document.body.classList.contains('portrait')||document.body.classList.contains('compact')?2:4;while(box.children.length>max)box.firstChild.remove();setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),450)},ms);}
+
+// ---------- update ----------
+function hurt(e,dmg,src){const arm=e.d.armor||0;let crit=false;const st=src?tStats(src):null;
+ if(st&&st.crit&&Math.random()<st.crit){dmg*=game.stats.critMul;crit=true;}
+ dmg=Math.max(1,dmg-arm);e.hp-=dmg;e.hitT=.12;
+ if(crit){if(floats.length<40)floats.push({x:e.x,y:e.y-e.d.r-6,t:.9,txt:'ファッ！？ '+Math.round(dmg),c:'#ff5c8a',big:true});snd(990,.07,'square',.05,-500);
+  if(game.t-game.lastCritToast>5){game.lastCritToast=game.t;toast('ファッ！？（クリティカル）','grimace_face','',1100);}}
+ if(e.hp<=0&&!e.dead){e.dead=true;const b=Math.round(e.d.bounty*(1+game.stats.bounty));game.gold+=b;game.kills++;if(src)src.kills++;
+  if(floats.length<40)floats.push({x:e.x,y:e.y,t:.8,txt:'+'+b,c:'#ffd36b'});const np=e.d.boss?28:(fx.length>150?0:6);for(let i=0;i<np;i++)fx.push({x:e.x,y:e.y,vx:(Math.random()-.5)*160,vy:(Math.random()-.5)*160,t:.5,c:e.d.col});
+  snd(e.d.boss?160:520,e.d.boss?.4:.05,'triangle',.05,-200);
+  if(e.d.boss){toast('迫真ボス撃破！いいゾ～これ','senpai_face','',2200);}}}
+let hudDirty=true;
+function update(dt){game.t+=dt;const g0=game.gold,l0=game.lives;
+ if(game.inWave&&spawnQ.length){game.spawnT-=dt;if(game.spawnT<=0){const s=spawnQ.shift();spawn(s.k);game.spawnT=s.gap;hudDirty=true;}}
+ for(const e of enemies){if(e.dead)continue;if(e.slowT>0)e.slowT-=dt;else e.slow=0;e.hitT=Math.max(0,e.hitT-dt);
+  e.dist+=e.d.speed*(1-e.slow)*dt;const p=posAt(e.dist);e.x=p.x;e.y=p.y;
+  if(e.dist>=pathTotal){e.dead=true;e.leaked=true;const dmg=e.d.boss?5:1;game.lives-=dmg;snd(140,.25,'sawtooth',.07,-60);
+   if(navigator.vibrate&&TOUCH)try{navigator.vibrate(e.d.boss?120:40)}catch(_){}
+   toast(e.d.boss?`ボスが下北沢に到達！ -${dmg}`:'まずいですよ！ ライフ -1','grimace_face','bad',1300);
+   if(game.lives<=0){game.lives=0;gameOver();}}}
+ for(const t of towers){const d=TOWERS[t.k];if(d.aura){t.pulseT+=dt;continue;}const st=tStats(t);t.cd-=dt;
+  if(d.pulse){if(t.cd<=0){let any=false;const r2=st.range*st.range;for(const e of enemies){if(e.dead)continue;const dx=e.x-t.x,dy=e.y-t.y;if(dx*dx+dy*dy<=r2){any=true;e.slow=Math.min(.8,d.slow+game.stats.slowAdd+.05*(t.lvl-1));e.slowT=d.slowT+game.stats.slowT;hurt(e,st.dmg,t);}}
+    if(any){t.cd=st.rate;fx.push({ring:true,x:t.x,y:t.y,r:10,R:st.range,t:.35,c:'#5cd6a8'});snd(300,.05,'sine',.03);}}continue;}
+  if(t.cd>0)continue;let best=null;const r2=st.range*st.range;for(const e of enemies){if(e.dead)continue;const dx=e.x-t.x,dy=e.y-t.y;if(dx*dx+dy*dy<=r2&&(!best||e.dist>best.dist))best=e;}
+  if(best){t.cd=st.rate;t.ang=Math.atan2(best.y-t.y,best.x-t.x);projs.push({x:t.x,y:t.y,tg:best,tx:best.x,ty:best.y,sp:d.splash?320:560,dmg:st.dmg,src:t,splash:d.splash?d.splash*game.stats.splashMul:0,c:d.proj});
+   shotSnd(d.splash?180:(t.k==='navy'?880:600));}}
+ for(const p of projs){if(p.done)continue;if(p.tg&&!p.tg.dead){p.tx=p.tg.x;p.ty=p.tg.y;}const dx=p.tx-p.x,dy=p.ty-p.y,dd=Math.hypot(dx,dy),step=p.sp*dt;
+  if(dd<=step+4){p.done=true;if(p.splash){fx.push({ring:true,x:p.tx,y:p.ty,r:8,R:p.splash,t:.3,c:'#ff8a5c'});if(floats.length<40)floats.push({x:p.tx,y:p.ty-10,t:.6,txt:'114514!',c:'#ff8a5c'});const s2=p.splash*p.splash;for(const e of enemies){if(e.dead)continue;const ex=e.x-p.tx,ey=e.y-p.ty;if(ex*ex+ey*ey<=s2)hurt(e,p.dmg,p.src);}}
+   else if(p.tg&&!p.tg.dead)hurt(p.tg,p.dmg,p.src);}
+  else{p.x+=dx/dd*step;p.y+=dy/dd*step;}}
+ projs=projs.filter(p=>!p.done);enemies=enemies.filter(e=>!e.dead);
+ for(const f of fx){f.t-=dt;if(!f.ring){f.x+=f.vx*dt;f.y+=f.vy*dt;}}fx=fx.filter(f=>f.t>0);
+ for(const f of floats){f.t-=dt;f.y-=28*dt;}floats=floats.filter(f=>f.t>0);
+ const boss=enemies.find(e=>e.d.boss);if(boss)$('bossfill').style.width=(100*boss.hp/boss.maxHp)+'%';else if($('bossbar').style.display!=='none')$('bossbar').style.display='none';
+ if(game.inWave&&!spawnQ.length&&!enemies.length&&!game.over){game.inWave=false;const bonus=20+game.wave*5;game.gold+=bonus;
+  toast(`ウェーブ ${game.wave} クリア！ +${bonus}G　いいゾ～これ`,'senpai_face','',2000);snd(523,.1,'triangle',.06);setTimeout(()=>snd(784,.15,'triangle',.06),110);
+  hudDirty=true;if(game.wave>=game.maxWave&&!game.endless){win();}else openDraft();}
+ if(game.gold!==g0||game.lives!==l0)hudDirty=true;}
+
+// ---------- draft ----------
+function openDraft(){paused=true;const pool=PERKS.slice();const pick=[];while(pick.length<3&&pool.length){pick.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);}
+ $('dTitle').textContent=`ウェーブ ${game.wave} クリア！`;const box=$('cards');box.innerHTML='';
+ for(const p of pick){const c=document.createElement('div');c.className='card';const n=game.perks.filter(x=>x===p.t).length;
+  c.innerHTML=`<img src="${ASSETS[p.img]}"><div class="t"></div><div class="d"></div><div class="r">${n?'所持 x'+n:'NEW'}</div>`;c.querySelector('.t').textContent=p.t;c.querySelector('.d').textContent=p.d;
+  c.onclick=()=>{p.ap(game.stats);game.perks.push(p.t);statsDirty=true;$('draft').classList.remove('on');paused=false;$('bPause').textContent='⏸';toast(p.t+'！','senpai_face','',1400);snd(700,.12,'triangle',.06,300);renderPerks();renderInfo();updHud();};box.appendChild(c);}
+ $('draft').classList.add('on');$('draft').scrollTop=0;}
+function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;const ks=Object.keys(m);$('perks').innerHTML=ks.length?ks.map(k=>`・${k}${m[k]>1?' x'+m[k]:''}`).join('<br>'):'まだなし';}
+
+// ---------- end ----------
+function saveBest(){try{const b=+localStorage.getItem('yajuuTD_best')||0;if(game.wave>b)localStorage.setItem('yajuuTD_best',game.wave);}catch(e){}}
+function gameOver(){if(game.over)return;game.over=true;game.inWave=false;saveBest();$('eTitle').textContent='下北沢陥落…';$('eImg').src=ASSETS.grimace_face;
+ $('eText').innerHTML=`ウェーブ ${game.wave} で力尽きた（痛いですね…）<br>撃破数 ${game.kills}`;$('bEndless').style.display='none';$('end').classList.add('on');snd(110,.8,'sawtooth',.08,-60);}
+function win(){game.over=true;game.won=true;saveBest();$('eTitle').textContent='下北沢防衛成功！';$('eImg').src=ASSETS.senpai_face;
+ $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！やりますねぇ！<br>ライフ残り ${game.lives} / 撃破数 ${game.kills}`;$('bEndless').style.display='';$('end').classList.add('on');}
+$('bRetry').onclick=()=>{$('end').classList.remove('on');reset();};
+$('bEndless').onclick=()=>{$('end').classList.remove('on');game.over=false;game.endless=true;game.maxWave=999;$('wmax').textContent='∞';openDraft();};
+
+// ---------- UI ----------
+function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{const d=TOWERS[k];const el=document.createElement('div');el.className='shop';el.style.setProperty('--rc',d.ring);el.dataset.k=k;
+ el.innerHTML=`<img src="${ASSETS[d.img]}" style="${k==='cannon'?'filter:sepia(1) saturate(4) hue-rotate(-30deg)':''}"><div style="min-width:0;max-width:100%"><div class="nm"></div><div class="ds"></div></div><div class="cost"></div><div class="key">[${i+1}]</div>`;
+ el.querySelector('.nm').textContent=document.body.classList.contains('portrait')||document.body.classList.contains('compact')?d.short:d.name;el.querySelector('.ds').textContent=d.desc;el.onclick=()=>selectShop(k);box.appendChild(el);});updShop();}
+function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k;el.querySelector('.cost').textContent=cost(k)+'G';el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<cost(k));});}
+function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
+function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave');bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':'ウェーブ開始';
+ const nw=game.wave+1;$('nextinfo').textContent=game.inWave?`残り ${spawnQ.length+enemies.length}`:(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);updShop();if(picked)updInfoBtns();}
+function renderInfo(){const box=$('info');
+ if(picked){const t=picked,d=TOWERS[t.k],st=tStats(t);box.innerHTML=`<div class="wrapI"><div class="row" style="flex:1;min-width:0"><img src="${ASSETS[d.img]}" style="border-color:${d.ring}"><div style="min-width:0"><b></b> Lv.${t.lvl}/4<div class="st">${d.aura?`オーラ 攻撃+${Math.round((.25+.1*(t.lvl-1))*game.stats.auraMul*100)}%`:`攻撃 ${st.dmg.toFixed(1)}・間隔 ${st.rate.toFixed(2)}s`}<br>射程 ${Math.round(st.range)}${st.aura?` <span style="color:#d9b36a">★+${Math.round(st.aura*100)}%</span>`:''}${st.crit?`・クリ ${Math.round(st.crit*100)}%`:''}・撃破 ${t.kills}</div></div></div>
+  <div class="btns"><button id="bUp"></button><button id="bSell"></button></div></div>`;box.querySelector('b').textContent=d.name;
+  $('bUp').onclick=()=>{const c=upCost(t);if(t.lvl>=4||game.gold<c)return;game.gold-=c;t.spent+=c;t.lvl++;statsDirty=true;snd(880,.1,'triangle',.06,300);floats.push({x:t.x,y:t.y-20,t:.8,txt:'Lv UP!',c:'#ffd36b'});renderInfo();updHud();};
+  $('bSell').onclick=()=>{game.gold+=Math.round(t.spent*.7);towers=towers.filter(o=>o!==t);statsDirty=true;picked=null;snd(300,.1,'triangle',.05,-150);renderInfo();updHud();};updInfoBtns();}
+ else if(sel){const d=TOWERS[sel];box.innerHTML=`<div class="wrapI"><div class="row"><img src="${ASSETS[d.img]}" style="border-color:${d.ring}"><div><b></b>　${cost(sel)}G<div class="st" id="selDesc"></div><div class="hint">${TOUCH?'マップを2回タップで設置':'マップをクリックで設置（Escで解除）'}</div></div></div></div>`;box.querySelector('b').textContent=d.name;$('selDesc').textContent=d.desc;}
+ else{const pk=game.perks.length?`パーク ${game.perks.length}枚：${[...new Set(game.perks)].join('・')}`:'';
+  box.innerHTML=`<div class="wrapI"><div class="row"><img src="${ASSETS.senpai_face}"><div><b>先輩「まずタワー置こうぜ」</b><div class="hint" id="idleHint"></div></div></div></div>`;
+  $('idleHint').textContent=(document.body.classList.contains('portrait')&&pk)?pk:(TOUCH?'上のタワーをタップ→マップを2回タップで設置。準備ができたら「ウェーブ開始」。':'タワーを選んでマップに設置。準備ができたら「ウェーブ開始」。');}}
+function updInfoBtns(){const u=$('bUp'),s=$('bSell');if(!u||!picked)return;const c=upCost(picked);u.textContent=picked.lvl>=4?'MAX':`強化 ${c}G`;u.disabled=picked.lvl>=4||game.gold<c;s.textContent=`売却 ${Math.round(picked.spent*.7)}G`;}
+function setPaused(v){paused=v;$('bPause').textContent=paused?'▶':'⏸';}
+$('bStart').onclick=()=>{$('title').classList.remove('on');reset();snd(523,.1,'triangle',.06);toast('おっすお願いしまーす','senpai_face','',1800);};
+$('bWave').onclick=startWave;
+$('bSpeed').onclick=()=>{speed=speed===1?2:speed===2?3:1;$('bSpeed').textContent=`▶x${speed}`;};
+$('bPause').onclick=()=>{if($('draft').classList.contains('on'))return;setPaused(!paused);};
+$('bMute').onclick=()=>{muted=!muted;$('bMute').textContent=muted?'🔇':'🔊';};
+try{const best=+localStorage.getItem('yajuuTD_best')||0;if(best)$('best').textContent=`ベスト記録：ウェーブ ${best}`;}catch(e){}
+// auto-pause when the tab/app goes to background (phones)
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&game&&!game.over&&!$('title').classList.contains('on')&&!$('draft').classList.contains('on'))setPaused(true);});
+
+// ---------- responsive layout & canvas ----------
+const cv=$('cv'),ctx=cv.getContext('2d');
+let portrait=false,view={k:1,dpr:1,cw:W,ch:H};
+const P=(x,y)=>portrait?[y,x]:[x,y];             // world -> view (transpose in portrait)
+const VW=()=>portrait?H:W, VH=()=>portrait?W:H;    // view logical size
+function layout(){const iw=innerWidth,ih=innerHeight;const wasP=portrait;
+ portrait=ih>iw*1.05;const compact=!portrait&&(ih<560||iw<900);
+ document.body.classList.toggle('portrait',portrait);document.body.classList.toggle('compact',compact);
+ if(wasP!==portrait&&game){buildShop();renderInfo();}
+ const st=$('stage').getBoundingClientRect();const lw=VW(),lh=VH();
+ const k=Math.max(.1,Math.min((st.width-4)/lw,(st.height-4)/lh));const dpr=Math.min(2,window.devicePixelRatio||1);
+ const cw=Math.floor(lw*k),ch=Math.floor(lh*k);cv.style.width=cw+'px';cv.style.height=ch+'px';
+ cv.width=Math.round(cw*dpr);cv.height=Math.round(ch*dpr);view={k,dpr,cw,ch};mapCache=null;}
+let lt=0;function relayout(){cancelAnimationFrame(lt);lt=requestAnimationFrame(()=>{layout();requestAnimationFrame(layout);});}
+addEventListener('resize',relayout);addEventListener('orientationchange',relayout);
+if(window.visualViewport)visualViewport.addEventListener('resize',relayout);
+if(window.ResizeObserver)new ResizeObserver(relayout).observe($('stage'));
+
+// ---------- input (pointer events: mouse = click to place, touch = tap twice to confirm) ----------
+function evTile(ev){const r=cv.getBoundingClientRect();const vx=(ev.clientX-r.left)*VW()/r.width,vy=(ev.clientY-r.top)*VH()/r.height;const [x,y]=portrait?[vy,vx]:[vx,vy];return{tx:Math.floor(x/T),ty:Math.floor(y/T)};}
+let tapHintT=0;function showTapHint(on){const h=$('tapHint');h.style.display=on?'block':'none';}
+cv.addEventListener('pointermove',ev=>{if(ev.pointerType==='mouse')hover=evTile(ev);});
+cv.addEventListener('pointerleave',ev=>{if(ev.pointerType==='mouse')hover=null;});
+cv.addEventListener('contextmenu',ev=>{ev.preventDefault();sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();});
+cv.addEventListener('pointerup',ev=>{if(!game||game.over||ev.button>0)return;const {tx,ty}=evTile(ev);const isTouch=ev.pointerType!=='mouse';
+ const t=towers.find(o=>o.tx===tx&&o.ty===ty);
+ if(t){picked=t;sel=null;pending=null;hover=null;showTapHint(false);updShop();renderInfo();snd(500,.03,'triangle',.03);return;}
+ if(sel){const free=!pathTiles.has(tx+','+ty)&&tx>=0&&ty>=0&&tx<COLS&&ty<ROWS;
+  if(isTouch&&!(pending&&pending.tx===tx&&pending.ty===ty)){if(free){pending={tx,ty};hover={tx,ty};showTapHint(true);snd(400,.03,'triangle',.03);}else{pending=null;hover={tx,ty};showTapHint(false);}return;}
+  pending=null;showTapHint(false);place(sel,tx,ty);if(isTouch)hover=null;if(game.gold<cost(sel))sel=null;updShop();renderInfo();}
+ else{picked=null;pending=null;renderInfo();}});
+addEventListener('keydown',ev=>{if($('title').classList.contains('on'))return;const k=ev.key;
+ if(k>='1'&&k<='5')selectShop(TKEYS[+k-1]);else if(k===' '){ev.preventDefault();startWave();}else if(k==='Escape'){sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
+ else if(k==='f'||k==='F')$('bSpeed').click();else if(k==='p'||k==='P')$('bPause').click();else if(k==='m'||k==='M')$('bMute').click();
+ else if((k==='u'||k==='U')&&picked)$('bUp')&&$('bUp').click();});
+// block pinch / double-tap zoom on iOS (user-scalable=no is ignored there)
+document.addEventListener('gesturestart',e=>e.preventDefault());
+let lastTouchEnd=0;document.addEventListener('touchend',e=>{const n=Date.now();if(n-lastTouchEnd<300&&!e.target.closest('.ov,button,.shop,.card,#cv'))e.preventDefault();lastTouchEnd=n;},{passive:false});
+
+// ---------- render ----------
+// font scale so canvas text stays readable when the canvas is shrunk on phones
+const fs=base=>Math.round(base*Math.min(2.2,Math.max(1,.75/view.k)))+'px';
+function face(key,wx,wy,r,ring,opt={}){const [x,y]=P(wx,wy);const s=sprite(key);
+ if(s)ctx.drawImage(s,x-r,y-r,r*2,r*2);else{ctx.fillStyle='#000';ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();}
+ if(opt.flash||opt.tint){ctx.fillStyle=opt.flash?`rgba(255,255,255,${opt.flash})`:opt.tint;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();}
+ ctx.lineWidth=opt.lw||3;ctx.strokeStyle=ring;ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.stroke();}
+let mapCache=null;
+function buildMapCache(){const c=document.createElement('canvas');c.width=cv.width;c.height=cv.height;const g=c.getContext('2d');const sc=view.k*view.dpr;g.setTransform(sc,0,0,sc,0,0);
+ const lw=VW(),lh=VH();g.fillStyle='#2b3a22';g.fillRect(0,0,lw,lh);
+ for(let x=0;x<COLS;x++)for(let y=0;y<ROWS;y++){if((x+y)%2){const [a,b]=P(x*T,y*T);g.fillStyle='#2f3f25';g.fillRect(a,b,T,T);}}
+ for(const d of deco){const [a,b]=P(d.x,d.y);g.fillStyle=d.c;g.beginPath();g.arc(a,b,d.r,0,7);g.fill();}
+ g.lineCap='round';g.lineJoin='round';g.beginPath();WP.forEach((p,i)=>{const [a,b]=P(p.x,p.y);i?g.lineTo(a,b):g.moveTo(a,b);});
+ g.strokeStyle='#6b5232';g.lineWidth=T;g.stroke();g.strokeStyle='#8a6a40';g.lineWidth=T-10;g.stroke();g.setLineDash([6,14]);g.strokeStyle='#a5835455';g.lineWidth=2;g.stroke();g.setLineDash([]);
+ // goal box
+ const gp=WP[WP.length-2];const [gx,gy]=P(W-29,gp.y);const bw=portrait?68:58,bh=portrait?58:68;
+ g.fillStyle='#1d1712';g.fillRect(gx-bw/2,gy-bh/2,bw,bh);g.strokeStyle='#ffd36b';g.lineWidth=2;g.strokeRect(gx-bw/2,gy-bh/2,bw,bh);
+ g.fillStyle='#ffd36b';g.textAlign='center';g.font='bold 13px sans-serif';g.fillText('下北沢',gx,gy-10);g.font='22px sans-serif';g.fillText('🏠',gx,gy+18);
+ const [sx,sy]=P(30,WP[0].y-30);g.fillStyle='#f3ead8';g.font='bold 12px sans-serif';g.fillText(portrait?'後輩 ↓':'後輩 →',portrait?sx+44:sx,portrait?sy+40:sy);
+ mapCache=c;}
+function ring(wx,wy,r,fill,stroke,dash){const [x,y]=P(wx,wy);ctx.beginPath();ctx.arc(x,y,r,0,7);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;if(dash)ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([]);}}
+function text(t,wx,wy,col,size,stroke){const [x,y]=P(wx,wy);ctx.font=`bold ${fs(size)} sans-serif`;ctx.textAlign='center';if(stroke){ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.strokeText(t,x,y);}ctx.fillStyle=col;ctx.fillText(t,x,y);}
+function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(mapCache,0,0);const sc=view.k*view.dpr;ctx.setTransform(sc,0,0,sc,0,0);const s=game.stats;
+ if(hover&&sel&&!game.over){const ok=!pathTiles.has(hover.tx+','+hover.ty)&&!towers.some(t=>t.tx===hover.tx&&t.ty===hover.ty)&&hover.tx>=0&&hover.ty>=0&&hover.tx<COLS&&hover.ty<ROWS;const cx=hover.tx*T+T/2,cy=hover.ty*T+T/2;
+  const r=TOWERS[sel].range*(1+s.gRange)*(TOWERS[sel].aura?1+s.auraRange:1);ring(cx,cy,r,ok?'rgba(255,211,107,.12)':'rgba(255,60,60,.15)',ok?'#ffd36b88':'#ff3c3c88');
+  ctx.globalAlpha=pending?.85:.6;face(TOWERS[sel].spr||TOWERS[sel].img,cx,cy,19,ok?TOWERS[sel].ring:'#f33');ctx.globalAlpha=1;
+  if(pending){const [x,y]=P(cx-T/2,cy-T/2);ctx.strokeStyle='#ffd36b';ctx.lineWidth=3;ctx.setLineDash([4,4]);ctx.strokeRect(x,y,T,T);ctx.setLineDash([]);}}
+ if(picked)ring(picked.x,picked.y,tStats(picked).range,null,'#ffd36bcc',[5,5]);
+ for(const t of towers){const d=TOWERS[t.k];const [bx,by]=P(t.tx*T,t.ty*T);ctx.fillStyle='#1d1712';ctx.fillRect(bx+3,by+3,T-6,T-6);ctx.strokeStyle=t===picked?'#ffd36b':'#4a3720';ctx.lineWidth=2;ctx.strokeRect(bx+3,by+3,T-6,T-6);
+  const st=tStats(t);
+  if(d.aura){const a=.06+.04*Math.sin(t.pulseT*3);ring(t.x,t.y,st.range,`rgba(217,179,106,${a})`);}
+  const recoil=(!d.aura&&!d.pulse&&t.cd>st.rate-.08)?2:0;
+  face(d.spr||d.img,t.x-Math.cos(t.ang)*recoil,t.y-Math.sin(t.ang)*recoil,19,d.ring);
+  if(t.k==='cannon')text('810',t.x,t.y+27,'#ff5c3c',9);
+  ctx.fillStyle='#ffd36b';for(let i=0;i<t.lvl;i++){ctx.beginPath();ctx.arc(bx+8+i*7,by+8,2.5,0,7);ctx.fill();}
+  if(st.aura&&!d.aura){ctx.fillStyle='#d9b36a';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('★',bx+T-9,by+12);}}
+ for(const e of enemies){const r=e.d.r;const bob=Math.sin(game.t*10+e.id*50)*1.5;
+  face(e.d.img,e.x,e.y+bob,r,e.slow?'#5cd6a8':e.d.col,{flash:e.hitT>0?.45:0,lw:e.d.boss?4:2.5,tint:e.slow?'rgba(92,214,168,.18)':null});
+  const [x,y]=P(e.x,e.y+bob);const w=r*2,hp=Math.max(0,e.hp/e.maxHp),bh=Math.max(4,Math.min(7,3/view.k));ctx.fillStyle='#000a';ctx.fillRect(x-w/2,y-r-bh-5,w,bh);ctx.fillStyle=hp>.5?'#6bdc5c':hp>.25?'#ffd36b':'#ff5c3c';ctx.fillRect(x-w/2,y-r-bh-5,w*hp,bh);
+  if(e.d.boss){ctx.font=`bold ${fs(11)} sans-serif`;ctx.textAlign='center';ctx.fillStyle='#c46bff';ctx.fillText(e.d.name,x,y+r+14);}}
+ for(const p of projs){const [x,y]=P(p.x,p.y);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(x,y,p.splash?6:3.5,0,7);ctx.fill();}
+ for(const f of fx){const [x,y]=P(f.x,f.y);if(f.ring){const k=1-f.t/.35;ctx.strokeStyle=f.c;ctx.globalAlpha=Math.max(0,Math.min(1,f.t*2.5));ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,f.r+(f.R-f.r)*Math.min(1,k),0,7);ctx.stroke();ctx.globalAlpha=1;}
+  else{ctx.fillStyle=f.c;ctx.globalAlpha=Math.min(1,f.t*2);ctx.fillRect(x-2,y-2,4,4);ctx.globalAlpha=1;}}
+ for(const f of floats){ctx.globalAlpha=Math.min(1,f.t*2);text(f.txt,f.x,f.y,f.c,f.big?15:12,true);ctx.globalAlpha=1;}
+ if(paused&&!$('draft').classList.contains('on')&&!game.over){ctx.fillStyle='#0008';ctx.fillRect(0,0,VW(),VH());ctx.fillStyle='#ffd36b';ctx.font=`bold ${fs(36)} sans-serif`;ctx.textAlign='center';ctx.fillText('一時停止（休憩）',VW()/2,VH()/2);}}
+
+let last=performance.now();
+function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
+ if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){for(let i=0;i<speed;i++)update(raw);}
+ if(game&&hudDirty)updHud();
+ if(game&&!$('title').classList.contains('on'))draw();
+ requestAnimationFrame(loop);}
+layout();reset();requestAnimationFrame(loop);
+document.querySelectorAll('img').forEach(im=>im.addEventListener('load',()=>{},{once:true}));
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,TOWERS,PERKS,layout,get portrait(){return portrait}};
+})();
+</script>
+</body>
+</html>
