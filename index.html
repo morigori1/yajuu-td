@@ -139,6 +139,45 @@ body.portrait .card{width:100%;display:grid;grid-template-columns:110px 1fr;grid
 body.portrait .card img{grid-row:1/4;height:100%;border-bottom:0;border-right:3px solid #6b4b25}
 body.portrait .card .t{font-size:17px}
 body.portrait .help{font-size:13px}
+
+/* ---- v3: 10 towers grid / strip, mutation buttons, flash ---- */
+#shop{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.shop{flex-direction:column;gap:2px;padding:5px 3px 3px;min-height:0;text-align:center}
+.shop img{width:42px;height:42px}
+.shop .nm{font-size:11.5px;padding:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.shop .ds{display:none}
+.shop .cost{position:static;font-size:12px}
+.shop .key{top:2px;left:5px;right:auto;bottom:auto}
+.shop .cost.free{color:#8dff6a}
+#info .btns{flex-wrap:wrap}
+#info .btns button.mut{font-size:11px;line-height:1.2;padding:3px 4px;border-color:#c98aff;background:#3a2148}
+#info .mutTag{display:inline-block;background:#c98aff;color:#1d1712;border-radius:6px;padding:0 5px;font-size:11px;font-weight:900;margin-left:4px}
+#flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:13}
+#flash.on{animation:fl .45s ease-out}
+@keyframes fl{from{opacity:.75}to{opacity:0}}
+.toast.combo{border-color:#ff5c8a;color:#ffd0e0}
+.toast.shake{animation:tin .25s ease-out,tsh .3s .25s}
+@keyframes tsh{0%,100%{transform:none}25%{transform:translateX(-4px) rotate(-1deg)}75%{transform:translateX(4px) rotate(1deg)}}
+.card .r b{color:#c98aff}
+body.compact #shop{gap:3px}
+body.compact .shop{min-height:0;padding:3px 1px 2px;gap:1px}
+body.compact .shop img{width:32px;height:32px}
+body.compact .shop .nm{font-size:10px;margin-top:0}
+body.compact .shop .cost{font-size:10.5px}
+body.compact #info .btns button.mut{font-size:10px}
+body.portrait #shop{display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;touch-action:pan-x;scrollbar-width:none;padding-bottom:1px}
+body.portrait #shop::-webkit-scrollbar{display:none}
+body.portrait .shop{flex:0 0 64px;scroll-snap-align:start}
+body.portrait #info>.wrapI{flex-wrap:wrap}
+body.portrait #info .btns button.mut{min-width:96px;max-width:130px}
+body:not(.portrait):not(.compact) #side>*{flex-shrink:0}
+body:not(.portrait):not(.compact) #info .btns{flex-wrap:wrap}
+body:not(.portrait):not(.compact) #info .btns button.mut{flex:1 1 100%;min-height:44px}
+body.compact #shop{flex:1 1 auto;min-height:100px;overflow-y:auto;grid-auto-rows:max-content;align-content:start;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+body.compact #info{flex-shrink:0}
+body.portrait #info .btns{width:100%;flex-wrap:nowrap}
+body.portrait #info .btns button.mut{flex:1 1 0;min-width:0;max-width:none}
+body.portrait #info .btns #bSell{flex:0 0 74px}
 </style>
 </head>
 <body>
@@ -162,6 +201,7 @@ body.portrait .help{font-size:13px}
     <div id="stage">
       <canvas id="cv"></canvas>
       <div id="toasts"></div>
+      <div id="flash"></div>
       <div id="tapHint">もう一度タップで設置</div>
       <div id="bossbar"><img id="bossimg" alt=""><div class="bar"><div class="fill" id="bossfill"></div></div></div>
     </div>
@@ -172,20 +212,21 @@ body.portrait .help{font-size:13px}
       <div id="perksBox"><h3>🃏 獲得パーク</h3><div id="perks">まだなし</div></div>
     </div>
   </div>
-  <div id="foot">クリック/タップで設置 ・ タワーを選んで強化・売却 ・ 1-5 選択 / Space 開始 / Esc 解除 / F 速度 / P 停止 — 下北沢（ゴール）を守れ！</div>
+  <div id="foot">クリック/タップで設置 ・ タワーを選んで強化・売却 ・ 1-9,0 選択 / U 強化 / Space 開始 / Esc 解除 / F 速度 / P 停止 — 下北沢（ゴール）を守れ！</div>
 </div>
 <div class="ov on" id="title">
   <div class="imgs"><img class="hero" id="tHero" alt=""><img class="side" id="tSide" alt=""></div>
   <div class="logo">野獣先輩<br class="pbr">タワーディフェンス</div>
   <div class="sub">～ 迫真TD部・下北沢防衛の裏技 ～</div>
-  <div class="help">押し寄せる後輩軍団から<b>下北沢</b>を守れ！タワーを置いてウェーブを凌ぎ、クリア毎に<b>ドラフトカード</b>を1枚獲得。クリティカルで「ファッ！？」、5・10・15 ウェーブには<b>迫真ボス</b>が襲来。15 ウェーブ突破でクリア（その後エンドレス）。<br><span id="ctlHelp"></span></div>
+  <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！10種のタワー（電撃・毒ガス・狙撃・銀行・道に置く<b>バリケード</b>…）を置き、Lv4で<b>覚醒A/B</b>に分岐。開始時に<b>シチュエーション</b>を選び、クリア毎に<b>ドラフトカード</b>で戦術を盛れ。盾・回復・分裂・たかり・透明の後輩、5・10・15 ウェーブには<b>迫真ボス</b>。コンボを繋げてイキスギろ。15 ウェーブ突破でクリア。<br><span id="ctlHelp"></span></div>
   <button class="go" id="bStart">はじめる（いいよ！こいよ！）</button>
   <div class="help" id="best" style="margin-top:8px"></div>
 </div>
 <div class="ov" id="draft">
   <h2 id="dTitle">ウェーブクリア！</h2>
-  <div style="color:#c9b894">ドラフト：カードを1枚選べ（やりますねぇ）</div>
+  <div style="color:#c9b894" id="dSub">ドラフト：カードを1枚選べ（やりますねぇ）</div>
   <div class="cards" id="cards"></div>
+  <button id="bReroll" style="margin-top:12px">引き直し</button>
 </div>
 <div class="ov" id="end">
   <h2 id="eTitle"></h2>
@@ -199,24 +240,31 @@ const ASSETS = {"senpai_face": "assets/senpai_face.jpg", "title_senpai": "assets
 'use strict';
 const $=id=>document.getElementById(id);
 const TOUCH=matchMedia('(pointer:coarse)').matches||('ontouchstart' in window);
-$('ctlHelp').textContent=TOUCH?'操作：タワーを選んでマップを2回タップで設置／タワーをタップで強化・売却':'操作：クリックで設置／タワーをクリックで強化・売却／1-5・Space・F・P・Esc';
+const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+$('ctlHelp').textContent=TOUCH?'操作：タワーを選んでマップを2回タップで設置（バリケードは道に）／タワーをタップで強化・覚醒・売却／タワー列は横スクロール':'操作：クリックで設置（バリケードは道に）／タワーをクリックで強化・覚醒・売却／1-9,0・U・Space・F・P・Esc';
+const pick=a=>a[Math.floor(Math.random()*a.length)];
 
 // ---------- images & sprite cache ----------
 const IMG={};
 for(const k in ASSETS){const im=new Image();im.src=ASSETS[k];IMG[k]=im;}
 $('avatar').src=ASSETS.senpai_face;$('tHero').src=ASSETS.title_senpai;$('tSide').src=ASSETS.navy_trio_card;$('bossimg').src=ASSETS.grimace_face;
+const TINT={red:'#ff7a50',green:'#8dff6a',blue:'#7ab8ff',purple:'#c98aff',gold:'#ffd36b',gray:'#808080'};
+const CSSF={red:'sepia(1) saturate(4) hue-rotate(-30deg)',green:'sepia(1) saturate(4) hue-rotate(50deg)',blue:'sepia(1) saturate(3) hue-rotate(170deg)',purple:'sepia(1) saturate(3) hue-rotate(230deg)',gold:'sepia(1) saturate(2.5)',gray:'grayscale(1) brightness(.9)'};
+const src=k=>ASSETS[k.split('#')[0]];
+const cssf=k=>{const t=k.split('#')[1];return t?`filter:${CSSF[t]};`:'';};
 // pre-render round sprites once (no per-frame clip/filter; ctx.filter is unsupported on older iOS Safari)
 const SPR={};const SPR_SZ=96;
-function makeSprite(key,src,tint){const c=document.createElement('canvas');c.width=c.height=SPR_SZ;const g=c.getContext('2d');
- g.beginPath();g.arc(SPR_SZ/2,SPR_SZ/2,SPR_SZ/2,0,7);g.closePath();g.fillStyle='#000';g.fill();g.save();g.clip();g.drawImage(src,0,0,SPR_SZ,SPR_SZ);
- if(tint){g.globalCompositeOperation='multiply';g.fillStyle=tint;g.fillRect(0,0,SPR_SZ,SPR_SZ);g.globalCompositeOperation='source-over';}g.restore();SPR[key]=c;}
-function sprite(key){if(SPR[key])return SPR[key];const base=key.replace(/#.*/,''),im=IMG[base];if(!im||!im.complete||!im.naturalWidth)return null;
- makeSprite(key,im,key.endsWith('#red')?'#ff7a50':null);return SPR[key];}
+function makeSprite(key,im,tint){const c=document.createElement('canvas');c.width=c.height=SPR_SZ;const g=c.getContext('2d');
+ g.beginPath();g.arc(SPR_SZ/2,SPR_SZ/2,SPR_SZ/2,0,7);g.closePath();g.fillStyle='#000';g.fill();g.save();g.clip();g.drawImage(im,0,0,SPR_SZ,SPR_SZ);
+ if(tint){g.globalCompositeOperation=tint==='#808080'?'saturation':'multiply';g.fillStyle=tint;g.fillRect(0,0,SPR_SZ,SPR_SZ);g.globalCompositeOperation='source-over';}g.restore();SPR[key]=c;}
+function sprite(key){if(SPR[key])return SPR[key];const [base,t]=key.split('#'),im=IMG[base];if(!im||!im.complete||!im.naturalWidth)return null;
+ makeSprite(key,im,t?TINT[t]:null);return SPR[key];}
 
 // ---------- audio ----------
 let AC=null,muted=false;
 function snd(f=440,d=.06,type='square',v=.05,slide=0){if(muted)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,f+slide),AC.currentTime+d);g.gain.value=v;g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
-let lastShot=0;function shotSnd(f){const n=performance.now();if(n-lastShot<45)return;lastShot=n;snd(f,.04,'square',.022);} // throttle so rapid fire doesn't spam audio nodes
+let lastShot=0;function shotSnd(f){const n=performance.now();if(n-lastShot<45)return;lastShot=n;snd(f,.04,'square',.022);}
+let lastKillSnd=0;function killSnd(f){const n=performance.now();if(n-lastKillSnd<40)return;lastKillSnd=n;snd(f,.05,'triangle',.045,-200);}
 
 // ---------- map (logical world is always 960x576 landscape; portrait view = transposed) ----------
 const T=48,COLS=20,ROWS=12,W=960,H=576;
@@ -225,167 +273,372 @@ const pathTiles=new Set();
 for(let i=0;i<WP.length-1;i++){const a=WP[i],b=WP[i+1];const ax=Math.floor(a.x/T),ay=Math.floor(a.y/T),bx=Math.floor(b.x/T),by=Math.floor(b.y/T);for(let x=Math.min(ax,bx);x<=Math.max(ax,bx);x++)for(let y=Math.min(ay,by);y<=Math.max(ay,by);y++)pathTiles.add(x+','+y);}
 const segLen=[];let pathTotal=0;for(let i=0;i<WP.length-1;i++){const l=Math.hypot(WP[i+1].x-WP[i].x,WP[i+1].y-WP[i].y);segLen.push(l);pathTotal+=l;}
 function posAt(d){for(let i=0;i<segLen.length;i++){if(d<=segLen[i]){const t=d/segLen[i];return{x:WP[i].x+(WP[i+1].x-WP[i].x)*t,y:WP[i].y+(WP[i+1].y-WP[i].y)*t};}d-=segLen[i];}return{...WP[WP.length-1]};}
+function distOf(x,y){let best=0,bd=1e9;for(let d=0;d<=pathTotal;d+=2){const p=posAt(d),q=(p.x-x)**2+(p.y-y)**2;if(q<bd){bd=q;best=d;}}return best;}
 let seed=114514;const rnd=()=>((seed=(seed*16807)%2147483647)/2147483647);
 const deco=[];for(let i=0;i<46;i++){const x=Math.floor(rnd()*COLS),y=Math.floor(rnd()*ROWS);if(!pathTiles.has(x+','+y))deco.push({x:x*T+rnd()*T,y:y*T+rnd()*T,r:2+rnd()*4,c:rnd()<.5?'#2f4026':'#344a2a'});}
 
+// ---------- meme lines ----------
+const L={
+ kill:['ンアッー！','アーイキソ','ヌッ！','痛いですね…','ア゛ッ！','イキスギィ！','ひでぇ…','あっ…','オォン！','やめちくり〜','ぬわああん','アッー！','ｱｰｲｷｿ','汗だく'],
+ crit:['ファッ！？','迫真！','ホラホラホラホラ','イキスギィ！','FA！？','オラァ！','暴れんなよ…'],
+ critToast:['ファッ！？（クリティカル）','迫真の一撃（ガチ）','FA！？ 今の見た？','痛いですね…これは痛い','ホラホラホラホラ（連打）'],
+ leak:['まずいですよ！','入って、どうぞ（下北沢に）','あっ…（察し）','やめてくれよ…（絶望）','ぬわああん抜けたもおおん','何やってんだお前ぇ！','先輩の部屋に入られた！'],
+ waveStart:['おまたせ！','いいよ！こいよ！','見とけよ見とけよ〜','ほら、行くどー','暴れんなよ…暴れんな…','おっ、来たな（汗）','まずうちさぁ…守備あんだけど…'],
+ waveClear:['いいゾ〜これ','やりますねぇ！','気持ちいい〜','あ〜いいっすね〜','疲れたもおおん','すっげぇ綺麗に片付いた','24歳、学生です（勝利）'],
+ place:['ここ、置いてかない？','いいよ！こいよ！','そうだよ（便乗）','おっ、いい場所ですねぇ','置いたぜ（迫真）'],
+ sell:['もう許せるぞオイ！','売っちゃったよ…（後悔）','返品します（迫真）','お前のことが好きだったんだよ！（売却）'],
+ poor:['お金が足りないですよ！','金欠ですねぇ…','810円しかない（大嘘）','財布が汗だく'],
+ bossDown:['迫真ボス撃破！いいゾ〜これ','ボス「ぬわああん負けたもおおん」','ボス、昇天（意味深）','ボス「やめてくれよ…」（完）'],
+ wallDown:['バリケード崩壊！ぬわああん','壁が壊れた！まずいですよ！','壁「痛いですね…」（全壊）'],
+ lose:['下北沢陥落…','ぬわああん負けたもおおん','あっ…（絶望）','先輩の部屋、占拠される'],
+ loseSub:['痛いですね…これは痛い','後輩たちが冷蔵庫のアイスティーを全部飲んだ','また来てくれよな〜頼むよ〜','下北沢の地価が810円に暴落した'],
+ win:['下北沢防衛成功！','やりますねぇ！完全勝利','いいゾ〜これ（満足）'],
+ winSub:['全員まとめてイキスギィ！','屋上で日焼けしながら勝利の一服','114514点満点の防衛だった','先輩「お前のことが好きだったんだよ！」'],
+};
+const COMBO_MS={10:'10コンボ！いいゾ〜これ',25:'25コンボ！イキスギィ！',50:'50コンボ！ンアッー！（絶頂）',100:'100コンボ！114514！！',200:'200コンボ！？ ファッ！？（壊れる）'};
+
 // ---------- defs ----------
 const TOWERS={
- senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',desc:'単体攻撃。クリティカルで「ファッ！？」',crit:.15,proj:'#ffd36b'},
- navy:{name:'サムライブルー連射塔',short:'連射塔',img:'navy_center_face',cost:150,range:115,dmg:7,rate:.22,ring:'#3d7bff',desc:'高速連射。数で押す',crit:.05,proj:'#8fb4ff'},
- trio:{name:'部室トリオ',short:'トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',desc:'オーラ支援：範囲内タワー攻撃+25%・速度+15%',aura:true},
- collar:{name:'胸ぐらスネア',short:'スネア',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',desc:'範囲パルス。敵を減速させる（指導）',pulse:true,slow:.45,slowT:1.2},
- cannon:{name:'114514砲',short:'114514砲',img:'senpai_face',spr:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',desc:'爆風範囲攻撃。迫真の一撃',splash:62,crit:.1,proj:'#ff8a5c'},
+ senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',desc:'単体攻撃。クリで「ファッ！？」',crit:.15,proj:'#ffd36b',
+  muts:[{n:'迫真狙い撃ち',d:'クリ率+25%・クリは装甲無視'},{n:'おかわり連射',d:'同時に2体を撃つ'}]},
+ navy:{name:'サムライブルー連射塔',short:'連射塔',img:'navy_center_face',cost:150,range:115,dmg:7,rate:.22,ring:'#3d7bff',desc:'高速連射。数で押す',crit:.05,proj:'#8fb4ff',
+  muts:[{n:'貫通サムライ',d:'弾が近くの敵に1回跳ねる'},{n:'焦らしブルー',d:'命中で20%減速'}]},
+ trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',desc:'オーラ支援：範囲内の攻撃+25%・速度+15%',aura:true,
+  muts:[{n:'便乗の輪',d:'オーラ範囲+40%・効果+15%'},{n:'ありますねぇ商法',d:'範囲内の撃破で+3G'}]},
+ collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',desc:'範囲パルス。敵を減速（指導）',pulse:true,slow:.45,slowT:1.2,
+  muts:[{n:'ふっとばし指導',d:'パルスで敵を押し戻す'},{n:'締め上げ',d:'パルスで0.5秒スタン'}]},
+ cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',desc:'爆風範囲攻撃。迫真の一撃',splash:62,crit:.1,proj:'#ff8a5c',
+  muts:[{n:'810焦土',d:'着弾地点が3秒燃える'},{n:'1919連打',d:'攻撃速度x2・威力x0.6'}]},
+ chain:{name:'イキスギ電撃塔',short:'電撃塔',img:'navy_right_face#purple',cost:225,range:125,dmg:16,rate:1.1,ring:'#c98aff',desc:'4体まで連鎖する電撃。盾に2倍',chain:4,crit:.05,
+  muts:[{n:'電撃結婚',d:'連鎖+3体'},{n:'ビクンビクン',d:'25%で0.6秒スタン'}]},
+ poison:{name:'くさそうガス',short:'くさガス',img:'locker_right_face#green',cost:160,range:110,dmg:0,rate:1.2,ring:'#8dff6a',desc:'毒ガス。装甲と盾を無視する継続ダメ',poison:9,poisonT:4,proj:'#8dff6a',
+  muts:[{n:'腐臭爆発',d:'毒で死んだ敵が周囲に爆発'},{n:'くっさ濃縮',d:'毒ダメージx2'}]},
+ sniper:{name:'見とけよ狙撃手',short:'狙撃手',img:'title_senpai#blue',cost:275,range:420,dmg:120,rate:2.8,ring:'#7ab8ff',desc:'超射程・装甲無視。HPが一番多い敵を狙う',pierce:true,crit:.1,
+  muts:[{n:'処刑',d:'HP20%以下の雑魚を即死'},{n:'ボス特攻',d:'ボスにx2.5'}]},
+ bank:{name:'810銀行',short:'810銀行',img:'trio_sepia_face#gold',cost:150,range:110,dmg:0,rate:0,ring:'#ffd36b',desc:'攻撃しない。毎ウェーブ収入＋範囲内撃破でG',bank:true,
+  muts:[{n:'利息',d:'毎ウェーブ所持金の4%（上限120）'},{n:'先輩のおごり',d:'ウェーブクリア毎にライフ+1'}]},
+ wall:{name:'迫真バリケード',short:'バリケード',img:'collar_face#gray',cost:90,range:0,dmg:0,rate:0,ring:'#b0b0b0',desc:'道に置く壁。敵を足止め（壊れる・最大6）',wall:true,hp:260,
+  muts:[{n:'トゲトゲ',d:'接触中の敵に毎秒反撃ダメ'},{n:'迫真復活',d:'毎秒HP5%回復'}]},
 };
 const TKEYS=Object.keys(TOWERS);
 const ENEMIES={
- kohai:{name:'後輩',img:'navy_left_face',hp:42,speed:55,bounty:7,r:15,col:'#3d7bff'},
- sprint:{name:'俊足後輩',img:'navy_right_face',hp:28,speed:100,bounty:8,r:13,col:'#7fe0ff'},
- bushitsu:{name:'部室の主',img:'locker_left_face',hp:130,speed:38,bounty:14,r:19,col:'#c49a52'},
- armor:{name:'鉄壁の見学者',img:'locker_right_face',hp:95,speed:48,bounty:13,r:17,col:'#9aa0a8',armor:5},
- boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:30,bounty:150,r:34,col:'#c46bff',armor:3,boss:true},
+ kohai:{name:'後輩',img:'navy_left_face',hp:42,speed:55,bounty:7,r:15,col:'#3d7bff',wd:8},
+ sprint:{name:'俊足後輩',img:'navy_right_face',hp:28,speed:100,bounty:8,r:13,col:'#7fe0ff',wd:6},
+ bushitsu:{name:'部室の主',img:'locker_left_face',hp:130,speed:38,bounty:14,r:19,col:'#c49a52',wd:20},
+ armor:{name:'鉄壁の見学者',img:'locker_right_face',hp:95,speed:48,bounty:13,r:17,col:'#9aa0a8',armor:5,wd:12},
+ shield:{name:'盾持ち後輩',img:'navy_center_face',hp:70,speed:50,bounty:12,r:16,col:'#6ab8ff',shield:.9,wd:10},
+ healer:{name:'看病する先輩',img:'trio_sepia_face',hp:85,speed:45,bounty:15,r:17,col:'#8dff6a',heal:.06,healR:95,wd:8},
+ splitter:{name:'分身後輩',img:'navy_left_face#purple',hp:90,speed:46,bounty:10,r:18,col:'#c98aff',split:'mini',wd:10},
+ mini:{name:'ちび後輩',img:'navy_left_face',hp:22,speed:85,bounty:3,r:10,col:'#c98aff',wd:4},
+ thief:{name:'たかり後輩',img:'navy_right_face#gold',hp:45,speed:92,bounty:16,r:14,col:'#ffd36b',steal:.15,wd:4},
+ ghost:{name:'覗き見学者',img:'locker_right_face#gray',hp:60,speed:58,bounty:14,r:15,col:'#bbbbbb',stealth:true,wd:8},
+ boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:30,bounty:150,r:34,col:'#c46bff',armor:3,boss:true,wd:60,
+  intro:['迫真ボス「ファッ！？ お前ら何してんの」','迫真ボス襲来！（顔がうるさい）']},
+ boss2:{name:'部室の主・真',img:'locker_left_face#red',hp:1800,speed:26,bounty:250,r:36,col:'#ff5c3c',armor:5,boss:true,summon:3,wd:90,
+  intro:['部室の主・真「ぬわああん、後輩呼ぶぞ」','部室の主・真 降臨（部屋が汗臭い）']},
+ boss3:{name:'野獣の眼光',img:'grimace_face#purple',hp:2600,speed:32,bounty:400,r:38,col:'#ff3c8a',armor:4,boss:true,shield:.35,shieldRegen:.03,enrage:true,wd:120,
+  intro:['野獣の眼光「お前のことが好きだったんだよ！」','最終形態：野獣の眼光（眼光が鋭い）']},
 };
+const BOSSES=['boss','boss2','boss3'];
 const PERKS=[
- {id:'iizo',t:'いいゾ～これ',d:'全タワーの攻撃力 +15%',img:'senpai_face',ap:s=>s.gDmg+=.15},
- {id:'fa',t:'ファッ！？',d:'全タワーのクリ率 +8%、クリ倍率 +0.5',img:'grimace_face',ap:s=>{s.gCrit+=.08;s.critMul+=.5}},
- {id:'yarimasu',t:'やりますねぇ',d:'先輩砲台の攻撃速度 +25%',img:'title_senpai',ap:s=>s.tRate.senpai+=.25},
- {id:'binjou',t:'そうだよ（便乗）',d:'部室トリオのオーラ効果 +50%・範囲 +25%',img:'trio_sepia_card',ap:s=>{s.auraMul+=.5;s.auraRange+=.25}},
- {id:'blue',t:'サムライブルー魂',d:'連射塔のダメージ +40%',img:'navy_trio_card',ap:s=>s.tDmg.navy+=.4},
- {id:'shidou',t:'胸ぐら指導',d:'スネアの減速 +15%・効果時間 +0.6秒',img:'collar_card',ap:s=>{s.slowAdd+=.15;s.slowT+=.6}},
- {id:'b114',t:'114514',d:'114514砲の爆風範囲 +30%・ダメージ +20%',img:'senpai_face',ap:s=>{s.splashMul+=.3;s.tDmg.cannon+=.2}},
- {id:'omatase',t:'おまたせ（セール）',d:'タワー設置・強化コスト -12%',img:'navy_trio_card',ap:s=>s.costMul*=.88},
- {id:'kyuukei',t:'ぬわああん疲れたもおおん',d:'休憩してライフ +5',img:'locker_left_face',ap:s=>{game.lives+=5}},
- {id:'rinji',t:'臨時収入（810）',d:'即座に 💰 +(150 + 20×ウェーブ)',img:'title_senpai',ap:s=>{game.gold+=150+20*game.wave}},
- {id:'range',t:'見とけよ見とけよ～',d:'全タワーの射程 +12%',img:'collar_card',ap:s=>s.gRange+=.12},
- {id:'bounty',t:'ありますねぇ！',d:'撃破報酬 +20%',img:'trio_sepia_card',ap:s=>s.bounty+=.2},
+ {t:'いいゾ～これ',d:'全タワーの攻撃力 +15%',img:'senpai_face',ap:s=>s.gDmg+=.15},
+ {t:'ファッ！？',d:'全タワーのクリ率 +8%、クリ倍率 +0.5',img:'grimace_face',ap:s=>{s.gCrit+=.08;s.critMul+=.5}},
+ {t:'やりますねぇ',d:'先輩砲台の攻撃速度 +25%',img:'title_senpai',ap:s=>s.tRate.senpai+=.25},
+ {t:'そうだよ（便乗）',d:'部室トリオのオーラ効果 +50%・範囲 +25%',img:'trio_sepia_card',ap:s=>{s.auraMul+=.5;s.auraRange+=.25}},
+ {t:'サムライブルー魂',d:'連射塔のダメージ +40%',img:'navy_trio_card',ap:s=>s.tDmg.navy+=.4},
+ {t:'胸ぐら指導',d:'胸ぐらの減速 +15%・効果時間 +0.6秒',img:'collar_card',ap:s=>{s.slowAdd+=.15;s.slowT+=.6}},
+ {t:'114514',d:'114514砲の爆風範囲 +30%・ダメージ +20%',img:'senpai_face',ap:s=>{s.splashMul+=.3;s.tDmg.cannon+=.2}},
+ {t:'おまたせ（セール）',d:'タワー設置・強化コスト -12%',img:'navy_trio_card',ap:s=>s.costMul*=.88},
+ {t:'ぬわああん疲れたもおおん',d:'休憩してライフ +5',img:'locker_left_face',ap:s=>{game.lives+=5}},
+ {t:'臨時収入（810）',d:'即座に 💰 +(150 + 20×ウェーブ)',img:'title_senpai',ap:s=>{game.gold+=150+20*game.wave}},
+ {t:'見とけよ見とけよ～',d:'全タワーの射程 +12%',img:'collar_card',ap:s=>s.gRange+=.12},
+ {t:'ありますねぇ！',d:'撃破報酬 +20%',img:'trio_sepia_card',ap:s=>s.bounty+=.2},
+ // v3 build-changers
+ {t:'貯金ですねぇ',d:'ウェーブ終了時に所持金の5%の利息（上限150）。貯めるほど得',img:'title_senpai',tag:'経済',ap:s=>s.interest+=.05},
+ {t:'返品OK（ガチ）',d:'売却が全額返金（70%→100%）。置き直し放題',img:'navy_trio_card',tag:'経済',max:1,ap:s=>s.sellRate=1},
+ {t:'二人羽織',d:'次に置くタワー2個がタダ（高いのを置け）',img:'trio_sepia_card',tag:'経済',ap:s=>{game.free+=2}},
+ {t:'床ヌルヌル（意味深）',d:'全ての敵の移動速度 -8%',img:'collar_card',tag:'妨害',ap:s=>s.eSpeed*=.92},
+ {t:'イキスギ連鎖',d:'クリする度そのタワーのクリ率+2%（ウェーブ中・最大+30%）',img:'grimace_face',tag:'クリ',max:1,ap:s=>s.critStack=1},
+ {t:'コンボ中毒',d:'10コンボ以上の撃破ボーナス2倍・コンボ猶予+1秒',img:'senpai_face',tag:'経済',ap:s=>{s.comboMul*=2;s.comboT+=1}},
+ {t:'くさいの伝染',d:'毒状態の敵が死ぬと周りに毒がうつる',img:'locker_right_face',tag:'毒',max:1,ap:s=>s.poisonSpread=1},
+ {t:'くっさ！',d:'毒ダメージ +50%',img:'locker_left_face',tag:'毒',ap:s=>s.poisonMul+=.5},
+ {t:'電撃結婚',d:'電撃塔の連鎖 +2体',img:'navy_center_face',tag:'電撃',ap:s=>s.chainAdd+=2},
+ {t:'壁ドン（物理）',d:'バリケードHP +60%・接触した敵に毎秒反撃',img:'collar_face',tag:'壁',ap:s=>{s.wallHp+=.6;s.wallThorn+=10}},
+ {t:'先輩の嗅覚',d:'覗き見学者が常に見える・全射程 +5%',img:'senpai_face',tag:'索敵',max:1,ap:s=>{s.reveal=1;s.gRange+=.05}},
+ {t:'迫真空手部（押忍）',d:'先輩砲台のクリで敵をノックバック',img:'title_senpai',tag:'クリ',max:1,ap:s=>s.critKB=1},
+ {t:'スコープで見とけよ',d:'狙撃手のダメージ +35%・攻撃速度 +15%',img:'collar_card',tag:'狙撃',ap:s=>{s.tDmg.sniper+=.35;s.tRate.sniper+=.15}},
+ {t:'810万円',d:'810銀行の収入 +60%',img:'trio_sepia_card',tag:'経済',ap:s=>s.bankMul+=.6},
+ {t:'24歳、学生です',d:'全タワーの攻撃速度 +10%',img:'senpai_face',ap:s=>s.gRate+=.1},
+ {t:'やめてくださいよ本当に',d:'たかり後輩にお金を盗まれない・ライフ +3',img:'navy_left_face',tag:'防御',max:1,ap:s=>{s.noSteal=1;game.lives+=3}},
+ {t:'ホラホラホラホラ',d:'連射塔・電撃塔の攻撃速度 +20%',img:'navy_trio_card',ap:s=>{s.tRate.navy+=.2;s.tRate.chain+=.2}},
+];
+const SITU=[
+ {t:'真夏の夜の淫夢',d:'敵の速度+15%・撃破報酬+30%',img:'title_senpai',ap:s=>{s.eSpeed*=1.15;s.bounty+=.3}},
+ {t:'迫真空手部',d:'クリ倍率+1.0・敵HP+12%',img:'grimace_face',ap:s=>{s.critMul+=1;s.eHp*=1.12}},
+ {t:'金欠先輩',d:'初期資金200G。代わりに利息+6%/ウェーブ',img:'navy_left_face',ap:s=>{game.gold=200;s.interest+=.06}},
+ {t:'ビルの屋上',d:'全射程+20%・タワー代+15%（日焼け代）',img:'collar_card',ap:s=>{s.gRange+=.2;s.costMul*=1.15}},
+ {t:'くさそうな部室',d:'毒ダメージ+60%・敵の回復量+50%',img:'locker_left_face',ap:s=>{s.poisonMul+=.6;s.eHeal*=1.5}},
+ {t:'大量発生',d:'敵の数+40%・敵HP-25%（コンボ祭り）',img:'navy_trio_card',ap:s=>{s.eCount*=1.4;s.eHp*=.75}},
+ {t:'普通だな！',d:'何も起きない（つまらん）。ライフ+5',img:'trio_sepia_card',ap:s=>{game.lives+=5}},
+ {t:'バリケード祭り',d:'バリケード半額・HP+50%・最大10個',img:'collar_face',ap:s=>{s.wallCost=.5;s.wallHp+=.5;s.wallMax=10}},
+ {t:'暴れんなよ…',d:'敵の速度-12%・撃破報酬-20%',img:'collar_card',ap:s=>{s.eSpeed*=.88;s.bounty-=.2}},
+ {t:'先輩のおごり',d:'初期資金+150G・ライフ-5',img:'senpai_face',ap:s=>{game.gold+=150;game.lives-=5}},
 ];
 
 // ---------- state ----------
-let game,towers,enemies,projs,fx,floats,spawnQ,sel=null,hover=null,picked=null,pending=null,speed=1,paused=false,statsDirty=true;
-function newStats(){return{gDmg:0,gCrit:0,critMul:3,gRange:0,tRate:{senpai:0,navy:0,trio:0,collar:0,cannon:0},tDmg:{senpai:0,navy:0,trio:0,collar:0,cannon:0},auraMul:1,auraRange:0,slowAdd:0,slowT:0,splashMul:1,costMul:1,bounty:0};}
-function reset(){game={gold:300,lives:20,wave:0,maxWave:15,inWave:false,over:false,won:false,endless:false,stats:newStats(),perks:[],kills:0,t:0,lastCritToast:-9};towers=[];enemies=[];projs=[];fx=[];floats=[];spawnQ=[];sel=null;picked=null;pending=null;statsDirty=true;$('wmax').textContent='15';$('bossbar').style.display='none';buildShop();updHud();renderInfo();renderPerks();}
+let game,towers,enemies,projs,fx,floats,spawnQ,fires,decals,sel=null,hover=null,picked=null,pending=null,speed=1,paused=false,statsDirty=true;
+function newStats(){const z=()=>Object.fromEntries(TKEYS.map(k=>[k,0]));return{gDmg:0,gCrit:0,critMul:3,gRange:0,gRate:0,tRate:z(),tDmg:z(),auraMul:1,auraRange:0,slowAdd:0,slowT:0,splashMul:1,costMul:1,bounty:0,
+ interest:0,sellRate:.7,eSpeed:1,eHp:1,eCount:1,eHeal:1,critStack:0,comboMul:1,comboT:1.5,poisonSpread:0,poisonMul:1,chainAdd:0,wallHp:0,wallThorn:0,wallCost:1,wallMax:6,reveal:0,critKB:0,bankMul:1,noSteal:0};}
+function reset(){game={gold:300,lives:20,wave:0,maxWave:15,inWave:false,over:false,won:false,endless:false,stats:newStats(),perks:[],kills:0,t:0,lastCritToast:-9,lastFlavor:-9,
+ free:0,combo:0,comboT:0,maxCombo:0,shake:0,big:null,situ:'',stolen:0};
+ towers=[];enemies=[];projs=[];fx=[];floats=[];spawnQ=[];fires=[];decals=[];sel=null;picked=null;pending=null;statsDirty=true;$('wmax').textContent='15';$('bossbar').style.display='none';buildShop();updHud();renderInfo();renderPerks();}
+const S=()=>game.stats;
+function shake(v){game.shake=Math.min(14,Math.max(game.shake,RM?v*.3:v));}
+function big(txt,c='#ffd36b',t=1.1){game.big={txt,c,t,T:t};}
+function flash(){const f=$('flash');f.classList.remove('on');void f.offsetWidth;f.classList.add('on');}
+function float(x,y,txt,c,bigF,t=.8){if(floats.length<45)floats.push({x,y,t,txt,c,big:bigF});}
+function flavor(text,img,cls,ms,gap=3.5){if(game.t-game.lastFlavor<gap)return;game.lastFlavor=game.t;toast(text,img,cls,ms);}
 
 // ---------- waves ----------
-function waveList(w){const L=[];const add=(k,n,gap)=>{for(let i=0;i<n;i++)L.push({k,gap});};
+function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math.round(n*m);for(let i=0;i<n;i++)L2.push({k,gap:gap/Math.sqrt(m)});};
  add('kohai',6+Math.floor(w*1.6),.9-Math.min(.45,w*.03));
  if(w>=2)add('sprint',3+w,.55);
  if(w>=3)add('bushitsu',Math.floor(w/2)+1,1.4);
+ if(w>=3)add('shield',Math.floor(w/3)+1,1.0);
  if(w>=4)add('armor',Math.floor(w/2),1.1);
- if(w>=7)add('sprint',w,.35);
- if(w%5===0){add('boss',w>=15?2:1,3.5);add('kohai',4+w,.4);}
- for(let i=L.length-1;i>0;i--){if(L[i].k==='boss')continue;const j=Math.floor(Math.random()*(i+1));if(L[j].k==='boss')continue;[L[i],L[j]]=[L[j],L[i]];}
- return L;}
+ if(w>=4)add('splitter',Math.floor(w/4),1.2);
+ if(w>=5)add('thief',Math.floor(w/5)+1,.8);
+ if(w>=6)add('healer',Math.floor((w-3)/3),1.3);
+ if(w>=7)add('ghost',Math.floor(w/3),.9);
+ if(w>=8)add('sprint',Math.floor(w*.7),.35);
+ if(w%5===0){L2.push({k:BOSSES[(w/5-1)%3],gap:3.5});add('kohai',4+w,.4);if(w>15)L2.push({k:BOSSES[(w/5)%3],gap:3});}
+ for(let i=L2.length-1;i>0;i--){if(ENEMIES[L2[i].k].boss)continue;const j=Math.floor(Math.random()*(i+1));if(ENEMIES[L2[j].k].boss)continue;[L2[i],L2[j]]=[L2[j],L2[i]];}
+ return L2;}
 function hpScale(w){return Math.pow(1+.32*(w-1),1.5);}
 function startWave(){if(game.inWave||game.over)return;game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;
- if(game.wave%5===0)toast(`迫真ボス襲来！ウェーブ ${game.wave}`,'collar_card','boss',3200);else toast(`ウェーブ ${game.wave}　おまたせ！`,'navy_trio_card','',1600);
+ if(game.wave%5===0)toast(`迫真ボス襲来！ウェーブ ${game.wave}（逃げるんだよォ！）`,'collar_card','boss shake',3200);else toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);
  snd(220,.25,'sawtooth',.05,220);updHud();}
-function spawn(k){const d=ENEMIES[k];const hp=d.hp*hpScale(game.wave)*(game.endless?1+(game.wave-15)*.12:1);
- enemies.push({k,d,hp,maxHp:hp,dist:0,slowT:0,slow:0,x:WP[0].x,y:WP[0].y,hitT:0,id:Math.random()});
- if(d.boss){$('bossbar').style.display='flex';snd(90,.6,'sawtooth',.08,-40);}}
+function spawn(k,dist=0){const d=ENEMIES[k];const hp=d.hp*hpScale(game.wave)*S().eHp*(game.endless?1+(game.wave-15)*.12:1);const sh=d.shield?hp*d.shield:0;const p=posAt(dist);
+ const e={k,d,hp,maxHp:hp,shield:sh,maxSh:sh,dist,slowT:0,slow:0,stunT:0,pois:0,poisT:0,poisSrc:null,healCd:1,sumT:d.summon||0,vis:!d.stealth,enr:false,x:p.x,y:p.y,hitT:0,id:Math.random()};enemies.push(e);
+ if(d.boss){$('bossbar').style.display='flex';$('bossimg').src=src(d.img);$('bossimg').style.cssText=cssf(d.img);snd(90,.6,'sawtooth',.08,-40);
+  toast(pick(d.intro),d.img.split('#')[0],'boss shake',3000);big('迫真','#ff3c8a',1.4);shake(10);if(navigator.vibrate&&TOUCH)try{navigator.vibrate([60,40,60])}catch(_){}}
+ return e;}
 
 // ---------- towers ----------
-function cost(k){return Math.round(TOWERS[k].cost*game.stats.costMul);}
-function upCost(t){return Math.round(TOWERS[t.k].cost*t.lvl*game.stats.costMul);}
-function auraFor(t){let m=0;for(const o of towers){if(o.k!=='trio'||o===t)continue;const r=TOWERS.trio.range*(1+.1*(o.lvl-1))*(1+game.stats.auraRange);if(Math.hypot(o.x-t.x,o.y-t.y)<=r)m=Math.max(m,(.25+.1*(o.lvl-1))*game.stats.auraMul);}return m;}
-function calcStats(t){const d=TOWERS[t.k],s=game.stats,a=auraFor(t);
- return{range:d.range*(1+.1*(t.lvl-1))*(1+s.gRange)*(d.aura?1+s.auraRange:1),
- dmg:d.dmg*Math.pow(1.55,t.lvl-1)*(1+s.gDmg+s.tDmg[t.k])*(1+a),
- rate:d.rate/((1+.12*(t.lvl-1))*(1+s.tRate[t.k])*(1+a*.6)),
- crit:(d.crit||0)+(d.crit!=null?s.gCrit:0),aura:a};}
-// cached: recomputed only when towers/levels/perks change (was per-hit before)
+function rawCost(k){return Math.round(TOWERS[k].cost*S().costMul*(k==='wall'?S().wallCost:1));}
+function cost(k){return game.free>0?0:rawCost(k);}
+function upCost(t){return Math.round(TOWERS[t.k].cost*t.lvl*S().costMul*(t.k==='wall'?S().wallCost:1));}
+function canMut(t){return t.lvl>=4&&t.mut==null;}
+function auraFor(t){const s=S();let m=0;for(const o of towers){if(o.k!=='trio'||o===t)continue;const r=TOWERS.trio.range*(1+.1*(o.lvl-1))*(1+s.gRange)*(1+s.auraRange)*(o.mut===0?1.4:1);
+ if((o.x-t.x)**2+(o.y-t.y)**2<=r*r)m=Math.max(m,(.25+.1*(o.lvl-1))*s.auraMul+(o.mut===0?.15:0));}return m;}
+function calcStats(t){const d=TOWERS[t.k],s=S(),Lv=t.lvl-1,a=(d.aura||d.bank||d.wall)?0:auraFor(t);
+ const range=d.range*(1+.1*Lv)*(1+s.gRange)*(d.aura?(1+s.auraRange)*(t.mut===0?1.4:1):1);
+ let dmg=d.dmg*Math.pow(1.55,Lv)*(1+s.gDmg+s.tDmg[t.k])*(1+a);
+ let rate=d.rate/((1+.12*Lv)*(1+s.tRate[t.k]+s.gRate)*(1+a*.6));
+ if(t.k==='cannon'&&t.mut===1){rate/=2;dmg*=.6;}
+ const crit=d.crit!=null?d.crit+s.gCrit+(t.k==='senpai'&&t.mut===0?.25:0):0;
+ const pois=d.poison?d.poison*Math.pow(1.5,Lv)*s.poisonMul*(1+s.gDmg*.5)*(1+a)*(t.mut===1?2:1):0;
+ const chain=d.chain?d.chain+s.chainAdd+(t.mut===0?3:0):0;
+ const maxHp=d.wall?d.hp*Math.pow(1.6,Lv)*(1+s.wallHp):0;
+ const aur=d.aura?(.25+.1*Lv)*s.auraMul+(t.mut===0?.15:0):0;
+ return{range,dmg,rate,crit,pois,chain,maxHp,aura:a,aur};}
 function tStats(t){if(statsDirty){for(const o of towers)o.st=calcStats(o);statsDirty=false;}return t.st||(t.st=calcStats(t));}
-function place(k,tx,ty){const c=cost(k);if(game.gold<c){toast('お金が足りないですよ！','navy_left_face','bad',1200);snd(120,.15);return false;}
- if(pathTiles.has(tx+','+ty)||towers.some(t=>t.tx===tx&&t.ty===ty)||tx<0||ty<0||tx>=COLS||ty>=ROWS)return false;
- game.gold-=c;const t={k,tx,ty,x:tx*T+T/2,y:ty*T+T/2,lvl:1,cd:0,spent:c,ang:0,pulseT:0,kills:0};towers.push(t);statsDirty=true;picked=null;snd(660,.08,'triangle',.06,200);
+function bankIncome(t){return Math.round((20+15*t.lvl)*S().bankMul);}
+function canPlace(k,tx,ty){if(tx<0||ty<0||tx>=COLS||ty>=ROWS)return false;if(towers.some(t=>t.tx===tx&&t.ty===ty))return false;const onP=pathTiles.has(tx+','+ty);return TOWERS[k].wall?onP&&tx>=1:!onP;}
+function place(k,tx,ty){if(!canPlace(k,tx,ty))return false;const c=cost(k);
+ if(game.gold<c){toast(pick(L.poor),'navy_left_face','bad',1200);snd(120,.15);return false;}
+ if(TOWERS[k].wall&&towers.filter(t=>t.k==='wall').length>=S().wallMax){toast(`バリケードは${S().wallMax}個まで（欲張りすぎィ！）`,'collar_face','bad',1400);return false;}
+ if(game.free>0){game.free--;toast(`二人羽織でタダ！（残り${game.free}）`,'trio_sepia_card','',1200);}
+ game.gold-=c;const t={k,tx,ty,x:tx*T+T/2,y:ty*T+T/2,lvl:1,cd:0,spent:c,ang:0,pulseT:0,kills:0,critB:0,mut:null};
+ if(TOWERS[k].wall){t.pd=distOf(t.x,t.y);}
+ towers.push(t);statsDirty=true;if(TOWERS[k].wall)t.hp=tStats(t).maxHp;picked=null;snd(660,.08,'triangle',.06,200);
+ for(let i=0;i<8;i++)fx.push({x:t.x,y:t.y,vx:(Math.random()-.5)*120,vy:(Math.random()-.5)*120,t:.4,c:TOWERS[k].ring});
+ if(Math.random()<.3)flavor(pick(L.place),TOWERS[k].img.split('#')[0],'',1100,5);
  if(navigator.vibrate&&TOUCH)try{navigator.vibrate(15)}catch(e){}
  updHud();renderInfo();return true;}
+function upgrade(t){const c=upCost(t);if(t.lvl>=4||game.gold<c)return;game.gold-=c;t.spent+=c;t.lvl++;statsDirty=true;if(t.k==='wall')t.hp=tStats(t).maxHp;
+ snd(880,.1,'triangle',.06,300);float(t.x,t.y-20,t.lvl===4?'Lv MAX！覚醒できるゾ':'Lv UP!','#ffd36b',t.lvl===4);renderInfo();updHud();}
+function mutate(t,i){const c=upCost(t);if(!canMut(t)||game.gold<c)return;game.gold-=c;t.spent+=c;t.mut=i;statsDirty=true;if(t.k==='wall')t.hp=tStats(t).maxHp;
+ const m=TOWERS[t.k].muts[i];toast(`覚醒！${m.n}（迫真）`,TOWERS[t.k].img.split('#')[0],'combo',1800);big('覚醒','#c98aff',1);shake(5);flash();
+ for(let j=0;j<24;j++)fx.push({x:t.x,y:t.y,vx:(Math.random()-.5)*260,vy:(Math.random()-.5)*260,t:.6,c:'#c98aff'});snd(440,.3,'sawtooth',.06,600);renderInfo();updHud();}
+function sell(t){const v=Math.round(t.spent*S().sellRate);game.gold+=v;towers=towers.filter(o=>o!==t);statsDirty=true;picked=null;snd(300,.1,'triangle',.05,-150);
+ if(Math.random()<.5)flavor(pick(L.sell),'navy_left_face','',1100,3);renderInfo();updHud();}
 
 // ---------- toasts ----------
-function toast(text,img,cls='',ms=1800){const box=$('toasts');const el=document.createElement('div');el.className='toast '+cls;el.innerHTML=`<img src="${ASSETS[img]}"><span></span>`;el.querySelector('span').textContent=text;box.appendChild(el);const max=document.body.classList.contains('portrait')||document.body.classList.contains('compact')?2:4;while(box.children.length>max)box.firstChild.remove();setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),450)},ms);}
+function toast(text,img,cls='',ms=1800){const box=$('toasts');const el=document.createElement('div');el.className='toast '+cls;el.innerHTML=`<img src="${src(img)}" style="${cssf(img)}"><span></span>`;el.querySelector('span').textContent=text;box.appendChild(el);const max=document.body.classList.contains('portrait')||document.body.classList.contains('compact')?2:4;while(box.children.length>max)box.firstChild.remove();setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),450)},ms);}
+
+// ---------- combat ----------
+function sweat(e,n){for(let i=0;i<n&&fx.length<230;i++)fx.push({x:e.x+(Math.random()-.5)*e.d.r,y:e.y-e.d.r*.4,vx:(Math.random()-.5)*90,vy:-40-Math.random()*90,t:.55,c:'#9fd8ff',drop:true});}
+function decal(x,y,r,c){decals.push({x:x+(Math.random()-.5)*10,y:y+(Math.random()-.5)*10,r,c,t:18,rx:.6+Math.random()*.6});if(decals.length>60)decals.shift();}
+function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const st=srcT?tStats(srcT):null;
+ if(!o.noCrit&&st&&st.crit){if(Math.random()<st.crit+(srcT.critB||0)){dmg*=s.critMul;crit=true;if(s.critStack)srcT.critB=Math.min(.3,(srcT.critB||0)+.02);}}
+ if(srcT&&srcT.k==='sniper'&&srcT.mut===1&&e.d.boss)dmg*=2.5;
+ const pierce=o.pierce||(crit&&srcT&&srcT.k==='senpai'&&srcT.mut===0);
+ if(!pierce)dmg=Math.max(1,dmg-(e.d.armor||0));
+ if(e.shield>0){const sx=o.shieldX||1,a=dmg*sx;if(a<e.shield){e.shield-=a;dmg=0;}else{dmg=(a-e.shield)/sx;e.shield=0;float(e.x,e.y-e.d.r-14,'ガード崩壊！','#6ab8ff',true);snd(1200,.08,'square',.04,-800);}}
+ e.hp-=dmg;e.hitT=.12;if(Math.random()<.3)sweat(e,2);
+ if(crit){float(e.x,e.y-e.d.r-6,pick(L.crit)+' '+Math.round(dmg),'#ff5c8a',true,.9);snd(990,.07,'square',.05,-500);shake(2.5);
+  if(s.critKB&&srcT.k==='senpai'&&!e.d.boss){e.dist=Math.max(0,e.dist-22);}
+  if(game.t-game.lastCritToast>6){game.lastCritToast=game.t;toast(pick(L.critToast),'grimace_face','',1100);}}
+ if(srcT&&srcT.k==='sniper'&&srcT.mut===0&&!e.d.boss&&e.hp>0&&e.hp<e.maxHp*.2){e.hp=0;float(e.x,e.y-e.d.r-6,'処刑（迫真）','#7ab8ff',true);}
+ if(e.hp<=0)kill(e,srcT);}
+function dot(e,dmg,srcT){if(e.dead)return;e.hp-=dmg;if(e.hp<=0)kill(e,srcT);}
+function poisonE(e,dps,dur,srcT){if(e.pois<dps)e.pois=dps;e.poisT=Math.max(e.poisT,dur);e.poisSrc=srcT;}
+function kill(e,srcT){if(e.dead)return;e.dead=true;const s=S();
+ game.combo=game.comboT>0?game.combo+1:1;game.comboT=s.comboT;game.maxCombo=Math.max(game.maxCombo,game.combo);
+ let b=Math.round(e.d.bounty*Math.max(.2,1+s.bounty));if(game.combo>=10)b+=Math.round(1*s.comboMul*(game.combo>=50?3:game.combo>=25?2:1));
+ for(const t of towers){if(t.k==='bank'){const r=tStats(t).range;if((t.x-e.x)**2+(t.y-e.y)**2<=r*r)b+=t.lvl;}
+  else if(t.k==='trio'&&t.mut===1){const r=tStats(t).range;if((t.x-e.x)**2+(t.y-e.y)**2<=r*r)b+=3;}}
+ game.gold+=b;game.kills++;if(srcT)srcT.kills++;
+ if(COMBO_MS[game.combo]){toast(COMBO_MS[game.combo],'senpai_face','combo shake',1600);big(game.combo+' COMBO','#ff5c8a',.9);shake(4);snd(660+game.combo,.12,'square',.05,400);}
+ if(Math.random()<(e.d.boss?1:.3))float(e.x,e.y-6,pick(L.kill),'#fff',true,.9);else float(e.x,e.y,'+'+b,'#ffd36b');
+ const np=e.d.boss?40:(fx.length>180?0:7);for(let i=0;i<np;i++)fx.push({x:e.x,y:e.y,vx:(Math.random()-.5)*200,vy:(Math.random()-.5)*200,t:.5,c:Math.random()<.5?e.d.col:'#9fd8ff',drop:Math.random()<.4});
+ decal(e.x,e.y,e.d.r*(e.d.boss?1.6:.9),e.pois>0?'#6fbf4a':Math.random()<.5?'#c9b08a':'#8fbfe0');
+ killSnd(e.d.boss?160:520);
+ if(e.d.split)for(let i=0;i<2;i++){const m=spawn(e.d.split,Math.max(0,e.dist-6-i*10));m.hp=m.maxHp=m.maxHp*.8;}
+ if(e.poisT>0){
+  if(e.poisSrc&&e.poisSrc.mut===0){fx.push({ring:true,x:e.x,y:e.y,r:6,R:64,t:.35,c:'#8dff6a'});float(e.x,e.y-16,'腐臭爆発！','#8dff6a',true);
+   for(const o of enemies)if(!o.dead&&o!==e&&(o.x-e.x)**2+(o.y-e.y)**2<64*64)dot(o,e.maxHp*.3*(o.d.boss?.3:1),e.poisSrc);shake(3);}
+  if(s.poisonSpread)for(const o of enemies)if(!o.dead&&o!==e&&(o.x-e.x)**2+(o.y-e.y)**2<60*60)poisonE(o,e.pois*.8,3,e.poisSrc);}
+ if(e.d.boss){toast(pick(L.bossDown),'senpai_face','combo shake',2400);big('撃破！','#ffd36b',1.4);shake(14);flash();snd(90,.8,'sawtooth',.09,400);if(navigator.vibrate&&TOUCH)try{navigator.vibrate(150)}catch(_){}}}
 
 // ---------- update ----------
-function hurt(e,dmg,src){const arm=e.d.armor||0;let crit=false;const st=src?tStats(src):null;
- if(st&&st.crit&&Math.random()<st.crit){dmg*=game.stats.critMul;crit=true;}
- dmg=Math.max(1,dmg-arm);e.hp-=dmg;e.hitT=.12;
- if(crit){if(floats.length<40)floats.push({x:e.x,y:e.y-e.d.r-6,t:.9,txt:'ファッ！？ '+Math.round(dmg),c:'#ff5c8a',big:true});snd(990,.07,'square',.05,-500);
-  if(game.t-game.lastCritToast>5){game.lastCritToast=game.t;toast('ファッ！？（クリティカル）','grimace_face','',1100);}}
- if(e.hp<=0&&!e.dead){e.dead=true;const b=Math.round(e.d.bounty*(1+game.stats.bounty));game.gold+=b;game.kills++;if(src)src.kills++;
-  if(floats.length<40)floats.push({x:e.x,y:e.y,t:.8,txt:'+'+b,c:'#ffd36b'});const np=e.d.boss?28:(fx.length>150?0:6);for(let i=0;i<np;i++)fx.push({x:e.x,y:e.y,vx:(Math.random()-.5)*160,vy:(Math.random()-.5)*160,t:.5,c:e.d.col});
-  snd(e.d.boss?160:520,e.d.boss?.4:.05,'triangle',.05,-200);
-  if(e.d.boss){toast('迫真ボス撃破！いいゾ～これ','senpai_face','',2200);}}}
 let hudDirty=true;
-function update(dt){game.t+=dt;const g0=game.gold,l0=game.lives;
- if(game.inWave&&spawnQ.length){game.spawnT-=dt;if(game.spawnT<=0){const s=spawnQ.shift();spawn(s.k);game.spawnT=s.gap;hudDirty=true;}}
- for(const e of enemies){if(e.dead)continue;if(e.slowT>0)e.slowT-=dt;else e.slow=0;e.hitT=Math.max(0,e.hitT-dt);
-  e.dist+=e.d.speed*(1-e.slow)*dt;const p=posAt(e.dist);e.x=p.x;e.y=p.y;
-  if(e.dist>=pathTotal){e.dead=true;e.leaked=true;const dmg=e.d.boss?5:1;game.lives-=dmg;snd(140,.25,'sawtooth',.07,-60);
-   if(navigator.vibrate&&TOUCH)try{navigator.vibrate(e.d.boss?120:40)}catch(_){}
-   toast(e.d.boss?`ボスが下北沢に到達！ -${dmg}`:'まずいですよ！ ライフ -1','grimace_face','bad',1300);
+function visTargets(t,r2){const out=[];for(const e of enemies){if(e.dead||!e.vis)continue;const dx=e.x-t.x,dy=e.y-t.y;if(dx*dx+dy*dy<=r2)out.push(e);}return out;}
+function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;
+ if(game.inWave&&spawnQ.length){game.spawnT-=dt;if(game.spawnT<=0){const q=spawnQ.shift();spawn(q.k);game.spawnT=q.gap;hudDirty=true;}}
+ if(game.comboT>0){game.comboT-=dt;if(game.comboT<=0)game.combo=0;}
+ if(game.shake>0)game.shake=Math.max(0,game.shake-dt*22);
+ if(game.big){game.big.t-=dt;if(game.big.t<=0)game.big=null;}
+ const walls=towers.filter(t=>t.k==='wall');
+ for(const e of enemies){if(e.dead)continue;const d=e.d;
+  if(d.stealth)e.vis=!!s.reveal||towers.some(t=>t.k!=='wall'&&(t.x-e.x)**2+(t.y-e.y)**2<92*92);
+  if(e.slowT>0)e.slowT-=dt;else e.slow=0;e.hitT=Math.max(0,e.hitT-dt);if(e.stunT>0)e.stunT-=dt;
+  if(e.poisT>0){e.poisT-=dt;dot(e,e.pois*dt,e.poisSrc);if(e.dead)continue;if(Math.random()<dt*3&&fx.length<220)fx.push({x:e.x,y:e.y-e.d.r,vx:(Math.random()-.5)*20,vy:-30,t:.6,c:'#8dff6a',drop:true});}
+  else e.pois=0;
+  if(d.heal){e.healCd-=dt;if(e.healCd<=0){e.healCd=1;let n=0;for(const o of enemies){if(o.dead||o===e||o.d.boss)continue;if((o.x-e.x)**2+(o.y-e.y)**2<=d.healR*d.healR&&o.hp<o.maxHp){o.hp=Math.min(o.maxHp,o.hp+o.maxHp*d.heal*s.eHeal*(o.poisT>0?.5:1));n++;}}
+   if(n){fx.push({ring:true,x:e.x,y:e.y,r:6,R:d.healR,t:.35,c:'#8dff6a'});if(Math.random()<.25)float(e.x,e.y-20,'看病♡（ぬわああん）','#8dff6a');}}}
+  if(d.summon){e.sumT-=dt;if(e.sumT<=0){e.sumT=d.summon;for(let i=0;i<2;i++)spawn('kohai',Math.max(0,e.dist-20-i*14));float(e.x,e.y-40,'後輩おかわり！','#ff5c3c',true);flavor('部室の主・真「後輩呼んだぞ（汗）」','locker_left_face','bad',1300,8);}}
+  if(d.shieldRegen&&e.maxSh)e.shield=Math.min(e.maxSh,e.shield+e.maxSh*d.shieldRegen*dt);
+  if(d.enrage&&!e.enr&&e.hp<e.maxHp*.5){e.enr=true;toast('野獣の眼光「ファッ！？」（激おこ・速度UP）','grimace_face','boss shake',2200);big('激おこ','#ff3c3c',1.2);shake(10);}
+  if(e.stunT<=0){let sp=d.speed*s.eSpeed*(1-e.slow)*(e.enr?1.5:1)*dt;e.blocked=false;
+   for(const w of walls){if(w.hp<=0)continue;const stop=w.pd-(d.r+16);if(e.dist<=stop+1&&e.dist+sp>=stop){sp=Math.max(0,stop-e.dist);e.blocked=true;
+     w.hp-=d.wd*(1+.15*game.wave)*(d.boss?1.5:1)*dt;w.hitT=.1;const th=s.wallThorn+(w.mut===0?18*w.lvl:0);if(th)dot(e,th*(1+.1*game.wave)*dt,w);
+     if(Math.random()<dt*4)sweat(e,1);break;}}
+   e.dist+=sp;}
+  const p=posAt(e.dist);e.x=p.x;e.y=p.y;
+  if(e.dist>=pathTotal&&!e.dead){e.dead=true;e.leaked=true;const dmg=d.boss?5:1;game.lives-=dmg;snd(140,.25,'sawtooth',.07,-60);shake(d.boss?14:6);game.combo=0;game.comboT=0;
+   if(navigator.vibrate&&TOUCH)try{navigator.vibrate(d.boss?120:40)}catch(_){}
+   if(d.steal&&!s.noSteal){const st=Math.min(game.gold,Math.max(20,Math.floor(game.gold*d.steal)));game.gold-=st;game.stolen+=st;toast(`たかり後輩に ${st}G 盗まれた！（やめちくり〜）`,'navy_right_face','bad shake',1600);}
+   else toast(d.boss?`ボスが下北沢に到達！ -${dmg}（入って、どうぞ）`:`${pick(L.leak)} ライフ -1`,'grimace_face','bad',1300);
    if(game.lives<=0){game.lives=0;gameOver();}}}
- for(const t of towers){const d=TOWERS[t.k];if(d.aura){t.pulseT+=dt;continue;}const st=tStats(t);t.cd-=dt;
-  if(d.pulse){if(t.cd<=0){let any=false;const r2=st.range*st.range;for(const e of enemies){if(e.dead)continue;const dx=e.x-t.x,dy=e.y-t.y;if(dx*dx+dy*dy<=r2){any=true;e.slow=Math.min(.8,d.slow+game.stats.slowAdd+.05*(t.lvl-1));e.slowT=d.slowT+game.stats.slowT;hurt(e,st.dmg,t);}}
-    if(any){t.cd=st.rate;fx.push({ring:true,x:t.x,y:t.y,r:10,R:st.range,t:.35,c:'#5cd6a8'});snd(300,.05,'sine',.03);}}continue;}
-  if(t.cd>0)continue;let best=null;const r2=st.range*st.range;for(const e of enemies){if(e.dead)continue;const dx=e.x-t.x,dy=e.y-t.y;if(dx*dx+dy*dy<=r2&&(!best||e.dist>best.dist))best=e;}
-  if(best){t.cd=st.rate;t.ang=Math.atan2(best.y-t.y,best.x-t.x);projs.push({x:t.x,y:t.y,tg:best,tx:best.x,ty:best.y,sp:d.splash?320:560,dmg:st.dmg,src:t,splash:d.splash?d.splash*game.stats.splashMul:0,c:d.proj});
-   shotSnd(d.splash?180:(t.k==='navy'?880:600));}}
+ for(const w of walls){if(w.hitT>0)w.hitT-=dt;if(w.mut===1)w.hp=Math.min(tStats(w).maxHp,w.hp+tStats(w).maxHp*.05*dt);
+  if(w.hp<=0){towers=towers.filter(o=>o!==w);statsDirty=true;if(picked===w){picked=null;renderInfo();}toast(pick(L.wallDown),'collar_face','bad shake',1500);shake(8);
+   for(let i=0;i<20;i++)fx.push({x:w.x,y:w.y,vx:(Math.random()-.5)*240,vy:(Math.random()-.5)*240,t:.6,c:i%2?'#8a6a40':'#b0b0b0'});decal(w.x,w.y,20,'#6b5232');snd(110,.3,'sawtooth',.07,-50);}}
+ for(const t of towers){const d=TOWERS[t.k];if(d.aura||d.bank||d.wall){t.pulseT+=dt;continue;}const st=tStats(t);t.cd-=dt;if(t.cd>0)continue;const r2=st.range*st.range;
+  if(d.pulse){const hit=visTargets(t,r2);if(!hit.length)continue;t.cd=st.rate;
+   for(const e of hit){e.slow=Math.min(.8,d.slow+s.slowAdd+.05*(t.lvl-1));e.slowT=d.slowT+s.slowT;
+    if(t.mut===0)e.dist=Math.max(0,e.dist-(e.d.boss?6:26));if(t.mut===1)e.stunT=Math.max(e.stunT,e.d.boss?.15:.5);hurt(e,st.dmg,t);}
+   fx.push({ring:true,x:t.x,y:t.y,r:10,R:st.range,t:.35,c:t.mut===1?'#ff5c8a':'#5cd6a8'});if(Math.random()<.15)float(t.x,t.y-24,t.mut===0?'ふっとべ！':t.mut===1?'締め上げ！':'指導！','#5cd6a8');snd(300,.05,'sine',.03);continue;}
+  const cand=visTargets(t,r2);if(!cand.length)continue;t.cd=st.rate;
+  if(t.k==='sniper'){let best=cand[0];for(const e of cand)if(e.hp+e.shield>best.hp+best.shield)best=e;t.ang=Math.atan2(best.y-t.y,best.x-t.x);
+   fx.push({line:true,x:t.x,y:t.y,x2:best.x,y2:best.y,t:.18,c:'#cfe6ff'});hurt(best,st.dmg,t,{pierce:true});shotSnd(1400);shake(1.5);continue;}
+  cand.sort((a,b)=>b.dist-a.dist);
+  if(t.k==='chain'){const hit=[cand[0]];let cur=cand[0];while(hit.length<st.chain){let nx=null,nd=110*110;for(const e of enemies){if(e.dead||!e.vis||hit.includes(e))continue;const q=(e.x-cur.x)**2+(e.y-cur.y)**2;if(q<nd){nd=q;nx=e;}}if(!nx)break;hit.push(nx);cur=nx;}
+   const pts=[[t.x,t.y]];let dm=st.dmg;for(const e of hit){pts.push([e.x,e.y]);if(t.mut===1&&Math.random()<.25)e.stunT=Math.max(e.stunT,e.d.boss?.2:.6);hurt(e,dm,t,{shieldX:2});dm*=.85;}
+   fx.push({bolt:pts.map(([x,y],i)=>[x+(i?(Math.random()-.5)*10:0),y+(i?(Math.random()-.5)*10:0)]),t:.16,c:'#e2c4ff'});t.ang=Math.atan2(cand[0].y-t.y,cand[0].x-t.x);shotSnd(1600);continue;}
+  const n=t.k==='senpai'&&t.mut===1?2:1;
+  for(let i=0;i<Math.min(n,cand.length);i++){const best=cand[i];t.ang=Math.atan2(best.y-t.y,best.x-t.x);
+   projs.push({x:t.x,y:t.y,tg:best,tx:best.x,ty:best.y,sp:d.splash?320:d.poison?300:560,dmg:st.dmg,src:t,splash:d.splash?d.splash*s.splashMul:0,pois:st.pois,c:d.proj,bounce:t.k==='navy'&&t.mut===0?1:0});}
+  shotSnd(d.splash?180:d.poison?240:(t.k==='navy'?880:600));}
  for(const p of projs){if(p.done)continue;if(p.tg&&!p.tg.dead){p.tx=p.tg.x;p.ty=p.tg.y;}const dx=p.tx-p.x,dy=p.ty-p.y,dd=Math.hypot(dx,dy),step=p.sp*dt;
-  if(dd<=step+4){p.done=true;if(p.splash){fx.push({ring:true,x:p.tx,y:p.ty,r:8,R:p.splash,t:.3,c:'#ff8a5c'});if(floats.length<40)floats.push({x:p.tx,y:p.ty-10,t:.6,txt:'114514!',c:'#ff8a5c'});const s2=p.splash*p.splash;for(const e of enemies){if(e.dead)continue;const ex=e.x-p.tx,ey=e.y-p.ty;if(ex*ex+ey*ey<=s2)hurt(e,p.dmg,p.src);}}
-   else if(p.tg&&!p.tg.dead)hurt(p.tg,p.dmg,p.src);}
+  if(dd<=step+4){p.done=true;
+   if(p.splash){fx.push({ring:true,x:p.tx,y:p.ty,r:8,R:p.splash,t:.3,c:'#ff8a5c'});float(p.tx,p.ty-10,Math.random()<.5?'114514!':'1919!','#ff8a5c',false,.6);shake(2);const s2=p.splash*p.splash;
+    for(const e of enemies){if(e.dead)continue;const ex=e.x-p.tx,ey=e.y-p.ty;if(ex*ex+ey*ey<=s2)hurt(e,p.dmg,p.src);}
+    if(p.src.mut===0&&fires.length<14)fires.push({x:p.tx,y:p.ty,r:p.splash*.7,t:3,dps:p.dmg*.45,src:p.src});}
+   else if(p.pois){fx.push({ring:true,x:p.tx,y:p.ty,r:6,R:38,t:.4,c:'#8dff6a'});for(const e of enemies){if(e.dead)continue;if((e.x-p.tx)**2+(e.y-p.ty)**2<=38*38)poisonE(e,p.pois,TOWERS.poison.poisonT,p.src);}if(Math.random()<.1)float(p.tx,p.ty-12,'くっさ！','#8dff6a');}
+   else if(p.tg&&!p.tg.dead){const tg=p.tg;if(p.src.k==='navy'&&p.src.mut===1){tg.slow=Math.max(tg.slow,.2);tg.slowT=Math.max(tg.slowT,.8);}hurt(tg,p.dmg,p.src);
+    if(p.bounce){let nx=null,nd=90*90;for(const e of enemies){if(e.dead||e===tg||!e.vis)continue;const q=(e.x-p.tx)**2+(e.y-p.ty)**2;if(q<nd){nd=q;nx=e;}}if(nx)projs.push({x:p.tx,y:p.ty,tg:nx,tx:nx.x,ty:nx.y,sp:560,dmg:p.dmg*.8,src:p.src,c:p.c,bounce:0});}}}
   else{p.x+=dx/dd*step;p.y+=dy/dd*step;}}
+ for(const f of fires){f.t-=dt;for(const e of enemies){if(!e.dead&&(e.x-f.x)**2+(e.y-f.y)**2<=f.r*f.r)dot(e,f.dps*dt,f.src);}}fires=fires.filter(f=>f.t>0);
  projs=projs.filter(p=>!p.done);enemies=enemies.filter(e=>!e.dead);
- for(const f of fx){f.t-=dt;if(!f.ring){f.x+=f.vx*dt;f.y+=f.vy*dt;}}fx=fx.filter(f=>f.t>0);
+ for(const f of fx){f.t-=dt;if(!f.ring&&!f.line&&!f.bolt){f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.drop)f.vy+=420*dt;}}fx=fx.filter(f=>f.t>0);
  for(const f of floats){f.t-=dt;f.y-=28*dt;}floats=floats.filter(f=>f.t>0);
+ for(const d of decals)d.t-=dt;if(decals.length&&decals[0].t<=0)decals=decals.filter(d=>d.t>0);
  const boss=enemies.find(e=>e.d.boss);if(boss)$('bossfill').style.width=(100*boss.hp/boss.maxHp)+'%';else if($('bossbar').style.display!=='none')$('bossbar').style.display='none';
- if(game.inWave&&!spawnQ.length&&!enemies.length&&!game.over){game.inWave=false;const bonus=20+game.wave*5;game.gold+=bonus;
-  toast(`ウェーブ ${game.wave} クリア！ +${bonus}G　いいゾ～これ`,'senpai_face','',2000);snd(523,.1,'triangle',.06);setTimeout(()=>snd(784,.15,'triangle',.06),110);
-  hudDirty=true;if(game.wave>=game.maxWave&&!game.endless){win();}else openDraft();}
+ if(game.inWave&&!spawnQ.length&&!enemies.length&&!game.over)waveClear();
  if(game.gold!==g0||game.lives!==l0)hudDirty=true;}
+function waveClear(){const s=S();game.inWave=false;let inc=20+game.wave*5,lifeUp=0,nb0=0;
+ for(const t of towers){if(t.k==='bank'){inc+=bankIncome(t);if(t.mut===0)nb0++;if(t.mut===1)lifeUp++;}t.critB=0;if(t.k==='wall')t.hp=tStats(t).maxHp;}
+ const rate=s.interest+.04*nb0;const intr=rate>0?Math.min(150+120*nb0,Math.floor(game.gold*rate)):0;
+ game.gold+=inc+intr;game.lives+=lifeUp;fires=[];
+ toast(`ウェーブ ${game.wave} クリア！ +${inc}G${intr?`・利息+${intr}G`:''}${lifeUp?`・おごりライフ+${lifeUp}`:''}　${pick(L.waveClear)}`,'senpai_face','',2200);
+ snd(523,.1,'triangle',.06);setTimeout(()=>snd(784,.15,'triangle',.06),110);hudDirty=true;
+ if(game.wave>=game.maxWave&&!game.endless){win();}else openDraft();}
 
-// ---------- draft ----------
-function openDraft(){paused=true;const pool=PERKS.slice();const pick=[];while(pick.length<3&&pool.length){pick.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);}
- $('dTitle').textContent=`ウェーブ ${game.wave} クリア！`;const box=$('cards');box.innerHTML='';
- for(const p of pick){const c=document.createElement('div');c.className='card';const n=game.perks.filter(x=>x===p.t).length;
-  c.innerHTML=`<img src="${ASSETS[p.img]}"><div class="t"></div><div class="d"></div><div class="r">${n?'所持 x'+n:'NEW'}</div>`;c.querySelector('.t').textContent=p.t;c.querySelector('.d').textContent=p.d;
-  c.onclick=()=>{p.ap(game.stats);game.perks.push(p.t);statsDirty=true;$('draft').classList.remove('on');paused=false;$('bPause').textContent='⏸';toast(p.t+'！','senpai_face','',1400);snd(700,.12,'triangle',.06,300);renderPerks();renderInfo();updHud();};box.appendChild(c);}
+// ---------- card overlay (draft / situation) ----------
+function openCards(title,sub,items,onPick,reroll){paused=true;$('dTitle').textContent=title;$('dSub').textContent=sub;const box=$('cards');box.innerHTML='';
+ for(const p of items){const c=document.createElement('div');c.className='card';const n=game.perks.filter(x=>x===p.t).length;
+  c.innerHTML=`<img src="${src(p.img)}" style="${cssf(p.img)}"><div class="t"></div><div class="d"></div><div class="r">${p.tag?`<span class="mutTag">${p.tag}</span> `:''}${reroll===undefined?'シチュ':n?'所持 x'+n:'NEW'}</div>`;c.querySelector('.t').textContent=p.t;c.querySelector('.d').textContent=p.d;
+  c.onclick=()=>{$('draft').classList.remove('on');paused=false;$('bPause').textContent='⏸';onPick(p);statsDirty=true;renderPerks();renderInfo();buildShop();updHud();};box.appendChild(c);}
+ const rb=$('bReroll');if(reroll===undefined){rb.style.display='none';}else{rb.style.display='';const c=30+10*game.wave;rb.textContent=`引き直し ${c}G（まだ足りない？）`;rb.disabled=game.gold<c;rb.onclick=()=>{if(game.gold<c)return;game.gold-=c;snd(500,.08,'triangle',.05,200);openDraft();updHud();};}
  $('draft').classList.add('on');$('draft').scrollTop=0;}
-function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;const ks=Object.keys(m);$('perks').innerHTML=ks.length?ks.map(k=>`・${k}${m[k]>1?' x'+m[k]:''}`).join('<br>'):'まだなし';}
+function openDraft(){const pool=PERKS.filter(p=>!(p.max&&game.perks.filter(x=>x===p.t).length>=p.max));const ch=[];while(ch.length<3&&pool.length)ch.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+ openCards(`ウェーブ ${game.wave} クリア！`,'ドラフト：カードを1枚選べ（やりますねぇ）',ch,p=>{p.ap(S());game.perks.push(p.t);toast(p.t+'！（いいゾ〜これ）',p.img.split('#')[0],'',1400);snd(700,.12,'triangle',.06,300);},1);}
+function openSitu(){const pool=SITU.slice(),ch=[];while(ch.length<3)ch.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+ openCards('シチュエーションを選べ','今回のラン全体のルールが変わる（迫真）',ch,p=>{p.ap(S());game.situ=p.t;toast(`シチュ：${p.t}（そうだよ）`,p.img.split('#')[0],'combo',2000);big(p.t,'#ffd36b',1.3);});}
+function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;const ks=Object.keys(m);$('perks').innerHTML=(game.situ?`<span style="color:#ffd36b">シチュ：${game.situ}</span><br>`:'')+(ks.length?ks.map(k=>`・${k}${m[k]>1?' x'+m[k]:''}`).join('<br>'):'まだなし');}
 
 // ---------- end ----------
 function saveBest(){try{const b=+localStorage.getItem('yajuuTD_best')||0;if(game.wave>b)localStorage.setItem('yajuuTD_best',game.wave);}catch(e){}}
-function gameOver(){if(game.over)return;game.over=true;game.inWave=false;saveBest();$('eTitle').textContent='下北沢陥落…';$('eImg').src=ASSETS.grimace_face;
- $('eText').innerHTML=`ウェーブ ${game.wave} で力尽きた（痛いですね…）<br>撃破数 ${game.kills}`;$('bEndless').style.display='none';$('end').classList.add('on');snd(110,.8,'sawtooth',.08,-60);}
-function win(){game.over=true;game.won=true;saveBest();$('eTitle').textContent='下北沢防衛成功！';$('eImg').src=ASSETS.senpai_face;
- $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！やりますねぇ！<br>ライフ残り ${game.lives} / 撃破数 ${game.kills}`;$('bEndless').style.display='';$('end').classList.add('on');}
-$('bRetry').onclick=()=>{$('end').classList.remove('on');reset();};
+function endStats(){return `撃破数 ${game.kills}・最大コンボ ${game.maxCombo}${game.stolen?`・盗まれた ${game.stolen}G`:''}${game.situ?`<br>シチュ：${game.situ}`:''}`;}
+function gameOver(){if(game.over)return;game.over=true;game.inWave=false;saveBest();$('eTitle').textContent=pick(L.lose);$('eImg').src=ASSETS.grimace_face;
+ $('eText').innerHTML=`ウェーブ ${game.wave} で力尽きた（${pick(L.loseSub)}）<br>${endStats()}`;$('bEndless').style.display='none';$('end').classList.add('on');snd(110,.8,'sawtooth',.08,-60);shake(14);}
+function win(){game.over=true;game.won=true;saveBest();$('eTitle').textContent=pick(L.win);$('eImg').src=ASSETS.senpai_face;
+ $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}・${endStats()}`;$('bEndless').style.display='';$('end').classList.add('on');}
+$('bRetry').onclick=()=>{$('end').classList.remove('on');reset();openSitu();};
 $('bEndless').onclick=()=>{$('end').classList.remove('on');game.over=false;game.endless=true;game.maxWave=999;$('wmax').textContent='∞';openDraft();};
 
 // ---------- UI ----------
 function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{const d=TOWERS[k];const el=document.createElement('div');el.className='shop';el.style.setProperty('--rc',d.ring);el.dataset.k=k;
- el.innerHTML=`<img src="${ASSETS[d.img]}" style="${k==='cannon'?'filter:sepia(1) saturate(4) hue-rotate(-30deg)':''}"><div style="min-width:0;max-width:100%"><div class="nm"></div><div class="ds"></div></div><div class="cost"></div><div class="key">[${i+1}]</div>`;
- el.querySelector('.nm').textContent=document.body.classList.contains('portrait')||document.body.classList.contains('compact')?d.short:d.name;el.querySelector('.ds').textContent=d.desc;el.onclick=()=>selectShop(k);box.appendChild(el);});updShop();}
-function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k;el.querySelector('.cost').textContent=cost(k)+'G';el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<cost(k));});}
+ el.innerHTML=`<img src="${src(d.img)}" style="${cssf(d.img)}"><div style="min-width:0;max-width:100%"><div class="nm"></div><div class="ds"></div></div><div class="cost"></div><div class="key">${(i+1)%10}</div>`;
+ el.querySelector('.nm').textContent=d.short;el.querySelector('.ds').textContent=d.desc;el.title=d.name+'：'+d.desc;el.onclick=()=>selectShop(k);box.appendChild(el);});updShop();}
+function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k,c=cost(k),ce=el.querySelector('.cost');ce.textContent=c?c+'G':'タダ';ce.classList.toggle('free',!c);el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<c);});}
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave');bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':'ウェーブ開始';
  const nw=game.wave+1;$('nextinfo').textContent=game.inWave?`残り ${spawnQ.length+enemies.length}`:(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);updShop();if(picked)updInfoBtns();}
+function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
+ if(d.wall)return `HP ${Math.ceil(t.hp)}/${Math.round(st.maxHp)}${s.wallThorn||t.mut===0?'・トゲあり':''}`;
+ if(d.bank)return `毎ウェーブ +${bankIncome(t)}G・範囲撃破 +${t.lvl}G`;
+ if(d.aura)return `オーラ 攻撃+${Math.round(st.aur*100)}%・射程 ${Math.round(st.range)}`;
+ let a=d.poison?`毒 ${st.pois.toFixed(1)}/s`:`攻撃 ${st.dmg.toFixed(1)}`;a+=`・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}`;
+ if(st.chain)a+=`・連鎖 ${st.chain}`;if(st.aura)a+=` <span style="color:#d9b36a">★+${Math.round(st.aura*100)}%</span>`;if(st.crit)a+=`・クリ ${Math.round((st.crit+(t.critB||0))*100)}%`;return a+`・撃破 ${t.kills}`;}
 function renderInfo(){const box=$('info');
- if(picked){const t=picked,d=TOWERS[t.k],st=tStats(t);box.innerHTML=`<div class="wrapI"><div class="row" style="flex:1;min-width:0"><img src="${ASSETS[d.img]}" style="border-color:${d.ring}"><div style="min-width:0"><b></b> Lv.${t.lvl}/4<div class="st">${d.aura?`オーラ 攻撃+${Math.round((.25+.1*(t.lvl-1))*game.stats.auraMul*100)}%`:`攻撃 ${st.dmg.toFixed(1)}・間隔 ${st.rate.toFixed(2)}s`}<br>射程 ${Math.round(st.range)}${st.aura?` <span style="color:#d9b36a">★+${Math.round(st.aura*100)}%</span>`:''}${st.crit?`・クリ ${Math.round(st.crit*100)}%`:''}・撃破 ${t.kills}</div></div></div>
-  <div class="btns"><button id="bUp"></button><button id="bSell"></button></div></div>`;box.querySelector('b').textContent=d.name;
-  $('bUp').onclick=()=>{const c=upCost(t);if(t.lvl>=4||game.gold<c)return;game.gold-=c;t.spent+=c;t.lvl++;statsDirty=true;snd(880,.1,'triangle',.06,300);floats.push({x:t.x,y:t.y-20,t:.8,txt:'Lv UP!',c:'#ffd36b'});renderInfo();updHud();};
-  $('bSell').onclick=()=>{game.gold+=Math.round(t.spent*.7);towers=towers.filter(o=>o!==t);statsDirty=true;picked=null;snd(300,.1,'triangle',.05,-150);renderInfo();updHud();};updInfoBtns();}
- else if(sel){const d=TOWERS[sel];box.innerHTML=`<div class="wrapI"><div class="row"><img src="${ASSETS[d.img]}" style="border-color:${d.ring}"><div><b></b>　${cost(sel)}G<div class="st" id="selDesc"></div><div class="hint">${TOUCH?'マップを2回タップで設置':'マップをクリックで設置（Escで解除）'}</div></div></div></div>`;box.querySelector('b').textContent=d.name;$('selDesc').textContent=d.desc;}
+ if(picked){const t=picked,d=TOWERS[t.k];const mn=t.mut!=null?d.muts[t.mut].n:'';
+  box.innerHTML=`<div class="wrapI"><div class="row" style="flex:1;min-width:0"><img src="${src(d.img)}" style="border-color:${d.ring};${cssf(d.img)}"><div style="min-width:0"><b></b> Lv.${t.lvl}/4${mn?` <span class="mutTag">${mn}</span>`:''}<div class="st" id="stl"></div></div></div>
+  <div class="btns">${canMut(t)?`<button id="bM0" class="mut"></button><button id="bM1" class="mut"></button>`:`<button id="bUp"></button>`}<button id="bSell"></button></div></div>`;box.querySelector('b').textContent=d.name;$('stl').innerHTML=statLine(t);
+  if(canMut(t)){[0,1].forEach(i=>{const b=$('bM'+i);b.innerHTML=`覚醒${'AB'[i]}：${d.muts[i].n}<br><small></small>`;b.querySelector('small').textContent=d.muts[i].d;b.onclick=()=>mutate(t,i);});}
+  else $('bUp').onclick=()=>upgrade(t);
+  $('bSell').onclick=()=>sell(t);updInfoBtns();}
+ else if(sel){const d=TOWERS[sel];box.innerHTML=`<div class="wrapI"><div class="row"><img src="${src(d.img)}" style="border-color:${d.ring};${cssf(d.img)}"><div><b></b>　${cost(sel)?cost(sel)+'G':'タダ'}<div class="st" id="selDesc"></div><div class="hint">${d.wall?'道の上に置く。':''}${TOUCH?'マップを2回タップで設置':'マップをクリックで設置（Escで解除）'}</div></div></div></div>`;box.querySelector('b').textContent=d.name;
+  $('selDesc').textContent=d.desc+`　覚醒(Lv4)：${d.muts[0].n} / ${d.muts[1].n}`;}
  else{const pk=game.perks.length?`パーク ${game.perks.length}枚：${[...new Set(game.perks)].join('・')}`:'';
   box.innerHTML=`<div class="wrapI"><div class="row"><img src="${ASSETS.senpai_face}"><div><b>先輩「まずタワー置こうぜ」</b><div class="hint" id="idleHint"></div></div></div></div>`;
-  $('idleHint').textContent=(document.body.classList.contains('portrait')&&pk)?pk:(TOUCH?'上のタワーをタップ→マップを2回タップで設置。準備ができたら「ウェーブ開始」。':'タワーを選んでマップに設置。準備ができたら「ウェーブ開始」。');}}
-function updInfoBtns(){const u=$('bUp'),s=$('bSell');if(!u||!picked)return;const c=upCost(picked);u.textContent=picked.lvl>=4?'MAX':`強化 ${c}G`;u.disabled=picked.lvl>=4||game.gold<c;s.textContent=`売却 ${Math.round(picked.spent*.7)}G`;}
+  $('idleHint').textContent=(document.body.classList.contains('portrait')&&pk)?pk:(TOUCH?'タワーをタップ→マップを2回タップで設置。Lv4で覚醒A/B。':'タワーを選んでマップに設置。Lv4で覚醒A/Bを選べる。準備ができたら「ウェーブ開始」。');}}
+function updInfoBtns(){if(!picked)return;const c=upCost(picked),u=$('bUp'),s=$('bSell');
+ if(u){u.textContent=picked.lvl>=4?'MAX':`強化 ${c}G`;u.disabled=picked.lvl>=4||game.gold<c;}
+ for(const i of [0,1]){const b=$('bM'+i);if(b)b.disabled=game.gold<c;}
+ if($('bM0')&&!$('bM0').dataset.c){$('bM0').dataset.c=1;}
+ if(s)s.textContent=`売却 ${Math.round(picked.spent*S().sellRate)}G`;
+ const sl=$('stl');if(sl&&picked.k==='wall')sl.innerHTML=statLine(picked);}
 function setPaused(v){paused=v;$('bPause').textContent=paused?'▶':'⏸';}
-$('bStart').onclick=()=>{$('title').classList.remove('on');reset();snd(523,.1,'triangle',.06);toast('おっすお願いしまーす','senpai_face','',1800);};
+$('bStart').onclick=()=>{$('title').classList.remove('on');reset();snd(523,.1,'triangle',.06);toast('おっすお願いしまーす','senpai_face','',1800);openSitu();};
 $('bWave').onclick=startWave;
 $('bSpeed').onclick=()=>{speed=speed===1?2:speed===2?3:1;$('bSpeed').textContent=`▶x${speed}`;};
 $('bPause').onclick=()=>{if($('draft').classList.contains('on'))return;setPaused(!paused);};
 $('bMute').onclick=()=>{muted=!muted;$('bMute').textContent=muted?'🔇':'🔊';};
 try{const best=+localStorage.getItem('yajuuTD_best')||0;if(best)$('best').textContent=`ベスト記録：ウェーブ ${best}`;}catch(e){}
-// auto-pause when the tab/app goes to background (phones)
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&game&&!game.over&&!$('title').classList.contains('on')&&!$('draft').classList.contains('on'))setPaused(true);});
-
 // ---------- responsive layout & canvas ----------
 const cv=$('cv'),ctx=cv.getContext('2d');
 let portrait=false,view={k:1,dpr:1,cw:W,ch:H};
@@ -413,12 +666,12 @@ cv.addEventListener('contextmenu',ev=>{ev.preventDefault();sel=null;picked=null;
 cv.addEventListener('pointerup',ev=>{if(!game||game.over||ev.button>0)return;const {tx,ty}=evTile(ev);const isTouch=ev.pointerType!=='mouse';
  const t=towers.find(o=>o.tx===tx&&o.ty===ty);
  if(t){picked=t;sel=null;pending=null;hover=null;showTapHint(false);updShop();renderInfo();snd(500,.03,'triangle',.03);return;}
- if(sel){const free=!pathTiles.has(tx+','+ty)&&tx>=0&&ty>=0&&tx<COLS&&ty<ROWS;
-  if(isTouch&&!(pending&&pending.tx===tx&&pending.ty===ty)){if(free){pending={tx,ty};hover={tx,ty};showTapHint(true);snd(400,.03,'triangle',.03);}else{pending=null;hover={tx,ty};showTapHint(false);}return;}
-  pending=null;showTapHint(false);place(sel,tx,ty);if(isTouch)hover=null;if(game.gold<cost(sel))sel=null;updShop();renderInfo();}
+ if(sel){const ok=canPlace(sel,tx,ty);
+  if(isTouch&&!(pending&&pending.tx===tx&&pending.ty===ty)){if(ok){pending={tx,ty};hover={tx,ty};showTapHint(true);snd(400,.03,'triangle',.03);}else{pending=null;hover={tx,ty};showTapHint(false);if(TOWERS[sel].wall)toast('バリケードは道の上に置くんだよ（迫真）','collar_face','bad',1200);}return;}
+  pending=null;showTapHint(false);if(!ok){if(TOWERS[sel].wall)toast('バリケードは道の上に置くんだよ（迫真）','collar_face','bad',1200);return;}place(sel,tx,ty);if(isTouch)hover=null;if(game.gold<cost(sel))sel=null;updShop();renderInfo();}
  else{picked=null;pending=null;renderInfo();}});
 addEventListener('keydown',ev=>{if($('title').classList.contains('on'))return;const k=ev.key;
- if(k>='1'&&k<='5')selectShop(TKEYS[+k-1]);else if(k===' '){ev.preventDefault();startWave();}else if(k==='Escape'){sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
+ if(k>='0'&&k<='9'){const i=k==='0'?9:+k-1;if(TKEYS[i])selectShop(TKEYS[i]);}else if(k===' '){ev.preventDefault();startWave();}else if(k==='Escape'){sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
  else if(k==='f'||k==='F')$('bSpeed').click();else if(k==='p'||k==='P')$('bPause').click();else if(k==='m'||k==='M')$('bMute').click();
  else if((k==='u'||k==='U')&&picked)$('bUp')&&$('bUp').click();});
 // block pinch / double-tap zoom on iOS (user-scalable=no is ignored there)
@@ -447,28 +700,54 @@ function buildMapCache(){const c=document.createElement('canvas');c.width=cv.wid
  mapCache=c;}
 function ring(wx,wy,r,fill,stroke,dash){const [x,y]=P(wx,wy);ctx.beginPath();ctx.arc(x,y,r,0,7);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;if(dash)ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([]);}}
 function text(t,wx,wy,col,size,stroke){const [x,y]=P(wx,wy);ctx.font=`bold ${fs(size)} sans-serif`;ctx.textAlign='center';if(stroke){ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.strokeText(t,x,y);}ctx.fillStyle=col;ctx.fillText(t,x,y);}
-function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(mapCache,0,0);const sc=view.k*view.dpr;ctx.setTransform(sc,0,0,sc,0,0);const s=game.stats;
- if(hover&&sel&&!game.over){const ok=!pathTiles.has(hover.tx+','+hover.ty)&&!towers.some(t=>t.tx===hover.tx&&t.ty===hover.ty)&&hover.tx>=0&&hover.ty>=0&&hover.tx<COLS&&hover.ty<ROWS;const cx=hover.tx*T+T/2,cy=hover.ty*T+T/2;
-  const r=TOWERS[sel].range*(1+s.gRange)*(TOWERS[sel].aura?1+s.auraRange:1);ring(cx,cy,r,ok?'rgba(255,211,107,.12)':'rgba(255,60,60,.15)',ok?'#ffd36b88':'#ff3c3c88');
-  ctx.globalAlpha=pending?.85:.6;face(TOWERS[sel].spr||TOWERS[sel].img,cx,cy,19,ok?TOWERS[sel].ring:'#f33');ctx.globalAlpha=1;
+function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);
+ const sh=game.shake,ox=sh?(Math.random()-.5)*sh*2:0,oy=sh?(Math.random()-.5)*sh*2:0;
+ if(sh){ctx.fillStyle='#000';ctx.fillRect(0,0,cv.width,cv.height);}
+ ctx.drawImage(mapCache,ox*view.k*view.dpr,oy*view.k*view.dpr);const sc=view.k*view.dpr;ctx.setTransform(sc,0,0,sc,ox*sc,oy*sc);const s=S();
+ for(const d of decals){const [x,y]=P(d.x,d.y);ctx.globalAlpha=Math.min(.45,d.t/4);ctx.fillStyle=d.c;ctx.beginPath();ctx.ellipse(x,y,d.r,d.r*d.rx,0,0,7);ctx.fill();}ctx.globalAlpha=1;
+ for(const f of fires){const a=Math.min(1,f.t)*(.25+.1*Math.sin(game.t*20+f.x));ring(f.x,f.y,f.r,`rgba(255,110,40,${a})`);if(Math.random()<.3&&fx.length<220)fx.push({x:f.x+(Math.random()-.5)*f.r,y:f.y+(Math.random()-.5)*f.r,vx:0,vy:-40,t:.4,c:'#ffb040'});}
+ if(hover&&sel&&!game.over){const ok=canPlace(sel,hover.tx,hover.ty);const cx=hover.tx*T+T/2,cy=hover.ty*T+T/2;
+  const r=TOWERS[sel].wall?22:TOWERS[sel].range*(1+s.gRange)*(TOWERS[sel].aura?1+s.auraRange:1);ring(cx,cy,r,ok?'rgba(255,211,107,.12)':'rgba(255,60,60,.15)',ok?'#ffd36b88':'#ff3c3c88');
+  ctx.globalAlpha=pending?.85:.6;face(TOWERS[sel].img,cx,cy,19,ok?TOWERS[sel].ring:'#f33');ctx.globalAlpha=1;
   if(pending){const [x,y]=P(cx-T/2,cy-T/2);ctx.strokeStyle='#ffd36b';ctx.lineWidth=3;ctx.setLineDash([4,4]);ctx.strokeRect(x,y,T,T);ctx.setLineDash([]);}}
- if(picked)ring(picked.x,picked.y,tStats(picked).range,null,'#ffd36bcc',[5,5]);
- for(const t of towers){const d=TOWERS[t.k];const [bx,by]=P(t.tx*T,t.ty*T);ctx.fillStyle='#1d1712';ctx.fillRect(bx+3,by+3,T-6,T-6);ctx.strokeStyle=t===picked?'#ffd36b':'#4a3720';ctx.lineWidth=2;ctx.strokeRect(bx+3,by+3,T-6,T-6);
-  const st=tStats(t);
-  if(d.aura){const a=.06+.04*Math.sin(t.pulseT*3);ring(t.x,t.y,st.range,`rgba(217,179,106,${a})`);}
-  const recoil=(!d.aura&&!d.pulse&&t.cd>st.rate-.08)?2:0;
-  face(d.spr||d.img,t.x-Math.cos(t.ang)*recoil,t.y-Math.sin(t.ang)*recoil,19,d.ring);
-  if(t.k==='cannon')text('810',t.x,t.y+27,'#ff5c3c',9);
+ if(picked&&!TOWERS[picked.k].wall)ring(picked.x,picked.y,tStats(picked).range,null,'#ffd36bcc',[5,5]);
+ for(const t of towers){const d=TOWERS[t.k];const [bx,by]=P(t.tx*T,t.ty*T);const st=tStats(t);
+  if(d.wall){const j=t.hitT>0?(Math.random()-.5)*3:0;ctx.fillStyle='#6b4a28';ctx.fillRect(bx+4+j,by+4,T-8,T-8);ctx.strokeStyle=t===picked?'#ffd36b':'#3a2812';ctx.lineWidth=3;ctx.strokeRect(bx+4+j,by+4,T-8,T-8);
+   ctx.beginPath();ctx.moveTo(bx+6+j,by+6);ctx.lineTo(bx+T-6+j,by+T-6);ctx.moveTo(bx+T-6+j,by+6);ctx.lineTo(bx+6+j,by+T-6);ctx.stroke();
+   face(d.img,t.x+j,t.y,12,t.mut===0?'#ff5c3c':t.mut===1?'#8dff6a':d.ring,{lw:2});
+   const hp=Math.max(0,t.hp/st.maxHp);ctx.fillStyle='#000a';ctx.fillRect(bx+4,by+T-8,T-8,5);ctx.fillStyle=hp>.5?'#b0b0b0':hp>.25?'#ffd36b':'#ff5c3c';ctx.fillRect(bx+4,by+T-8,(T-8)*hp,5);}
+  else{ctx.fillStyle='#1d1712';ctx.fillRect(bx+3,by+3,T-6,T-6);ctx.strokeStyle=t===picked?'#ffd36b':'#4a3720';ctx.lineWidth=2;ctx.strokeRect(bx+3,by+3,T-6,T-6);
+   if(d.aura){const a=.06+.04*Math.sin(t.pulseT*3);ring(t.x,t.y,st.range,`rgba(217,179,106,${a})`);}
+   if(d.bank){const a=.04+.03*Math.sin(t.pulseT*2);ring(t.x,t.y,st.range,`rgba(255,211,107,${a})`);}
+   const recoil=(!d.aura&&!d.pulse&&!d.bank&&t.cd>st.rate-.08)?2:0;
+   face(d.img,t.x-Math.cos(t.ang)*recoil,t.y-Math.sin(t.ang)*recoil,19,d.ring);
+   if(t.k==='cannon')text('810',t.x,t.y+27,'#ff5c3c',9);if(t.k==='bank')text('💰',t.x+14,t.y+16,'#ffd36b',11);
+   if(st.aura&&!d.aura){ctx.fillStyle='#d9b36a';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('★',bx+T-9,by+12);}}
   ctx.fillStyle='#ffd36b';for(let i=0;i<t.lvl;i++){ctx.beginPath();ctx.arc(bx+8+i*7,by+8,2.5,0,7);ctx.fill();}
-  if(st.aura&&!d.aura){ctx.fillStyle='#d9b36a';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('★',bx+T-9,by+12);}}
- for(const e of enemies){const r=e.d.r;const bob=Math.sin(game.t*10+e.id*50)*1.5;
-  face(e.d.img,e.x,e.y+bob,r,e.slow?'#5cd6a8':e.d.col,{flash:e.hitT>0?.45:0,lw:e.d.boss?4:2.5,tint:e.slow?'rgba(92,214,168,.18)':null});
-  const [x,y]=P(e.x,e.y+bob);const w=r*2,hp=Math.max(0,e.hp/e.maxHp),bh=Math.max(4,Math.min(7,3/view.k));ctx.fillStyle='#000a';ctx.fillRect(x-w/2,y-r-bh-5,w,bh);ctx.fillStyle=hp>.5?'#6bdc5c':hp>.25?'#ffd36b':'#ff5c3c';ctx.fillRect(x-w/2,y-r-bh-5,w*hp,bh);
-  if(e.d.boss){ctx.font=`bold ${fs(11)} sans-serif`;ctx.textAlign='center';ctx.fillStyle='#c46bff';ctx.fillText(e.d.name,x,y+r+14);}}
- for(const p of projs){const [x,y]=P(p.x,p.y);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(x,y,p.splash?6:3.5,0,7);ctx.fill();}
- for(const f of fx){const [x,y]=P(f.x,f.y);if(f.ring){const k=1-f.t/.35;ctx.strokeStyle=f.c;ctx.globalAlpha=Math.max(0,Math.min(1,f.t*2.5));ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,f.r+(f.R-f.r)*Math.min(1,k),0,7);ctx.stroke();ctx.globalAlpha=1;}
-  else{ctx.fillStyle=f.c;ctx.globalAlpha=Math.min(1,f.t*2);ctx.fillRect(x-2,y-2,4,4);ctx.globalAlpha=1;}}
+  if(t.mut!=null){ctx.fillStyle='#c98aff';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText('AB'[t.mut],bx+T-9,by+T-9);}}
+ for(const e of enemies){const r=e.d.r;const bob=Math.sin(game.t*10+e.id*50)*1.5+(e.stunT>0?Math.sin(game.t*60)*2:0);
+  if(!e.vis)ctx.globalAlpha=.22;
+  face(e.d.img,e.x,e.y+bob,r,e.enr?'#ff3c3c':e.slow?'#5cd6a8':e.d.col,{flash:e.hitT>0?.45:0,lw:e.d.boss?4:2.5,tint:e.poisT>0?'rgba(120,255,80,.25)':e.slow?'rgba(92,214,168,.18)':null});
+  const [x,y]=P(e.x,e.y+bob);
+  if(e.shield>0){ctx.strokeStyle='#6ab8ff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,r+4,-Math.PI/2,-Math.PI/2+6.283*e.shield/e.maxSh);ctx.stroke();}
+  if(e.vis){const w=r*2,hp=Math.max(0,e.hp/e.maxHp),bh=Math.max(4,Math.min(7,3/view.k));ctx.fillStyle='#000a';ctx.fillRect(x-w/2,y-r-bh-5,w,bh);ctx.fillStyle=hp>.5?'#6bdc5c':hp>.25?'#ffd36b':'#ff5c3c';ctx.fillRect(x-w/2,y-r-bh-5,w*hp,bh);}
+  ctx.textAlign='center';
+  if(e.stunT>0){ctx.font=`${fs(12)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText('☆彡',x,y-r-10);}
+  if(e.d.heal){ctx.font=`bold ${fs(12)} sans-serif`;ctx.fillStyle='#8dff6a';ctx.fillText('+',x+r,y-r);}
+  if(e.d.steal){ctx.font=`${fs(11)} sans-serif`;ctx.fillText('💸',x+r,y-r);}
+  if(e.d.boss){ctx.font=`bold ${fs(11)} sans-serif`;ctx.fillStyle='#c46bff';ctx.fillText(e.d.name,x,y+r+14);}
+  ctx.globalAlpha=1;}
+ for(const p of projs){const [x,y]=P(p.x,p.y);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(x,y,p.splash?6:p.pois?5:3.5,0,7);ctx.fill();}
+ for(const f of fx){
+  if(f.ring){const [x,y]=P(f.x,f.y);const k=1-f.t/.35;ctx.strokeStyle=f.c;ctx.globalAlpha=Math.max(0,Math.min(1,f.t*2.5));ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,f.r+(f.R-f.r)*Math.min(1,k),0,7);ctx.stroke();}
+  else if(f.line){const [x,y]=P(f.x,f.y),[x2,y2]=P(f.x2,f.y2);ctx.strokeStyle=f.c;ctx.globalAlpha=f.t*5;ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();}
+  else if(f.bolt){ctx.strokeStyle=f.c;ctx.globalAlpha=Math.min(1,f.t*7);ctx.lineWidth=3;ctx.beginPath();f.bolt.forEach(([a,b],i)=>{const [x,y]=P(a,b);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.stroke();}
+  else{const [x,y]=P(f.x,f.y);ctx.fillStyle=f.c;ctx.globalAlpha=Math.min(1,f.t*2);if(f.drop){ctx.beginPath();ctx.arc(x,y,2.6,0,7);ctx.fill();}else ctx.fillRect(x-2,y-2,4,4);}
+  ctx.globalAlpha=1;}
  for(const f of floats){ctx.globalAlpha=Math.min(1,f.t*2);text(f.txt,f.x,f.y,f.c,f.big?15:12,true);ctx.globalAlpha=1;}
+ ctx.setTransform(sc,0,0,sc,0,0);
+ if(game.combo>=5){ctx.font=`bold ${fs(game.combo>=25?22:16)} sans-serif`;ctx.textAlign='right';ctx.strokeStyle='#000';ctx.lineWidth=4;const tx=`${game.combo} COMBO`;ctx.strokeText(tx,VW()-10,VH()-12);ctx.fillStyle=game.combo>=50?'#ff3c8a':game.combo>=25?'#ff8a5c':'#ffd36b';ctx.fillText(tx,VW()-10,VH()-12);}
+ if(game.big){const b=game.big,k=b.t/b.T,scl=1+(1-k)*.3+(k>.85?(k-.85)*4:0);ctx.save();ctx.translate(VW()/2,VH()/2);ctx.scale(scl,scl);ctx.globalAlpha=Math.min(1,b.t*2.5);ctx.font=`900 ${fs(54)} sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=8;ctx.strokeStyle='#000';ctx.strokeText(b.txt,0,0);ctx.fillStyle=b.c;ctx.fillText(b.txt,0,0);ctx.restore();ctx.textBaseline='alphabetic';ctx.globalAlpha=1;}
  if(paused&&!$('draft').classList.contains('on')&&!game.over){ctx.fillStyle='#0008';ctx.fillRect(0,0,VW(),VH());ctx.fillStyle='#ffd36b';ctx.font=`bold ${fs(36)} sans-serif`;ctx.textAlign='center';ctx.fillText('一時停止（休憩）',VW()/2,VH()/2);}}
 
 let last=performance.now();
@@ -478,8 +757,7 @@ function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!$('title').classList.contains('on'))draw();
  requestAnimationFrame(loop);}
 layout();reset();requestAnimationFrame(loop);
-document.querySelectorAll('img').forEach(im=>im.addEventListener('load',()=>{},{once:true}));
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,TOWERS,PERKS,layout,get portrait(){return portrait}};
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,mutate,upgrade,canPlace,TOWERS,PERKS,SITU,ENEMIES,layout,get portrait(){return portrait},pathTiles};
 })();
 </script>
 </body>
