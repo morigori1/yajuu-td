@@ -1554,6 +1554,72 @@ function drawV15(){if(!game)return;const c=ctx;c.save();c.setTransform(1,0,0,1,0
  c.restore();}
 const _draw15=draw;draw=function(){_draw15();try{drawV15();}catch(err){}};
 const _upd15=update;update=function(dt){_upd15(dt);try{V15.grime=Math.max(0,V15.grime-dt*.004);V15.taunt-=dt;if(V15.taunt<=0&&enemies.length){V15.taunt=7+Math.random()*6;const e=pick(enemies.filter(x=>!x.dead));if(e)say(e,pick(MEAN),2);}}catch(_){}};
+// ===================== v16: 合体＋連鎖コンボ＋タイムアタック/チャレンジ =====================
+const V16={chain:0,chainT:0,best:0,chal:null,pend:null};
+const FUSE_SAY=['ンアッー！（合体）','汗と汗が混ざり合う…','くっさ！合体くっさ！','ヌゥン！ヘッ！ヘッ！','あーもうめちゃくちゃだよ','暴れんなよ…（合体中）','ア゛ッー！','汚ねぇ合体だ（確信）'];
+function fuseCands(t){if(!t||t.fuse||TOWERS[t.k].wall||t.lvl<3)return[];return towers.filter(o=>o!==t&&!o.fuse&&!TOWERS[o.k].wall&&o.lvl>=3&&Math.abs(o.tx-t.tx)<=1&&Math.abs(o.ty-t.ty)<=1);}
+function fuseCost(t,o){return Math.round(120+40*(t.lvl+o.lvl));}
+function fuse(t,o){const c=fuseCost(t,o);if(game.gold<c){toast(`合体には ${c}G いるゾ`,'collar_face','bad',1200);return;}game.gold-=c;
+ towers=towers.filter(x=>x!==o);t.fuse={k:o.k,n:`${TOWERS[t.k].short}×${TOWERS[o.k].short}`};t.lvl=Math.max(t.lvl,o.lvl);t.kills=(t.kills||0)+(o.kills||0);t.thp=null;statsDirty=true;hudDirty=true;
+ const x=t.x,y=t.y;// ひどい合体演出
+ for(let i=0;i<(RM?4:16);i++)splat(pick(['#c9b08a','#8a7a20','#e8f4ff','#6b4a1a']));
+ siteBurst(x,y,'#b8a040',{n:RM?14:46,R:150,shake:16,txt:'合体（意味深）',sweat:true,sp:340,lw:5,decal:true});
+ setTimeout(()=>siteBurst(x,y,'#7a5a20',{n:RM?8:30,R:110,shake:10,txt:'ブリュッ',sweat:true,sp:260,lw:4,decal:true}),250);
+ punch(x,y,1.6,1.2,.9,1.8,'#8a7a20');shake(14);flash();V15.grime=Math.min(1,V15.grime+.25);
+ for(let i=0;i<(RM?6:24);i++)float(x+(Math.random()-.5)*120,y+(Math.random()-.5)*90,pick(['汗','汁','💦','ﾇﾁｬ','くさっ']),pick(['#c9b08a','#e8f4ff','#8dff6a']),i%5===0,1.4);
+ big(`${t.fuse.n} 合体！`,'#c9b08a',1.6);voice(pick(FUSE_SAY),3,.1);setTimeout(()=>voice('ア゛ッー！ くっさ！',3,2),900);
+ bark(3);snd(70,.9,'sawtooth',.09,-30);
+ for(const e of enemies)if(!e.dead&&(e.x-x)**2+(e.y-y)**2<160*160){e.slow=Math.max(e.slow||0,.6);e.slowT=Math.max(e.slowT||0,3);if(Math.random()<.4)say(e,pick(['くっさ！？','オエッ','近寄るな汗塔','鼻が死ぬゥ']),1.6);}
+ hlNote(`合体：${t.fuse.n}`,'#c9b08a',6,true);picked=t;renderInfo();}
+const _calc16=calcStats;calcStats=function(t){const st=_calc16(t);if(t.fuse&&st){const o=_calc16({...t,k:t.fuse.k,fuse:null,mut:null,over:null});st.dmg=(st.dmg||0)*1.5+(o.dmg||0)*.6;st.range=(st.range||0)*1.15;st.rate=(st.rate||1)*.85;if(o.pois)st.pois=Math.max(st.pois||0,o.pois);if(o.chain)st.chain=Math.max(st.chain||0,o.chain)+1;if(o.crit)st.crit=Math.max(st.crit||0,o.crit);if(o.aura)st.aura=Math.max(st.aura||0,o.aura);if(o.markV)st.markV=Math.max(st.markV||0,o.markV);if(o.splash)st.splash=Math.max(st.splash||0,o.splash);}return st;};
+const _rinfo16=renderInfo;renderInfo=function(){_rinfo16();try{const t=picked;if(!t)return;const box=$('info'),btns=box.querySelector('.btns');if(!btns)return;
+ if(t.fuse){const s=document.createElement('div');s.className='hint';s.style.color='#c9b08a';s.textContent=`🔗合体塔「${t.fuse.n}」：ダメ×1.5＋相方の能力・撃破で汗連鎖`;btns.before(s);return;}
+ const cs=fuseCands(t);if(!cs.length){if(t.lvl<3){}return;}for(const o of cs.slice(0,3)){const b=document.createElement('button');b.className='mut';b.style.borderColor='#c9b08a';b.textContent=`🔗合体 ${TOWERS[t.k].short}×${TOWERS[o.k].short} ${fuseCost(t,o)}G`;b.onclick=()=>fuse(t,o);btns.prepend(b);}}catch(_){}};
+// 連鎖：違う塔3本以上が1.5秒内に殴った敵を倒すと連鎖、合体塔の撃破は汗が飛び火
+const _hurt16=hurt;hurt=function(e,dmg,srcT,o){if(srcT&&e&&!e.dead){(e.hb||(e.hb=new Map())).set(srcT,game.t);}return _hurt16(e,dmg,srcT,o);};
+function chainBlast(x,y,dm,src,n){let hit=0;for(const e of enemies){if(e.dead||hit>=n)continue;if((e.x-x)**2+(e.y-y)**2<110*110){hit++;fx.length<FX_CAP&&pushFx({type:'ring',x:e.x,y:e.y,r:8,t:.3,c:'#c9b08a'});_hurt16(e,dm,null,{noCrit:1});}}return hit;}
+const _kill16=kill;kill=function(e,t){const was=e&&e.dead;_kill16(e,t);if(was||!e)return;try{
+ const n=e.hb?[...e.hb.values()].filter(v=>game.t-v<1.5).length:0;
+ if(n>=3||(t&&t.fuse)){V16.chain=V16.chainT>0?V16.chain+1:1;V16.chainT=2.5;V16.best=Math.max(V16.best,V16.chain);game.chainBest=V16.best;
+  const g=4+V16.chain*2;game.gold+=g;hudDirty=true;const dm=(e.maxHp||50)*.25+V16.chain*6;
+  float(e.x,e.y-26,`連鎖×${V16.chain} +${g}G`,'#c9b08a',true,1);splat(pick(['#c9b08a','#8a7a20']));
+  setTimeout(()=>{if(game&&!game.over)chainBlast(e.x,e.y,dm,t,2+Math.min(4,V16.chain>>1));},120);
+  if(V16.chain%5===0){big(`${V16.chain}連鎖！汁ブシャー`,'#c9b08a',1);shake(8+V16.chain/2);punch(e.x,e.y,1.18,.4,.3,0,'#8a7a20');voice(pick(['連鎖くっさ','ンアッー！','汗が止まらないゾ']),2,.1);hlNote(`${V16.chain}連鎖`,'#c9b08a',5);}
+  if(game.ta)game.taBonus=(game.taBonus||0)+.3;}}catch(_){}};
+// チャレンジ
+const CHALS=[
+ {id:'ta',n:'⏱ タイムアタック',d:'15WAVEを最速クリア。連鎖1回ごとに-0.3秒。ウェーブ間待機も時間に入る。'},
+ {id:'life1',n:'💀 ライフ1（無慈悲）',d:'1体漏れたら終わり。撃破報酬+30%。'},
+ {id:'poor',n:'💸 114G縛り',d:'初期資金114G、利子なし。貧乏汗だく。'},
+ {id:'five',n:'🗼 塔5本まで',d:'設置は5本まで。合体で枠を空けろ。'},
+ {id:'hard',n:'🔥 汗だくハード',d:'敵HP×1.6・速度×1.15。覚悟しろよ？'}];
+function chalBest(id){try{return JSON.parse(localStorage.getItem('yajuuTD_chal')||'{}')[id];}catch(_){return null;}}
+function chalSave(id,v,lower){try{const o=JSON.parse(localStorage.getItem('yajuuTD_chal')||'{}');if(o[id]==null||(lower?v<o[id]:v>o[id])){o[id]=v;localStorage.setItem('yajuuTD_chal',JSON.stringify(o));return true;}}catch(_){}return false;}
+const fmtT=s=>`${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`;
+const _reset16=reset;reset=function(){_reset16();V16.chain=0;V16.chainT=0;V16.best=0;const c=V16.pend;game.chal=c;game.ta=c==='ta';game.taT=0;game.taBonus=0;
+ if(c==='life1')game.lives=1;if(c==='poor')game.gold=114;if(c)toast(`チャレンジ：${CHALS.find(x=>x.id===c).n}`,'collar_face','',2000);updHud();};
+const _cp16=canPlace;canPlace=function(k,tx,ty){if(game&&game.chal==='five'&&towers.length>=5)return false;return _cp16(k,tx,ty);};
+const _sp16=spawn;spawn=function(...a){const r=_sp16(...a);try{const e=r||enemies[enemies.length-1];if(e&&!e._v16){e._v16=1;if(game.chal==='hard'){e.hp*=1.6;if(e.maxHp)e.maxHp*=1.6;if(e.spd)e.spd*=1.15;}}}catch(_){}return r;};
+const _k16b=kill;kill=function(e,t){const g0=game.gold,was=e&&e.dead;_k16b(e,t);if(!was&&game.chal==='life1'){game.gold+=Math.round(Math.max(0,game.gold-g0)*.3);}};
+const _win16=win;win=function(){_win16();try{if(!game.chal)return;let msg;if(game.ta){const s=Math.max(0,game.taT-game.taBonus);const nb=chalSave('ta',+s.toFixed(1),true);msg=`⏱ タイム ${fmtT(s)}${nb?'（自己ベスト更新！やりますねぇ）':''}`;}else{chalSave(game.chal,1);msg=`チャレンジ「${CHALS.find(x=>x.id===game.chal).n}」達成！`;}
+ $('eText').innerHTML=`<b style="color:#c9b08a">${msg}</b><br>最大連鎖 ${V16.best}<br>`+$('eText').innerHTML;}catch(_){}};
+const _go16=gameOver;gameOver=function(){_go16();try{$('eText').innerHTML+=`<br>最大連鎖 ${V16.best}${game.chal?'・チャレンジ失敗（ざぁこ♡）':''}`;}catch(_){}};
+const _upd16=update;update=function(dt){_upd16(dt);try{if(V16.chainT>0){V16.chainT-=dt;if(V16.chainT<=0)V16.chain=0;}if(game.ta&&!game.over)game.taT+=dt;}catch(_){}};
+function drawV16(){const c=ctx;c.save();c.setTransform(1,0,0,1,0,0);const d=view.dpr,t=performance.now()/1000;
+ for(const tw of towers)if(tw.fuse){const s=view.k*d,[vx,vy]=P(tw.x,tw.y);c.globalAlpha=.35+.2*Math.sin(t*6+tw.x);c.strokeStyle='#8a7a20';c.lineWidth=3*d;c.beginPath();c.arc(vx*s,vy*s,(22+3*Math.sin(t*9))*s,0,7);c.stroke();c.fillStyle='#c9b08a';if(!RM&&Math.random()<.3)c.fillRect(vx*s+(Math.random()-.5)*30*s,vy*s+Math.random()*20*s,2*d,6*d);}
+ c.globalAlpha=1;c.font=`bold ${14*d}px sans-serif`;c.textAlign='left';c.lineWidth=3*d;c.strokeStyle='#000';let y=c.canvas.height-12*d;
+ const line=(s,col)=>{c.strokeText(s,10*d,y);c.fillStyle=col;c.fillText(s,10*d,y);y-=18*d;};
+ if(V16.chain>1)line(`🔗 連鎖×${V16.chain}`,'#c9b08a');
+ if(game.ta)line(`⏱ ${fmtT(Math.max(0,game.taT-game.taBonus))}${chalBest('ta')!=null?'  BEST '+fmtT(chalBest('ta')):''}`,'#ffd36b');
+ else if(game.chal)line(CHALS.find(x=>x.id===game.chal).n,'#ff8a5c');
+ c.restore();}
+const _draw16=draw;draw=function(){_draw16();try{drawV16();}catch(_){}};
+(function(){const tb=$('bStory');const b=document.createElement('button');b.id='bChal';b.textContent='⏱ タイムアタック／チャレンジ';b.style.cssText='margin-top:8px;min-height:44px';tb.after(b);
+ const ov=document.createElement('div');ov.className='ov';ov.id='chal';ov.innerHTML='<h2>⏱ チャレンジ（迫真）</h2><div class="cards" id="chalList"></div><button id="chalBack" style="margin-top:12px">戻る</button>';document.body.appendChild(ov);
+ b.onclick=()=>{const L=$('chalList');L.innerHTML='';for(const ch of CHALS){const k=document.createElement('button');k.className='card';const bt=chalBest(ch.id);k.innerHTML=`<b></b><br><small></small><br><span style="color:#ffd36b">${bt!=null?(ch.id==='ta'?'BEST '+fmtT(bt):'✔ 達成済み'):'未達成'}</span>`;k.querySelector('b').textContent=ch.n;k.querySelector('small').textContent=ch.d;
+  k.onclick=()=>{V16.pend=ch.id;ov.classList.remove('on');$('title').classList.remove('on');reset();snd(523,.1,'triangle',.06);openSitu();};L.appendChild(k);}ov.classList.add('on');};
+ $('chalBack').onclick=()=>ov.classList.remove('on');
+ const bs=$('bStart'),o=bs.onclick;bs.onclick=()=>{V16.pend=null;o();};})();
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
@@ -1561,7 +1627,7 @@ function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!$('title').classList.contains('on'))draw();
  requestAnimationFrame(loop);}
 layout();reset();requestAnimationFrame(loop);
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles};
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16};
 })();
 </script>
 </body>
