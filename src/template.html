@@ -439,16 +439,16 @@ const COMBO_MS={10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、�
 
 // ---------- defs ----------
 const TOWERS={
- senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',role:'火力',vs:'クリ／連射／狙撃の3本柱。覚醒で特化',desc:'【火力】迫真クリ／サムライブルー連射／見とけよ狙撃を覚醒で選択。序盤から終盤まで使える（王道を征く）',crit:.15,proj:'#ffd36b',
+ senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:95,range:135,dmg:20,rate:.8,ring:'#ffd36b',role:'火力',vs:'クリ／連射／狙撃の3本柱。覚醒で特化',desc:'【火力】迫真クリ／サムライブルー連射／見とけよ狙撃を覚醒で選択。序盤から終盤まで使える（王道を征く）',crit:.15,proj:'#ffd36b',
   muts:[{n:'迫真狙い撃ち',d:'クリ率+25%・クリは装甲無視（ファッ！？）'},{n:'サムライブルー',d:'高速連射・雑魚掃除（やりますねぇ！）'}],
   overs:[{n:'見とけよ狙撃',d:'超射程・装甲無視・HP20%以下即死（処刑）'},{n:'貫通サムライ',d:'連射時は弾が2回跳ねる（貫通！）'}]},
  trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',role:'オーラ',vs:'中央ハブ向き。らせんで真価',desc:'【オーラ】便乗の輪／ホラホラ声援／観葉植物を覚醒で選択。攻撃枠を食うが周囲を強化（そうだよ）',aura:true,
   muts:[{n:'便乗の輪',d:'オーラ範囲+40%・効果+15%（便乗！）'},{n:'ホラホラ声援',d:'全体攻撃+8%/基・上限あり（声援！）'}],
   overs:[{n:'そうだよ（便乗）',d:'オーラ内タワーのクリ+8%（便乗）'},{n:'観葉植物くん',d:'範囲内HP回復+速度+12%（水やり！）'}]},
- collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',role:'減速',vs:'俊足・跳躍・自爆・汗だまり対策',desc:'【減速】ふっとばし指導／アイスティー／生ビールを覚醒で選択。範囲パルスで敵を止める（やめてくださいよ本当に）',pulse:true,slow:.45,slowT:1.2,proj:'#b8ecff',freeze:.7,
+ collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:165,range:100,dmg:8,rate:.95,ring:'#5cd6a8',role:'減速',vs:'俊足・跳躍・自爆・汗だまり対策',desc:'【減速】ふっとばし指導／アイスティー／生ビールを覚醒で選択。範囲パルスで敵を止める（やめてくださいよ本当に）',pulse:true,slow:.45,slowT:1.2,proj:'#b8ecff',freeze:.7,
   muts:[{n:'ふっとばし指導',d:'パルスで敵を押し戻す（指導！）'},{n:'アイスティー砲',d:'凍結で硬直＋減速・結露つき（冷たい）'}],
   overs:[{n:'二重締め',d:'ノックバック強化＋0.5秒スタン（締め！）'},{n:'生ビール砲',d:'泡で減速＋混乱・酔わせ（ゴクゴク）'}]},
- cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',role:'範囲',vs:'810焦土／円定規／電撃の3本柱',desc:'【範囲】810焦土／円定規コンパス／イキスギ電撃を覚醒で選択。爆風で密集を処理（114514！）',splash:62,crit:.1,proj:'#ff8a5c',
+ cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:280,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',role:'範囲',vs:'810焦土／円定規／電撃の3本柱',desc:'【範囲】810焦土／円定規コンパス／イキスギ電撃を覚醒で選択。爆風で密集を処理（114514！）',splash:62,crit:.1,proj:'#ff8a5c',
   muts:[{n:'810焦土',d:'着弾地点が3秒燃える（810！）'},{n:'円定規コンパス',d:'周囲同心円攻撃・数学的な美しさ（汚い）'}],
   overs:[{n:'焦土延長',d:'焦土6秒・炎ダメ+40%（焦土！）'},{n:'イキスギ電撃',d:'4体連鎖・盾に2倍【対盾】（ビクンビクン）'}]},
  bank:{name:'810銀行',short:'810銀行',img:'trio_sepia_face#gold',cost:175,range:110,dmg:0,rate:0,ring:'#ffd36b',role:'経済',vs:'攻撃枠を食う。序盤投資・後半は火力に換金せよ',desc:'【経済】利息／集金後輩を覚醒で選択。火力とトレード',bank:true,proj:'#ffe08a',
@@ -457,10 +457,10 @@ const TOWERS={
  wall:{name:'迫真バリケード',short:'バリケード',img:'collar_face#gray',cost:90,range:0,dmg:0,rate:0,ring:'#b0b0b0',role:'壁',vs:'ヘアピン/迷路のチョーク。跳躍は飛び越える',desc:'【壁】道に置くチョーク。跳躍は飛び越え注意',wall:true,hp:260,
   muts:[{n:'トゲトゲ',d:'接触中の敵に毎秒反撃ダメ'},{n:'迫真復活',d:'毎秒HP5%回復'}],
   overs:[{n:'爆ぜる壁',d:'破壊時に周囲ダメ'},{n:'連結壁',d:'隣接壁とHPを分け合う'}]},
- mine:{name:'810地雷',short:'810地雷',img:'senpai_face#gray',cost:70,range:58,dmg:90,rate:5,ring:'#ff3c3c',role:'罠',vs:'道に置く。爆発／減速床の2本柱',desc:'【罠】道に置く。114514爆発／ぬるぬる泥床を覚醒で選択',onPath:true,mine:true,
+ mine:{name:'810地雷',short:'810地雷',img:'senpai_face#gray',cost:65,range:58,dmg:90,rate:5,ring:'#ff3c3c',role:'罠',vs:'道に置く。爆発／減速床の2本柱',desc:'【罠】道に置く。114514爆発／ぬるぬる泥床を覚醒で選択',onPath:true,mine:true,
   muts:[{n:'114514爆発',d:'踏むと爆発・再装填（威力大）'},{n:'ぬるぬる泥床',d:'持続減速床・何度でも踏める'}],
   overs:[{n:'連鎖爆風',d:'爆発時の爆風+50%・威力+30%'},{n:'底なし沼',d:'泥床時ボス以外を時々掴む'}]},
- gaze:{name:'ほら見ろよ見ろよ塔',short:'視線塔',img:'collar_card#blue',cost:180,range:130,dmg:4,rate:.9,ring:'#6ab8ff',role:'デバフ',vs:'晒し上げ／くっさガス／ハエの3本柱',desc:'【デバフ】晒し上げ視線／くっさガス／ハエ大群を覚醒で選択。敵を弱体化（見とけよ見とけよ～）',gaze:true,
+ gaze:{name:'ほら見ろよ見ろよ塔',short:'視線塔',img:'collar_card#blue',cost:170,range:140,dmg:5,rate:.9,ring:'#6ab8ff',role:'デバフ',vs:'晒し上げ／くっさガス／ハエの3本柱',desc:'【デバフ】晒し上げ視線／くっさガス／ハエ大群を覚醒で選択。敵を弱体化（見とけよ見とけよ～）',gaze:true,
   muts:[{n:'晒し上げ',d:'被ダメ+40%マーク（晒し！）'},{n:'くっさガス',d:'装甲無視の継続ダメ（くっさ！）'}],
   overs:[{n:'アクエリアス砲',d:'晒し上げ時バフ解除＋減速（水分補給）'},{n:'ハエ大群',d:'ステルス看破・群れ演出（ハエ！）'}]},
 };
@@ -621,9 +621,10 @@ function camTick(dt){if(CAM.t>0){CAM.t-=dt;}else CAM.tz=1;CAM.z+=(CAM.tz-CAM.z)*
  if(game&&game.card)game.card.t-=dt;if(game&&game.tele>0)game.tele-=dt;if(game&&game.streak)game.streak.t-=dt;}
 const STREAK=[[10,'いいゾ～これ','#ffd36b'],[25,'ホラホラホラホラ','#ff8a5c'],[50,'暴れんなよ…暴れんなよ…','#ff3c8a'],[100,'イキスギィ！イクイクイク','#c98aff'],[200,'迫真空手部、極','#fff']];
 function streakCheck(c,x,y){for(const [n,txt,col] of STREAK)if(c===n){game.streak={n,txt,col,t:2,T:2};big(`${n} STREAK`,col,1.2);punch(x,y,1.12+n/1000,.6,n>=50?.5:0,n>=50?1.2:0,col);shake(6+n/20);flash();snd(440+n*2,.25,'square',.05,300);goro(x,y,null,true,n>=50?3:2);}}
-function waveCard(){const bossW=game.wave%5===0;let hint='';
+function waveCard(){const bossW=game.wave%5===0;const nextBoss=(game.wave+1)%5===0&&game.wave<game.maxWave;let hint='';
  if(game.wave===1&&game.mode!=='camp')hint='💡 タワーを置いて後輩を止めろ（やめてくださいよ本当に）';
  else if(game.wave===2&&towers.length>0&&!towers.some(t=>t.mut!=null))hint='💡 Lv3で覚醒できる（もっと強く…なりたい）';
+ else if(nextBoss)hint='⚠️ 次はボス戦！準備しろ（イキスギィ！）';
  game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:hint||game.stageEv?'⚠ '+(hint||game.stageEv):'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
 const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を征く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ','ｱｰｲｷｿ','ありますあります','いいねぇー','行きませんか？行きましょうよ','痛いですね…これは痛い','おかのした','こ↑こ↓','これもうわかんねぇな','じゃけん夜行きましょうね～','だいぶ溜まってんじゃんアゼルバイジャン','ダメみたいですね','で、出ますよ…','ないです','ヌッ！','喉渇いた…喉渇かない？','白菜かけますね','はっきりわかんだね','バッチェ冷えてますよ','ビール！ビール！','Foo↑気持ちいい～','ブッチッパ！','ほらいくどー','やんほぬ','わかるわかる（タメ口）','ありがとナス！','ウッソだろお前ｗｗｗ','かしこまり！','悲しいなぁ','最後の一発くれてやるよオラ！','もう許せるぞオイ！','知らねーよ、そんなの','いつもの','汚汚汚～～～～～～～～～','オッスオッス！','勝手にたまげてろ','がんばれ！','くさい（確信）','ここすき','すき','誰？','もっとやれ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
@@ -965,7 +966,10 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
  const boss=enemies.find(e=>e.d.boss);if(boss)$('bossfill').style.width=(100*boss.hp/boss.maxHp)+'%';else if($('bossbar').style.display!=='none')$('bossbar').style.display='none';
  if(game.inWave&&!spawnQ.length&&!enemies.length&&!game.over)waveClear();
  if(game.gold!==g0||game.lives!==l0)hudDirty=true;}
-function waveClear(){const s=S();game.inWave=false;let inc=20+game.wave*5,lifeUp=0,nb0=0;
+function waveClear(){const s=S();game.inWave=false;
+ const clearGoro=['いいゾ〜これ','やりますねぇ！','114514！','もう許せるぞオイ！','王道を征く','あーいいっすね～','がんばれ！','キタ！'];
+ if(Math.random()<.65)big(pick(clearGoro),'#ffd36b',1.05);
+ let inc=20+game.wave*5,lifeUp=0,nb0=0;
  for(const t of towers){if(t.k==='bank'){inc+=bankIncome(t);if(t.mut===0)nb0++;if(t.mut===1)lifeUp++;}t.critB=0;t.sipG=0;t.stunT=0;if(t.k==='mine')t.armed=1;if(t.k==='wall')t.hp=tStats(t).maxHp;}
  const rate=s.interest+.04*nb0+(s.setEco&&tagN('経済')>=2?.03:0)+(nb0&&s.ecoBond?.01:0);const intr=(rate>0&&game.chal!=='poor')?Math.min(120+100*nb0+(towers.some(t=>t.k==='bank'&&t.over===0)?120:0),Math.floor(game.gold*rate)):0;
  game.gold+=inc+intr;game.lives+=lifeUp+s.lifeRegen;fires=[];stageClear();
@@ -1070,13 +1074,24 @@ function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
  if(d.aura)return `オーラ 攻撃+${Math.round(st.aur*100)}%・射程 ${Math.round(st.range)}`;
  let a=d.poison?`毒 ${st.pois.toFixed(1)}/s`:`攻撃 ${st.dmg.toFixed(1)}`;a+=`・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}`;
  if(st.chain)a+=`・連鎖 ${st.chain}`;if(st.aura)a+=` <span style="color:#d9b36a">★+${Math.round(st.aura*100)}%</span>`;if(st.crit)a+=`・クリ ${Math.round((st.crit+(t.critB||0))*100)}%`;if(st.sip)a+=`・集金 ${t.sipG}/${st.sipCap}G`;if(st.sip)a+=`・集金 ${t.sipG}/${st.sipCap}G`;return a+`・撃破 ${t.kills}`;}
+function getAwakenHint(k,mut,idx){
+ const hints={
+  senpai:{0:{0:'💥 クリ特化',1:'⚡ 連射特化'},1:{0:'🎯 超射程・処刑',1:'💫 貫通'}},
+  trio:{0:{0:'📍 範囲↑・効果↑',1:'🗣 全体攻撃'},1:{0:'💥 クリ支援',1:'💚 回復支援'}},
+  collar:{0:{0:'👊 ノックバック',1:'❄ 凍結'},1:{0:'💢 スタン',1:'🍺 混乱'}},
+  cannon:{0:{0:'🔥 焦土DoT',1:'⭕ 同心円'},1:{0:'🔥 焦土延長',1:'⚡ 連鎖・対盾'}},
+  gaze:{0:{0:'👁 被ダメ↑マーク',1:'☠ 毒DoT'},1:{0:'💧 バフ解除',1:'🦟 ステルス看破'}},
+  bank:{0:{0:'💰 利息（受動）',1:'💴 集金（能動）'},1:{0:'💰 利息上限↑',1:'💴 集金効率↑'}},
+  mine:{0:{0:'💣 爆発・単発',1:'🟤 減速床'},1:{0:'💥 爆風強化',1:'🕳 掴む'}}
+ };
+ return hints[k]&&hints[k][mut!=null?1:0]?hints[k][mut!=null?1:0][idx]:'';}
 function renderInfo(){const box=$('info');
  if(picked){const t=picked,d=TOWERS[t.k];const mn=t.mut!=null?d.muts[t.mut].n:'';
   const on=t.over!=null?d.overs[t.over].n:'';const mx=S().maxLvl;
   box.innerHTML=`<div class="wrapI"><div class="row" style="flex:1;min-width:0"><img src="${src(d.img)}" style="border-color:${d.ring};${cssf(d.img)}"><div style="min-width:0"><b></b> Lv.${t.lvl}/${mx}${mn?` <span class="mutTag">${mn}</span>`:''}${on?` <span class="mutTag" style="background:#5a3a10;color:#ffd36b">極·${on}</span>`:''}<div class="st" id="stl"></div></div></div>
   <div class="btns">${canOver(t)?`<button id="bO0" class="mut" style="border-color:#ffd36b"></button><button id="bO1" class="mut" style="border-color:#ffd36b"></button>`:canMut(t)?`<button id="bM0" class="mut"></button><button id="bM1" class="mut"></button>`:`<button id="bUp"></button>`}<button id="bSell"></button></div></div>`;box.querySelector('b').textContent=d.name;$('stl').innerHTML=statLine(t);
-  if(canOver(t)){[0,1].forEach(i=>{const b=$('bO'+i);b.innerHTML=`極${'AB'[i]} ${overCost(t)}G：${d.overs[i].n}<br><small></small>`;b.querySelector('small').textContent=d.overs[i].d;b.onclick=()=>overwake(t,i);});}
-  else if(canMut(t)){[0,1].forEach(i=>{const b=$('bM'+i);b.innerHTML=`覚醒${'AB'[i]} ${mutCost(t)}G：${d.muts[i].n}<br><small></small>`;b.querySelector('small').textContent=d.muts[i].d;b.onclick=()=>mutate(t,i);});}
+  if(canOver(t)){[0,1].forEach(i=>{const b=$('bO'+i);const hint=getAwakenHint(t.k,t.mut,i);b.innerHTML=`極${'AB'[i]} ${overCost(t)}G：${d.overs[i].n}<br><small></small>${hint?`<div style="font-size:10px;color:#8ac0ff;margin-top:2px">${hint}</div>`:''}`;b.querySelector('small').textContent=d.overs[i].d;b.onclick=()=>overwake(t,i);});}
+  else if(canMut(t)){[0,1].forEach(i=>{const b=$('bM'+i);const hint=getAwakenHint(t.k,null,i);b.innerHTML=`覚醒${'AB'[i]} ${mutCost(t)}G：${d.muts[i].n}<br><small></small>${hint?`<div style="font-size:10px;color:#8ac0ff;margin-top:2px">${hint}</div>`:''}`;b.querySelector('small').textContent=d.muts[i].d;b.onclick=()=>mutate(t,i);});}
   else $('bUp').onclick=()=>upgrade(t);
   $('bSell').onclick=()=>sell(t);updInfoBtns();}
  else if(sel){const d=TOWERS[sel];box.innerHTML=`<div class="wrapI"><div class="row"><img src="${src(d.img)}" style="border-color:${d.ring};${cssf(d.img)}"><div><b></b>　${cost(sel)?cost(sel)+'G':'タダ'}<div class="st" id="selDesc"></div><div class="hint">${d.onPath?'道の上に置く。':''}${TOUCH?'マップを2回タップで設置':'マップをクリックで設置（Escで解除）'}</div></div></div></div>`;box.querySelector('b').textContent=d.name;
