@@ -27,7 +27,7 @@ body.compact #bWave.go:not(:disabled),body.portrait #bWave.go:not(:disabled){min
 #hud .stat{font-weight:800;font-size:18px;display:flex;align-items:center;gap:4px;white-space:nowrap}
 #hud .stat b{color:#ffd36b}
 #hud .avatar{width:40px;height:40px;border-radius:50%;border:2px solid #ffd36b;object-fit:cover;flex:none}
-#nextinfo{font-size:13px;color:#c9b894;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#nextinfo{font-size:13px;color:#c9b894;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex:1;max-width:100%}
 #dailyInfo{display:none;flex-basis:100%;font-size:11px;color:#ffd36b;white-space:normal;overflow:hidden;margin:0;line-height:1.3;max-height:2.8em}
 #hud .ctl{display:flex;gap:6px;align-items:center;min-width:0;flex-wrap:wrap}
 #bWave{min-width:120px}
@@ -118,7 +118,8 @@ body.portrait #hud{padding:4px 8px;gap:6px}
 body.portrait #hud .stats{flex-basis:100%;gap:10px}
 body.portrait #hud .avatar{width:34px;height:34px}
 body.portrait #hud .stat{font-size:16px}
-body.portrait #nextinfo{flex:1;text-align:right}
+body.portrait #nextinfo{flex:1;text-align:right;min-width:0}
+body.portrait #dailyInfo,body.compact #dailyInfo{max-height:3.9em}
 body.portrait #hud .ctl{flex-basis:100%}
 body.portrait #bWave{flex:1;font-size:16px}
 body.portrait #main{flex-direction:column}
@@ -174,7 +175,7 @@ body.portrait #shop{display:flex;flex-direction:row;overflow-x:auto;overflow-y:h
 body.portrait #shop::-webkit-scrollbar{display:none}
 body.portrait .shop{flex:0 0 70px;scroll-snap-align:start}
 body.portrait .shop img{width:36px;height:36px}
-body.portrait .shop .nm{font-size:9px}
+body.portrait .shop .nm{font-size:9px;max-width:66px}
 body.portrait .shop .cost{font-size:10px;padding:1px 3px}
 body.portrait .shop.sel,body.compact .shop.sel{transform:none;box-shadow:0 0 8px #ffd36b}
 body.portrait #info>.wrapI{flex-wrap:wrap}
@@ -183,7 +184,8 @@ body:not(.portrait):not(.compact) #side>*{flex-shrink:0}
 body:not(.portrait):not(.compact) #info .btns{flex-wrap:wrap}
 body:not(.portrait):not(.compact) #info .btns button.mut{flex:1 1 100%;min-height:44px}
 body.compact #shop{flex:1 1 auto;min-height:100px;overflow-y:auto;grid-auto-rows:max-content;align-content:start;touch-action:pan-y;-webkit-overflow-scrolling:touch}
-body.compact #info{flex-shrink:0}
+body.compact #info{flex-shrink:0;overflow:hidden}
+body.compact #info .st,body.portrait #info .st{overflow:hidden;max-height:2.8em;line-height:1.3}
 body.portrait #info .btns{width:100%;flex-wrap:nowrap}
 body.portrait #info .btns button.mut{flex:1 1 0;min-width:0;max-width:none}
 body.portrait #info .btns #bSell{flex:0 0 82px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -425,7 +427,7 @@ function pickRoute(){const op=ROUTES.map((r,i)=>i).filter(i=>ROUTES[i].open);if(
 
 // ---------- meme lines ----------
 const L={
- kill:['ヌッ！','ンアッー！（了解）','あっ、そっかぁ…（昇天）','痛いですね…（他人事）','オォン！アォン！','ひでぇ…（褒め言葉）','あ ほ く さ','ぬわああん（完）','顔面ペチャ（物理）','そうだよ（死亡）','いかんでしょ（いく）','えぇ…（困惑して死ぬ）','は？（倒れる）','おかのした（成仏）','24歳、撃破です','ファッ！？ ウーン…','やめちくり〜（手遅れ）','114514（断末魔）','これもうわかんねぇな','汗だく（最期）','帰って、どうぞ（帰らぬ人）','やったぜ。','はっきりわかんだね（死）','なんだお前（素）','大丈夫か大丈夫か（大丈夫じゃない）','サッー！（撃破）','ふらふらして沈んだ'],
+ kill:['ヌッ！','ンアッー！（了解）','あっ、そっかぁ…（昇天）','痛いですね…（他人事）','オォン！アォン！','ひでぇ…（褒め言葉）','あ ほ く さ','ぬわああん（完）','顔面ペチャ（物理）','そうだよ（死亡）','いかんでしょ（いく）','えぇ…（困惑して死ぬ）','は？（倒れる）','おかのした（成仏）','24歳、撃破です','ファッ！？ ウーン…','やめちくり〜（手遅れ）','114514（断末魔）','これもうわかんねぇな','汗だく（最期）','帰って、どうぞ（帰らぬ人）','やったぜ。','はっきりわかんだね（死）','なんだお前（素）','大丈夫か大丈夫か（大丈夫じゃない）','サッー！（撃破）','ふらふらして沈んだ','跳び損ねた（床）','ドカーン前に倒した'],
  crit:['ファッ！？','迫真の、迫真','ホラ、ホラ（ホラではない）','オラァ！（丁寧語）','FA！？','見とけよ（見えない速さ）','王道を征く一撃','は？（威圧）','お ま た せ','114514倍','ン゛ッ（会心）','ここすき'],
  critToast:['ファッ！？（会心の会心）','迫真！（何が？）','今の見た？ 嘘つけ絶対見てたゾ','痛いですね…これは痛い（確信）','ホラ、ホラ、ホラ（何もない）'],
  leak:['まずいですよ！（まずくない）','入って、どうぞ（入るな）','あっ…（察し）（察せない）','やめてくれよ…（絶望）（希望）','何やってんだお前ぇ！（俺）','いいよ！こいよ！（来ないで）','おかしいですよ！カテジナさん！（誰）','ちょっと待ってくださいよォ！（もう遅い）','そうだよ（入られた）','玄関、汗だく（意味不明）','は？ 抜けた？ 抜けたって何？'],
@@ -572,7 +574,7 @@ const PERKS=[
  {t:'覚醒ラッシュ（意味不明）',d:'覚醒したタワー1基ごとに全攻撃+6%（最大+36%）',img:'grimace_face',tag:'覚醒',max:1,ap:s=>s.awakenDmg=.06},
  {t:'極の道',d:'極覚醒コスト半額・通常覚醒-20%',img:'title_senpai',tag:'覚醒',max:1,ap:s=>{s.overCost*=.5;s.mutCost*=.8}},
  {t:'三色の覚醒',d:'異なる塔を3種以上覚醒で全ダメ+25%',img:'navy_trio_card',tag:'覚醒',max:1,ap:s=>s.triAwaken=1},
- {t:'毒視電の輪',d:'毒・電撃・視線タワーが全部あると各+20%',img:'navy_center_face',tag:'シナジー',max:1,ap:s=>s.triRing=1},
+ {t:'砲視銀の輪',d:'114514砲・視線・銀行が揃うと全ダメ+20%',img:'navy_center_face',tag:'シナジー',max:1,ap:s=>s.triRing=1},
  {t:'二重の汗',d:'二重エリートへのダメ+40%・報酬+1.5倍',img:'navy_right_face',tag:'エリート',max:1,ap:s=>s.dualHunt=1},
  {t:'後輩の結束',d:'集金と銀行が互いの範囲で収入+1G',img:'locker_left_face',tag:'経済',max:1,ap:s=>s.ecoBond=1},
  {t:'王道を征く、強化系',d:'強化コスト-20%・Lv上限5のまま',img:'senpai_face',tag:'強化',max:1,ap:s=>s.upCostMul*=.8},
@@ -625,6 +627,7 @@ const SITU=[
  {t:'近道全開',d:'仮設橋が最初から開通・報酬+15%・敵数+10%',img:'collar_card',ap:s=>{s.forceBridge=1;s.bounty+=.15;s.eCount*=1.1;try{for(const r of ROUTES)if(r.br)r.open=true;rebuildTiles();if(game)game.tele=2.2;}catch(_){}}},
  {t:'密着指導',d:'射程-22%・攻撃+28%・速度+12%（近づけ）',img:'collar_face',ap:s=>{s.gRange-=.22;s.gDmg+=.28;s.gRate+=.12}},
  {t:'サッー道場',d:'野獣ステップ多め・攻撃速度+10%・報酬+10%',img:'navy_center_face',ap:s=>{s.specDash=1;s.gRate+=.1;s.bounty+=.1}},
+ {t:'見とけよ特訓',d:'全射程+12%・被ダメマーク+10%・敵HP+6%',img:'collar_card',ap:s=>{s.gRange+=.12;s.markAdd+=.1;s.eHp*=1.06}},
 ];
 
 // ---------- state ----------
@@ -740,7 +743,7 @@ function overN(){return towers.filter(t=>t.over!=null).length;}
 function mutKinds(){return new Set(towers.filter(t=>t.mut!=null).map(t=>t.k)).size;}
 function hasKinds(...ks){const have=new Set(towers.map(t=>t.k));return ks.every(k=>have.has(k));}
 function tagN(tag){let n=0;for(const p of game.perks){const q=PERKS.find(x=>x.t===p);if(q&&q.tag===tag)n++;}return n;}
-function awakenMul(){const s=S();let m=1+mutN()*s.awakenDmg;if(s.triAwaken&&mutKinds()>=3)m+=.25;if(s.triRing&&hasKinds('poison','chain','gaze'))m+=.2;m+=overN()*s.overDmg;return m;}
+function awakenMul(){const s=S();let m=1+mutN()*s.awakenDmg;if(s.triAwaken&&mutKinds()>=3)m+=.25;if(s.triRing&&hasKinds('cannon','gaze','bank'))m+=.2;m+=overN()*s.overDmg;return m;}
 function mapB(){return(MAP&&MAP.buff)||{};}
 function wallCap(){return S().wallMax+(mapB().wallMaxAdd||0);}
 function hypeCalc(){const mb=mapB();let d=0,r=0;const cut=S().ecoCut||0;for(const o of towers)if(o.k==='trio'&&o.mut===1){const v=(.08+.02*(o.lvl-1)+S().hypeAdd+(mb.hypeAdd||0))*(1-cut);d+=v;}const overH=towers.some(t=>t.k==='trio'&&t.mut===1&&t.over===1);game.hypeD=Math.min(.5+S().hypeAdd*2+(mb.hypeAdd||0)*2+(overH?.2:0),d);game.hypeR=0;}
@@ -1120,7 +1123,10 @@ function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{
 function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k,c=cost(k),ce=el.querySelector('.cost');ce.textContent=c?c+'G':'タダ';ce.classList.toggle('free',!c);el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<c);});}
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;try{if($('gold'))$('gold').textContent=game.gold;if($('lives'))$('lives').textContent=game.lives;if($('wave'))$('wave').textContent=game.wave;const bw=$('bWave');if(bw){bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':(TOUCH?'ウェーブ開始':'ウェーブ開始 (Space)');}
- const nw=game.wave+1;if($('nextinfo'))$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?'次: ボス戦！':'次: ウェーブ '+nw)+(game.inWave||TOUCH?'':'　Spaceで開始');
+ const nw=game.wave+1,slim=document.body.classList.contains('portrait')||document.body.classList.contains('compact');
+ if($('nextinfo')){const left=spawnQ.length+enemies.filter(e=>e&&!e.dead).length;
+  if(game.inWave)$('nextinfo').textContent=(game.combo>=3?game.combo+'連撃・':'')+'残'+left;
+  else $('nextinfo').textContent=(nw%5===0?'次:ボス':'次:W'+nw)+(slim||TOUCH?'':'　Space');}
  const di=$('dailyInfo');if(di){const bits=[];if(game.situ)bits.push('シチュ：'+game.situ);if(game.stageEv)bits.push('⚠ '+game.stageEv);if(game.dailyMod)bits.push('📅 '+game.dailyMod.n+'：'+game.dailyMod.d);if(bits.length){di.style.display='block';di.textContent=bits.join('　');}else di.style.display='none';}
  try{updShop();if(picked&&TOWERS[picked.k])updInfoBtns();}catch(_){}}catch(_){}}
 function statLine(t){const d=TOWERS[t&&t.k];if(!d)return'';const st=tStats(t),s=S();
@@ -1403,20 +1409,28 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
    if(st.aura&&!d.aura){ctx.fillStyle='#d9b36a';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('★',bx+T-9,by+12);}}
   ctx.fillStyle='#ffd36b';for(let i=0;i<t.lvl;i++){ctx.beginPath();ctx.arc(bx+8+i*7,by+8,2.5,0,7);ctx.fill();}
   if(t.mut!=null){ctx.fillStyle='#c98aff';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText('AB'[t.mut],bx+T-9,by+T-9);}if(t.over!=null){ctx.fillStyle='#ffd36b';ctx.font='bold 9px sans-serif';ctx.textAlign='center';ctx.fillText('極'+'AB'[t.over],bx+T-11,by+11);}}
- for(const e of enemies){if(!e||!e.d)continue;const r=e.d.r||14;const bob=Math.sin(game.t*10+e.id*50)*1.5+(e.stunT>0?Math.sin(game.t*60)*2:0);
+ for(const e of enemies){if(!e||!e.d)continue;const r=e.d.r||14;const bob=Math.sin(game.t*10+e.id*50)*1.5+(e.stunT>0?Math.sin(game.t*60)*2:0)+((e.aff==='tipsy'||e.aff2==='tipsy')?Math.sin(game.t*7+e.id)*2.2:0);
   if(!e.vis){const stLv=e.d.stealthLv||0;ctx.globalAlpha=stLv>=2?.12:stLv>=1?.18:.22;}
-  if(e.aff&&e.vis&&AFFIX[e.aff]){const ac=AFFIX[e.aff].c;ring(e.x,e.y+bob,r+5+Math.sin(game.t*9+e.id*9)*2,null,ac);if(e.aff2&&AFFIX[e.aff2])ring(e.x,e.y+bob,r+8+Math.sin(game.t*7+e.id)*2,null,AFFIX[e.aff2].c);}if(e.buried){ctx.globalAlpha=.35;}
+  if(e.aff&&e.vis&&AFFIX[e.aff]){const ac=AFFIX[e.aff].c;ring(e.x,e.y+bob,r+5+Math.sin(game.t*9+e.id*9)*2,null,ac);if(e.aff2&&AFFIX[e.aff2])ring(e.x,e.y+bob,r+8+Math.sin(game.t*7+e.id)*2,null,AFFIX[e.aff2].c);}
+  if(e.vis&&e.d.dash)ring(e.x,e.y+bob,r+6+(e._dashed?2:0),null,e._dashed?'#ffd36b':'#c9a24a',[3,3]);
+  if(e.vis&&e.d.jump)ring(e.x,e.y+bob,r+5,null,'#ff7a5088',[2,4]);
+  if(e.vis&&e.d.bomb){const pul=.5+.5*Math.sin(game.t*8+e.id);ring(e.x,e.y+bob,r+4+pul*2,null,`rgba(255,92,60,${.35+.3*pul})`);}
+  if(e.buried){ctx.globalAlpha=.35;}
   face(e.d.img,e.x,e.y+bob,(e.aff==='giant'||e.aff2==='giant')?r*1.3:r,e.enr?'#ff3c3c':e.slow?'#5cd6a8':e.cheerT?'#ff7a50':e.d.col,{flash:e.hitT>0?.45:0,lw:e.d.boss?4:2.5,tint:e.poisT>0?'rgba(120,255,80,.25)':e.slow?'rgba(92,214,168,.18)':e.buried?'rgba(80,70,50,.45)':null});if(e.buried)ctx.globalAlpha=1;
   const [x,y]=P(e.x,e.y+bob);
   if(e.shield>0){ctx.strokeStyle='#6ab8ff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,r+4,-Math.PI/2,-Math.PI/2+6.283*e.shield/e.maxSh);ctx.stroke();}
   if(e.vis){const w=r*2,hp=Math.max(0,e.hp/e.maxHp),bh=Math.max(4,Math.min(7,3/view.k));ctx.fillStyle='#000a';ctx.fillRect(x-w/2,y-r-bh-5,w,bh);ctx.fillStyle=hp>.5?'#6bdc5c':hp>.25?'#ffd36b':'#ff5c3c';ctx.fillRect(x-w/2,y-r-bh-5,w*hp,bh);
-   let ix=x+w/2+3,iy=y-r-bh-5;if(e.slowT>0){ctx.fillStyle='#5cd6a8';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.poisT>0){ctx.fillStyle='#8dff6a';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.mark>0){ctx.fillStyle='#6ab8ff';ctx.fillRect(ix,iy,5,5);}}
+   let ix=x+w/2+3,iy=y-r-bh-5;if(e.slowT>0){ctx.fillStyle='#5cd6a8';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.poisT>0){ctx.fillStyle='#8dff6a';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.mark>0){ctx.fillStyle='#6ab8ff';ctx.fillRect(ix,iy,5,5);ix+=7;}
+   if(e.d.dash){ctx.fillStyle=e._dashed?'#ffd36b':'#c9a24a';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.d.jump){ctx.fillStyle='#ff7a50';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.d.bomb){ctx.fillStyle='#ff5c3c';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.d.burrow){ctx.fillStyle='#a09080';ctx.fillRect(ix,iy,5,5);}}
   ctx.textAlign='center';
   if(e.stunT>0){ctx.font=`${fs(11)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText('☆彡',x-r-8,y-r-2);}
   if(e.d.heal){ctx.font=`bold ${fs(12)} sans-serif`;ctx.fillStyle='#8dff6a';ctx.fillText('+',x+r,y-r);}
   if(e.d.steal){ctx.font=`${fs(11)} sans-serif`;ctx.fillText('💸',x+r,y-r);}
   if(e.d.jam&&e.vis){ring(e.x,e.y,e.d.jam,'rgba(150,150,150,.06)');}
   if(e.aff&&e.vis&&AFFIX[e.aff]){ctx.font=`bold ${fs(10)} sans-serif`;ctx.fillStyle=AFFIX[e.aff].c;ctx.fillText(AFFIX[e.aff].n+(e.aff2&&AFFIX[e.aff2]?'+'+AFFIX[e.aff2].n:''),x,y+r+12);if((e.aff==='stink'||e.aff2==='stink')&&Math.random()<.15&&fx.length<200)fx.push({x:e.x+(Math.random()-.5)*r,y:e.y-r,vx:(Math.random()-.5)*14,vy:-24,t:.7,c:'#a8ff3c'});}if(e.d.cheer&&e.vis){ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#ff7a50';ctx.fillText('応援',x,y-r-6);}if(e.buried){ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#a09080';ctx.fillText('もぐり',x,y+r+4);}
+  if(e.d.dash&&e.vis){ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText(e._dashed?'サッー':'ステップ',x,y-r-6);}
+  if(e.d.jump&&e.vis){ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#ff7a50';ctx.fillText('跳び',x,y-r-6);}
+  if(e.d.bomb&&e.vis){ctx.font=`${fs(11)} sans-serif`;ctx.fillText('💣',x+r,y-r);}
   if(e.d.boss){ctx.font=`bold ${fs(11)} sans-serif`;ctx.fillStyle='#c46bff';ctx.fillText(e.d.name,x,y+r+14);}
   ctx.globalAlpha=1;}
  for(const p of projs){const [x,y]=P(p.x,p.y);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(x,y,p.splash?6:p.pois?5:3.5,0,7);ctx.fill();}
@@ -1892,7 +1906,7 @@ const V18={
   {h:'外典　新地図三葉',img:'navy_trio_card',t:'十字交差口・汗だくサウナ・下北沢駅前が防衛区域に追加。いずれも汗と泥の気配が濃い。'},
   {h:'外典　v30覚醒革命',img:'senpai_face',t:'21種の塔が8ベース塔へ統合。覚醒で分岐（Mutation／Overwake）。先輩砲台（迫真クリ／サムライブルー／見とけよ狙撃）、部室トリオ（便乗の輪／ホラホラ声援／観葉植物）、胸ぐらスネア（ふっとばし／アイスティー／生ビール）、114514砲（810焦土／円定規／イキスギ電撃）、ほら見ろよ見ろよ塔（晒し上げ／くっさガス／ハエ大群）、810銀行（利息／集金）、迫真バリケード、810地雷（114514爆発／ぬるぬる泥床）。王道を征く。'},
   {h:'外典　デイリー曜日修飾',img:'trio_sepia_face#gold',t:'📅 日替わりデイリーに曜日修飾。日曜：810地雷セール（半額＋威力）、月曜：利息ですねぇ（銀行+50%・利息+3%）、火曜：先輩イキイキ（砲台速度+25%・ダメ+12%）、水曜：撃破報酬ボーナス（+40%・コンボ猶予）、木曜：見とけよ射程（射程+20%・クリ+5%）、金曜：おごりの114514G（+150G・ライフ+2）、土曜：汗だく弱体（敵HP-15%・速度-6%）。曜日ごとに最適戦略が変わる。王道を征く。'},
-  {h:'外典　v47ランの変わり味',img:'navy_trio_card',t:'同じ8塔でもランの顔が変わる。シチュに壁は甘え／素の塔で征け／置き直し道場／近道全開／密着指導／サッー道場。舞台に消灯タイム・たかり襲撃・増員コール。野獣ステップ後輩は被弾で加速、ふらふらは歩幅が揺れる。HUD上段にシチュと舞台名が出る（v48）。王道を征く。'},
+  {h:'外典　v47ランの変わり味',img:'navy_trio_card',t:'同じ8塔でもランの顔が変わる。シチュに壁は甘え／素の塔で征け／置き直し道場／近道全開／密着指導／サッー道場／見とけよ特訓。舞台に消灯タイム・たかり襲撃・増員コール。野獣ステップ・跳び・自爆は色リングとラベルで判別（v49）。王道を征く。'},
  ],
  goroku:[
   ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
