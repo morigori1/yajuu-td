@@ -823,7 +823,7 @@ function overwake(t,i){const d=TOWERS[t&&t.k];if(!d)return;const c=overCost(t);i
  const m=d.overs[i];toast(`極覚醒！${m.n}（は？）`,d.img.split('#')[0],'combo shake',2000);big('極','#ffd36b',1.2);flash();
  siteBurst(t.x,t.y,'#ffd36b',{n:52,R:110,shake:10,txt:'極覚醒！',big:true,sweat:true,sp:320,lw:6,ring3:true,rt:.85,alt:'#c98aff',dr:28});
  pushFx({ring:true,x:t.x,y:t.y,r:14,R:70,t:.9,T:.9,c:'#c98aff',lw:4});snd(520,.35,'sawtooth',.07,700);if(navigator.vibrate&&TOUCH)try{navigator.vibrate([50,40,50])}catch(_){};renderInfo();updHud();}
-function sell(t){const v=Math.round(t.spent*S().sellRate);game.gold+=v;const ox=t.x,oy=t.y;towers=towers.filter(o=>o!==t);statsDirty=true;
+function sell(t){if(!t||!towers.includes(t))return;const v=Math.round(t.spent*S().sellRate);game.gold+=v;const ox=t.x,oy=t.y;towers=towers.filter(o=>o!==t);statsDirty=true;
  picked=null;pending=null;hover=null;showTapHint(false);snd(300,.1,'triangle',.05,-150);
  try{const ae=document.activeElement;if(ae&&$('info')&&$('info').contains(ae))ae.blur();}catch(_){}
  float(ox,oy-20,'+'+v+'G','#ffd36b',true,.9);
