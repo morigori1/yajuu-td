@@ -206,6 +206,36 @@ body.portrait #info .btns #bSell{flex:0 0 74px}
 body.portrait #stImg,body.compact #stImg{width:64px;height:64px}
 body.compact .stChap{margin-bottom:6px}body.compact .stBox{padding:10px}
 .goroBan{position:fixed;left:50%;top:22%;transform:translate(-50%,-50%) rotate(-4deg);font:900 clamp(26px,7vw,64px)/1.1 sans-serif;-webkit-text-stroke:2px #2a0d05;text-shadow:0 0 18px #ff7a50,0 4px 0 #000;pointer-events:none;z-index:60;white-space:nowrap;animation:goroA 1.3s ease-out forwards}@keyframes goroA{0%{transform:translate(-50%,-50%) scale(2.4) rotate(-8deg);opacity:0}12%{transform:translate(-50%,-50%) scale(.9) rotate(-3deg);opacity:1}20%{transform:translate(-50%,-50%) scale(1.08) rotate(-5deg)}80%{opacity:1}100%{transform:translate(-50%,-80%) scale(1) rotate(-4deg);opacity:0}}
+/* v12 */
+#rb{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);width:min(560px,calc(100% - 16px));background:rgba(28,14,10,.95);border:3px solid #ff3c8a;border-radius:16px;padding:8px 10px 10px;z-index:16;display:none;box-shadow:0 0 30px #ff3c8a88,0 6px 18px #000c;animation:rbIn .25s cubic-bezier(.2,1.6,.4,1)}
+#rb.on{display:block}
+@keyframes rbIn{from{transform:translateX(-50%) scale(.6) rotate(-4deg);opacity:0}to{transform:translateX(-50%) scale(1);opacity:1}}
+#rb .rq{display:flex;gap:8px;align-items:center;font-weight:900;font-size:17px;color:#ffd0e0}
+#rb .rq img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:3px solid #ff3c8a;flex:none}
+#rb .rq small{display:block;color:#ff9be0;font-size:11px}
+#rb .ra{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+#rb .ra button{font-size:14px;line-height:1.2;padding:6px 4px;background:#3a1d2a;border-color:#ff5c8a}
+#rb .rbar{height:6px;background:#0008;border-radius:4px;margin-top:6px;overflow:hidden}#rb .rbar i{display:block;height:100%;background:linear-gradient(90deg,#ff3c8a,#ffd36b)}
+#rb .rtag{position:absolute;right:10px;top:-14px;background:#ff3c8a;color:#fff;font-weight:900;font-size:12px;padding:2px 10px;border-radius:10px;letter-spacing:.1em}
+body.portrait #rb .ra{grid-template-columns:1fr}
+#exMap{display:flex;flex-direction:column-reverse;gap:10px;margin:10px 0;width:min(560px,100%)}
+#exMap .row{display:flex;justify-content:center;gap:10px}
+#exMap .nd{width:150px;min-height:74px;border-radius:14px;background:#2a2017;border:3px solid #6b4b25;font-size:14px;line-height:1.25;padding:6px;opacity:.45}
+#exMap .nd b{display:block;font-size:22px}
+#exMap .nd.can{opacity:1;border-color:#ffd36b;box-shadow:0 0 14px #ffd36b66;animation:ndp 1s infinite alternate}
+#exMap .nd.done{opacity:.8;border-color:#8dff6a;background:#1d2a17}
+#exMap .nd.boss{border-color:#c46bff}
+@keyframes ndp{to{transform:translateY(-3px)}}
+#exRes{min-height:44px;color:#ffd36b;font-weight:900;text-align:center;max-width:520px}
+body.portrait #exMap .nd{width:31%;font-size:12px}
+#hlv{position:relative;width:min(720px,100%);aspect-ratio:5/3;background:#000;border:3px solid #ffd36b;border-radius:12px;overflow:hidden}
+#hlv img{width:100%;height:100%;object-fit:contain;animation:kb 2.4s ease-out}
+@keyframes kb{from{transform:scale(1.18) rotate(-1deg);filter:brightness(2) saturate(2)}12%{filter:none}to{transform:scale(1)}}
+#hlCap{position:absolute;left:0;right:0;bottom:0;padding:8px 12px;background:linear-gradient(transparent,#000d);font-weight:900;font-size:20px;color:#fff;text-shadow:0 2px 0 #000}
+#hlTag{position:absolute;left:10px;top:8px;background:#c00;color:#fff;font-weight:900;font-size:12px;padding:2px 8px;border-radius:6px;animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:.3}}
+#hlStats{margin:8px 0;color:#c9b894;font-size:14px;text-align:center;max-width:700px}
+.eb{flex-wrap:wrap;gap:8px}
 </style>
 </head>
 <body>
@@ -228,7 +258,7 @@ body.compact .stChap{margin-bottom:6px}body.compact .stBox{padding:10px}
   <div id="main">
     <div id="stage">
       <canvas id="cv"></canvas>
-      <div id="toasts"></div>
+      <div id="toasts"></div><div id="rb"></div>
       <div id="flash"></div>
       <div id="tapHint">もう一度タップで設置</div>
       <div id="bossbar"><img id="bossimg" alt=""><div class="bar"><div class="fill" id="bossfill"></div></div></div>
@@ -263,6 +293,19 @@ body.compact .stChap{margin-bottom:6px}body.compact .stBox{padding:10px}
   <div style="color:#c9b894" id="dSub">ドラフト：カードを1枚選べ（やりますねぇ）</div>
   <div class="cards" id="cards"></div>
   <button id="bReroll" style="margin-top:12px">引き直し</button>
+</div>
+<div class="ov" id="explore">
+  <h2>🗺 部室ダンジョン探索（迫真）</h2>
+  <div style="color:#c9b894;text-align:center" id="exSub">光ってる部屋を1つ選べ。最上階には部室の主がいる。</div>
+  <div id="exMap"></div>
+  <div id="exRes"></div>
+  <button class="go" id="exGo" style="display:none">戻る（おかのした）</button>
+</div>
+<div class="ov" id="hl">
+  <h2>📼 ハイライト（迫真リプレイ）</h2>
+  <div id="hlv"><img id="hlImg" alt=""><div id="hlTag">● REC</div><div id="hlCap"></div></div>
+  <div id="hlStats"></div>
+  <div class="eb"><button id="hlPrev">◀</button><button id="hlPlay">⏸</button><button id="hlNext">▶</button><button class="go" id="hlClose">閉じる</button></div>
 </div>
 <div class="ov" id="end">
   <h2 id="eTitle"></h2>
@@ -898,8 +941,8 @@ function stageDraw(){const t=game.t;for(const k of BLOCK){const [x,y]=k.split(',
 // ---------- card overlay (draft / situation) ----------
 function openCards(title,sub,items,onPick,reroll){paused=true;$('dTitle').textContent=title;$('dSub').textContent=sub;const box=$('cards');box.innerHTML='';
  for(const p of items){const c=document.createElement('div');c.className='card';const n=game.perks.filter(x=>x===p.t).length;
-  c.innerHTML=`<img src="${src(p.img)}" style="${cssf(p.img)}"><div class="t"></div><div class="d"></div><div class="r">${p.tag?`<span class="mutTag">${p.tag}</span> `:''}${reroll===undefined?'シチュ':n?'所持 x'+n:'NEW'}</div>`;c.querySelector('.t').textContent=p.t;c.querySelector('.d').textContent=p.d;
-  c.onclick=()=>{$('draft').classList.remove('on');paused=false;$('bPause').textContent='⏸';onPick(p);statsDirty=true;renderPerks();renderInfo();buildShop();updHud();};box.appendChild(c);}
+  c.innerHTML=`<img src="${src(p.img)}" style="${cssf(p.img)}"><div class="t"></div><div class="d"></div><div class="r">${p.tag?`<span class="mutTag">${p.tag}</span> `:''}${reroll===undefined?(p.lab||'シチュ'):n?'所持 x'+n:'NEW'}</div>`;c.querySelector('.t').textContent=p.t;c.querySelector('.d').textContent=p.d;
+  c.onclick=()=>{$('draft').classList.remove('on');paused=false;$('bPause').textContent='⏸';onPick(p);statsDirty=true;renderPerks();renderInfo();buildShop();updHud();const _a=afterCards;afterCards=null;if(_a)setTimeout(_a,80);};box.appendChild(c);}
  const rb=$('bReroll');if(reroll===undefined){rb.style.display='none';}else{rb.style.display='';const c=30+10*game.wave;rb.textContent=`引き直し ${c}G（まだ足りない？）`;rb.disabled=game.gold<c;rb.onclick=()=>{if(game.gold<c)return;game.gold-=c;snd(500,.08,'triangle',.05,200);openDraft();updHud();};}
  $('draft').classList.add('on');$('draft').scrollTop=0;}
 function openDraft(){goro(null,null,null,true,2);const pool=PERKS.filter(p=>!(p.max&&game.perks.filter(x=>x===p.t).length>=p.max));const ch=[];while(ch.length<3&&pool.length)ch.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
@@ -1229,6 +1272,148 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
  if(game.combo>=5){ctx.font=`bold ${fs(game.combo>=25?22:16)} sans-serif`;ctx.textAlign='right';ctx.strokeStyle='#000';ctx.lineWidth=4;const tx=`${game.combo} COMBO`;ctx.strokeText(tx,VW()-10,VH()-12);ctx.fillStyle=game.combo>=100?`hsl(${(game.t*360)%360},100%,65%)`:game.combo>=50?'#ff3c8a':game.combo>=25?'#ff8a5c':'#ffd36b';ctx.fillText(tx,VW()-10,VH()-12);}
  if(game.big){const b=game.big,k=b.t/b.T,scl=1+(1-k)*.3+(k>.85?(k-.85)*4:0);ctx.save();ctx.translate(VW()/2,VH()/2);ctx.scale(scl,scl);ctx.globalAlpha=Math.min(1,b.t*2.5);ctx.font=`900 ${fs(54)} sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=8;ctx.strokeStyle='#000';ctx.strokeText(b.txt,0,0);ctx.fillStyle=b.c;ctx.fillText(b.txt,0,0);ctx.restore();ctx.textBaseline='alphabetic';ctx.globalAlpha=1;}
  if(paused&&!$('draft').classList.contains('on')&&!stQ&&!game.over){ctx.fillStyle='#0008';ctx.fillRect(0,0,VW(),VH());ctx.fillStyle='#ffd36b';ctx.font=`bold ${fs(36)} sans-serif`;ctx.textAlign='center';ctx.fillText('一時停止（休憩）',VW()/2,VH()/2);}}
+
+// ================= v12: 協力/妨害カード・敵セリフ＆返しバトル・部室探索・ハイライト =================
+let afterCards=null;
+// ---- (4) highlights ----
+let capReq=null,capLast=-99;
+function hlNote(txt,col,score=3,force){if(!game||!game.hl)return;const n=performance.now()/1000;if(!force&&n-capLast<1.6&&!(capReq&&score>capReq.score))return;capReq={txt,col:col||'#ffd36b',score,w:game.wave};}
+function hlCapture(){if(!capReq)return;const r=capReq;capReq=null;capLast=performance.now()/1000;let url='';
+ try{const w=360,h=Math.round(w*cv.height/cv.width),c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');g.drawImage(cv,0,0,w,h);
+  g.fillStyle='#000a';g.fillRect(0,0,w,18);g.font='bold 12px sans-serif';g.fillStyle='#ffd36b';g.fillText(`WAVE ${r.w}  ${MAP.name||''}`,6,13);url=c.toDataURL('image/jpeg',.72);}catch(_){}
+ const H=game.hl;H.push({txt:r.txt,col:r.col,score:r.score,img:url,w:r.w,i:H.length?H[H.length-1].i+1:0});
+ if(H.length>16){let lo=0;for(let i=1;i<H.length-1;i++)if(H[i].score<H[lo].score)lo=i;H.splice(lo,1);}}
+// ---- (1) pact cards ----
+const PACT=[
+ {t:'後輩の差し入れ',lab:'協力',d:'即 ライフ+1・💰+60（アイスティー付き）',img:'navy_center_face#green',ap:()=>{game.lives++;game.gold+=60;}},
+ {t:'応援団乱入',lab:'協力',d:'次ウェーブ 全ダメ+30%／敵の数+15%',img:'navy_trio_card',tmp:{gDmg:.6,eCount:1.15}},
+ {t:'合同練習',lab:'協力',d:'次ウェーブ 全ダメ+45%／撃破報酬-35%',img:'trio_sepia_card',tmp:{gDmg:.9,bounty:-.35}},
+ {t:'タオル係',lab:'協力',d:'💰-60：次ウェーブ 敵速度-15%（汗を拭かれて失速）',img:'locker_left_face',cost:60,tmp:{eSpeed:.85}},
+ {t:'先輩の肩もみ',lab:'協力',d:'全タワーの麻痺解除・次ウェーブ 敵HP-10%／💰-40',img:'senpai_face',cost:40,tmp:{eHp:.9}},
+ {t:'部室の鍵を隠す',lab:'妨害',d:'次ウェーブ 敵速度-22%／敵HP+15%',img:'locker_right_face',tmp:{eSpeed:.78,eHp:1.15}},
+ {t:'偽の地図',lab:'妨害',d:'次ウェーブ 敵HP-20%／敵の数+30%（迷子祭り）',img:'collar_card',tmp:{eHp:.8,eCount:1.3}},
+ {t:'噂を流す',lab:'妨害',d:'次ウェーブ 撃破報酬+60%／エリート率x2',img:'grimace_face',tmp:{bounty:.6,eliteMul:2}},
+ {t:'冷房を切る',lab:'妨害',d:'次ウェーブ 敵が汗で滑って開始3秒スタン／敵速度+8%',img:'navy_left_face#red',tmp:{eSpeed:1.08},onStart:()=>{game.pactStun=3;}},
+ {t:'裏切り後輩',lab:'賭け',d:'50%で💰+220、50%でライフ-2（ま、多少はね？）',img:'navy_right_face#purple',ap:()=>{if(Math.random()<.5){game.gold+=220;toast('裏切り成功 +220G（やったぜ）','navy_right_face','combo',1600);}else{game.lives=Math.max(1,game.lives-2);toast('裏切り失敗 ライフ-2（やめてくれよ…）','navy_right_face','bad shake',1600);}}},
+ {t:'何もしない',lab:'休憩',d:'💰+25。普通だな！',img:'title_senpai',ap:()=>{game.gold+=25;}}];
+function openPact(){if(!game||game.over)return;const co=PACT.filter(p=>p.lab==='協力'),di=PACT.filter(p=>p.lab==='妨害'),ot=PACT.filter(p=>p.lab==='賭け'||p.lab==='休憩');
+ const ch=[pick(co),pick(di),pick(ot)];
+ openCards(`次のウェーブへの仕込み`,'協力 or 妨害カードを1枚（次のウェーブだけ効く・コストあり）',ch,p=>{
+  if(p.cost){if(game.gold<p.cost){toast('金が足りない（そんなぁ）','navy_left_face','bad',1400);return;}game.gold-=p.cost;}
+  if(p.t==='先輩の肩もみ')for(const t of towers)t.stunT=0;
+  if(p.ap)p.ap();if(p.tmp||p.onStart)game.pact=p;game.pactLog.push(p.t);
+  toast(`${p.lab}：${p.t}`,p.img.split('#')[0],p.lab==='妨害'?'boss':'combo',1600);big(p.lab+'！',p.lab==='妨害'?'#c46bff':'#8dff6a',.9);snd(p.lab==='妨害'?300:640,.12,'triangle',.05,p.lab==='妨害'?-120:220);hudDirty=true;});}
+function pactApply(){const p=game.pact;if(!p||game.pactOn)return;const s=S(),rv={};
+ for(const [k,v] of Object.entries(p.tmp||{})){rv[k]=s[k];if(k==='gDmg'||k==='bounty')s[k]+=v;else s[k]*=v;}
+ game.pactOn={rv};statsDirty=true;if(p.onStart)p.onStart();float(W/2,60,`仕込み発動：${p.t}`,p.lab==='妨害'?'#c46bff':'#8dff6a',true,1.6);}
+function pactRevert(){if(!game.pactOn)return;const s=S();for(const [k,v] of Object.entries(game.pactOn.rv))s[k]=v;game.pactOn=null;game.pact=null;statsDirty=true;}
+// ---- (2) enemy dialogue + reaction battle ----
+const SAY={def:['先輩どこっすか…','暑すぎィ！','下北沢まであと少し','汗が止まらないっす','部室どこ…ここ？','アイスティー飲みたい','ぬわああん疲れたもおおん','ここ通っていいっすか？'],
+ hurt:['痛いっすよ先輩！','ンアッー！','やめてくれよ…','あっ（察し）','暴れんなよ…'],
+ elite:['オレ強くなったっす','見とけよ見とけよ〜','この汗は本物だぞ','エリートの汗ナメんな'],
+ boss:['逃げるんだよォ！','おい、ゴールどこだよ','お前のタワー、汗臭くない？','まだ終わらんよ（迫真）']};
+const TAUNT=[
+ {q:'お前のタワー、なんか小さくない？',a:'ま、多少はね？',w:['すいません許してください！','はい、ヨロシクゥ！']},
+ {q:'なぁ…今日、暑くない？',a:'暑いっすね（迫真）',w:['寒いだろ！いい加減にしろ！','は？（威圧）']},
+ {q:'ここ、通っていいよな？',a:'ダメです（迫真）',w:['いいよ！こいよ！','おかのした']},
+ {q:'お前、ちゃんと練習してんの？',a:'やりますねぇ！（してます）',w:['してないです','練習って何すか？']},
+ {q:'アイスティーしかなかったけどいいかな？',a:'飲まないです（警戒）',w:['いただきます！','ゴクゴク…']},
+ {q:'オレの汗、見てくれよ',a:'見ないです（拭く）',w:['いいゾ〜これ','もっと見せて']},
+ {q:'まずウチさぁ、屋上あるんだけど',a:'焼いてかない（帰る）',w:['焼いてかない？（焼く）','屋上いいっすね']},
+ {q:'先輩呼んでくるぞ？',a:'呼べよ（迫真）',w:['やめてくれよ…','逃げるんだよォ！']},
+ {q:'お前ら何してんの？',a:'防衛です（真顔）',w:['休憩です','わかんないっす']},
+ {q:'ラスト一本、いける？',a:'いけるいける（根性）',w:['無理です','明日でいい？']}];
+let RB=null;
+function say(e,txt,dur=2.2){if(!e||e.dead)return;e.say={txt,t:dur,T:dur};}
+function rbOpen(e){if(RB||!e||e.dead||game.over)return;const tq=pick(TAUNT),opts=[tq.a,...tq.w].sort(()=>Math.random()-.5);
+ RB={e,tq,t:TOUCH?6:5,T:TOUCH?6:5};say(e,tq.q,6);const el=$('rb');
+ el.innerHTML=`<div class="rtag">返しバトル</div><div class="rq"><img src="${src(e.d.img)}" style="${cssf(e.d.img)}"><div><small>${e.d.name||'後輩'}${e.aff?'（'+AFFIX[e.aff].n+'）':''}が絡んできた！</small><span></span></div></div><div class="ra"></div><div class="rbar"><i></i></div>`;
+ el.querySelector('.rq span').textContent='「'+tq.q+'」';const ra=el.querySelector('.ra');
+ opts.forEach((o,i)=>{const b=document.createElement('button');b.textContent=(TOUCH?'':(i+1)+'. ')+o;b.onclick=ev=>{ev.stopPropagation();rbAnswer(o===tq.a);};ra.appendChild(b);});
+ el.classList.add('on');snd(880,.08,'square',.05,-300);punch(e.x,e.y,1.15,.4,0,.8);}
+function rbAnswer(ok,timeout){if(!RB)return;const {e,tq}=RB;RB=null;$('rb').classList.remove('on');CAM.slow=0;const s=S();
+ if(ok){game.rbWin++;game.rbStreak++;const st=Math.min(5,game.rbStreak),g=Math.round((15+game.wave*3)*(1+.25*(st-1)));game.gold+=g;
+  say(e,pick(['ぐうの音も出ねぇ…','論破されたっす…','ンアッー！']),2);
+  if(!e.dead){const dmg=e.maxHp*(e.d.boss?.08:.3);e.hp-=dmg;if(e.hp<=0)kill(e,null);}
+  let n=0;for(const o of enemies)if(!o.dead&&(o.x-e.x)**2+(o.y-e.y)**2<160*160){o.stunT=Math.max(o.stunT,1.6+.2*st);n++;if(Math.random()<.5)say(o,pick(['えっ…','ﾌｧｯ!?','ぐぬぬ']),1.2);}
+  siteBurst(e.x,e.y,'#ff3c8a',{n:30,R:160,shake:8,txt:`論破！${st>1?' x'+st:''}`,big:true,sweat:true,sp:240,lw:5,ring3:true});
+  big(st>2?`${st}連続論破！`:'論破！','#ff3c8a',1.1);toast(`「${tq.a}」${n}体スタン +${g}G`,'senpai_face','combo shake',1800);snd(980,.15,'square',.06,500);
+  hlNote(`論破：「${tq.a}」${st>1?'（'+st+'連続）':''}`,'#ff3c8a',5+st);}
+ else{game.rbStreak=0;say(e,pick(['はい論破〜','雑魚乙（迫真）','やっぱりな♂']),2.2);
+  if(!e.dead){e.enr=true;e.haste=Math.min(.6,(e.haste||0)+(timeout?.2:.35));}
+  for(const o of enemies)if(!o.dead&&o!==e&&(o.x-e.x)**2+(o.y-e.y)**2<130*130){o.cheerT=Math.max(o.cheerT||0,3);}
+  big(timeout?'沈黙…':'論破された…','#8a8a8a',1);toast(timeout?'言い返せなかった…敵が調子に乗った':'返し失敗！敵が勢いづいた（やめてくれよ…）','grimace_face','bad shake',1600);snd(140,.3,'sawtooth',.05,-60);shake(6);}
+ hudDirty=true;}
+function rbTick(dt){if(RB){RB.t-=dt;CAM.slow=Math.max(CAM.slow,.1);const i=$('rb').querySelector('.rbar i');if(i)i.style.width=Math.max(0,RB.t/RB.T*100)+'%';
+  if(RB.e.dead&&RB.t<RB.T-.5){rbAnswer(true);return;}if(RB.t<=0)rbAnswer(false,true);return;}
+ if(!game.inWave||game.over)return;
+ game.sayT-=dt;if(game.sayT<=0){game.sayT=TOUCH?2.6:1.8;const vs=enemies.filter(e=>!e.dead&&e.vis&&!e.say);if(vs.length){const e=pick(vs);say(e,pick(e.d.boss?SAY.boss:e.aff?SAY.elite:SAY.def));}}
+ game.rbT-=dt;if(game.wave>=2&&game.rbT<=0&&!paused){const c=enemies.filter(e=>!e.dead&&e.vis&&e.dist>60);if(c.length){c.sort((a,b)=>(b.aff?1:0)+(b.d.boss?2:0)-(a.aff?1:0)-(a.d.boss?2:0)||b.dist-a.dist);rbOpen(c[0]);game.rbT=16+Math.random()*10;}else game.rbT=3;}}
+// raw-time tick for RB (not slowed); enemy bubble timers in game time
+function bubbleTick(dt){for(const e of enemies)if(e.say){e.say.t-=dt;if(e.say.t<=0)e.say=null;}}
+function drawBubbles(){const sc=view.k*view.dpr,_z=CAM.z;const [vx,vy]=P(CAM.x,CAM.y);const _cx=vx*sc,_cy=vy*sc;
+ ctx.setTransform(sc*_z,0,0,sc*_z,_cx*(1-_z),_cy*(1-_z));let n=0;
+ for(const e of enemies){if(!e.say||e.dead||n>(TOUCH?4:7))continue;n++;const [x,y0]=P(e.x,e.y),y=y0-e.d.r-14,k=Math.min(1,(e.say.T-e.say.t)*6),a=Math.min(1,e.say.t*3);
+  ctx.globalAlpha=a;ctx.font=`bold ${fs(RB&&RB.e===e?14:11)} sans-serif`;const w=ctx.measureText(e.say.txt).width+14,h=parseInt(fs(RB&&RB.e===e?14:11))+10;
+  ctx.save();ctx.translate(x,y);ctx.scale(k,k);ctx.fillStyle=RB&&RB.e===e?'#ff3c8a':e.d.boss?'#3a1d4a':'#fffbe8';ctx.strokeStyle='#000';ctx.lineWidth=2;
+  ctx.beginPath();ctx.roundRect?ctx.roundRect(-w/2,-h,w,h,8):ctx.rect(-w/2,-h,w,h);ctx.moveTo(-5,0);ctx.lineTo(0,8);ctx.lineTo(5,0);ctx.fill();ctx.stroke();
+  ctx.fillStyle=RB&&RB.e===e||e.d.boss?'#fff':'#2a1a0a';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(e.say.txt,0,-h/2);ctx.restore();}
+ ctx.globalAlpha=1;ctx.textBaseline='alphabetic';}
+document.addEventListener('keydown',ev=>{if(!RB)return;const i='123'.indexOf(ev.key);if(i<0)return;ev.preventDefault();ev.stopImmediatePropagation();const b=$('rb').querySelectorAll('button')[i];b&&b.click();},true);
+// ---- (3) clubroom explore ----
+const ROOM={
+ chest:{n:'宝箱ロッカー',i:'🎁',f(){if(Math.random()<.6){const g=80+game.wave*15;game.gold+=g;return `💰+${g}G（中身は汗臭いけど金だ）`;}const ps=PERKS.filter(p=>p.tag!=='呪'&&!(p.max&&game.perks.filter(x=>x===p.t).length>=p.max));const p=pick(ps);p.ap(S());game.perks.push(p.t);renderPerks();return `パーク「${p.t}」を拾った！`;}},
+ locker:{n:'謎のロッカー',i:'🚪',f(){const r=Math.random();if(r<.34){game.free+=1;return '設置タダ券 x1（使えるのか？）';}if(r<.67){game.lives=Math.max(1,game.lives-1);game.gold+=160;return '汗まみれの後輩が出た！ライフ-1・💰+160';}const ts=towers.filter(t=>t.lvl<S().maxLvl);if(ts.length){const t=pick(ts);t.lvl++;statsDirty=true;return `${TOWERS[t.k].short||TOWERS[t.k].name} がLv${t.lvl}に（ロッカーで筋トレ）`;}game.gold+=90;return '空っぽ…小銭💰+90';}},
+ shower:{n:'シャワー室',i:'🚿',f(){game.lives+=3;return 'ライフ+3（汗を流した。すっきり）';}},
+ vend:{n:'闇の自販機',i:'🥤',f(){const c=100+game.wave*5;if(game.gold<c){game.gold+=30;return `💰が足りない…落ちてた小銭+30（${c}G要る）`;}game.gold-=c;S().gDmg+=.12;statsDirty=true;return `アイスティー購入 -${c}G：全ダメ永続+6%（ちょっと眠い）`;}},
+ senpai:{n:'先輩の部屋',i:'🔥',f(){game.exElite=4;game.exDraft=1;return '先輩に見つかった！次ウェーブにエリート4体追加…代わりにパーク1枚！';}},
+ boss:{n:'部室の主',i:'👑',f(){game.gold+=300;game.lives+=2;game.exBossHp=1;return '主を説得（物理）した！💰+300・ライフ+2・次ウェーブ敵HP+25%';}}};
+function exGen(){const types=['chest','locker','shower','vend','senpai','chest','locker'];const rows=[];for(let r=0;r<3;r++)rows.push([0,1,2].map(()=>pick(types)));rows.push(['boss']);return{rows,floor:0,col:null,path:[],loop:(game.ex?game.ex.loop+1:0)};}
+function exCan(r,c){const X=game.ex;if(r!==X.floor)return false;if(X.rows[r].length===1||X.col==null)return true;return Math.abs(c-X.col)<=1;}
+function exRender(){const X=game.ex,m=$('exMap');m.innerHTML='';X.rows.forEach((row,r)=>{const d=document.createElement('div');d.className='row';row.forEach((k,c)=>{const R=ROOM[k],b=document.createElement('button');const done=X.path.some(p=>p[0]===r&&p[1]===c);
+  b.className='nd'+(exCan(r,c)?' can':'')+(done?' done':'')+(k==='boss'?' boss':'');b.innerHTML=`<b>${R.i}</b>${R.n}`;b.disabled=!exCan(r,c);b.onclick=()=>exPick(r,c);d.appendChild(b);});m.appendChild(d);});
+ $('exSub').textContent=`${X.loop?'周回'+(X.loop+1)+'・':''}${X.floor+1}階／${X.rows.length}階　光ってる部屋を1つ選べ（隣の列にだけ進める）`;}
+function exPick(r,c){const X=game.ex;if(!exCan(r,c))return;const k=X.rows[r][c],msg=ROOM[k].f();X.path.push([r,c]);X.col=c;X.floor++;game.exLog.push(ROOM[k].n);
+ document.querySelectorAll('#exMap .nd').forEach(b=>b.disabled=true);$('exRes').textContent=`${ROOM[k].i} ${ROOM[k].n}：${msg}`;$('exGo').style.display='';snd(k==='boss'?200:600,.15,'triangle',.06,k==='boss'?300:150);
+ if(k==='boss')hlNote('部室の主を討伐（説得）','#c46bff',6,true);hudDirty=true;updHud();}
+function openExplore(){if(!game||game.over)return;if(!game.ex||game.ex.floor>=game.ex.rows.length)game.ex=exGen();paused=true;$('exRes').textContent='';$('exGo').style.display='none';exRender();$('explore').classList.add('on');$('explore').scrollTop=0;}
+$('exGo').onclick=()=>{$('explore').classList.remove('on');paused=false;$('bPause').textContent='⏸';buildShop();renderInfo();updHud();
+ if(game.exDraft){game.exDraft=0;const pool=PERKS.filter(p=>!(p.max&&game.perks.filter(x=>x===p.t).length>=p.max));const ch=[];while(ch.length<3&&pool.length)ch.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  openCards('先輩の部屋の戦利品','パークを1枚（タダ）',ch,p=>{p.ap(S());game.perks.push(p.t);toast(p.t+'！','senpai_face','',1400);},undefined);}};
+// ---- hooks ----
+const _openDraft=openDraft;openDraft=function(){_openDraft();afterCards=()=>{if(!game.over)openPact();afterCards=null;
+  afterCards=()=>{afterCards=null;if(!game.over&&game.wave%3===0)openExplore();};};};
+const _startWave=startWave;startWave=function(){const w0=game.wave;_startWave();if(game.wave===w0||!game.inWave)return;
+ if(game.exBossHp){S().eHp*=1.25;game.pactExtra=1.25;game.exBossHp=0;}
+ pactApply();game.rbT=8+Math.random()*8;game.sayT=1;
+ if(game.exElite){const n=game.exElite;game.exElite=0;for(let i=0;i<n;i++)setTimeout(()=>{if(!game.inWave)return;const ks=['normal','fast','tank'].filter(k=>ENEMIES[k]);const e=spawn(pick(ks.length?ks:Object.keys(ENEMIES).filter(k=>!ENEMIES[k].boss)),0);if(!e.aff){e.aff=pick(AFK);e.hp*=1.6;e.maxHp*=1.6;game.elites++;}say(e,'先輩の命令だ！',2.5);},900+i*1400);}};
+const _waveClear=waveClear;waveClear=function(){pactRevert();if(game.pactExtra){S().eHp/=game.pactExtra;game.pactExtra=0;}if(RB)rbAnswer(false,true);
+ if(game.lives>0&&game.livesLow&&game.lives>=8)hlNote('ピンチから立て直した','#8dff6a',4);_waveClear();};
+const _spawn=spawn;spawn=function(k,d,na,r){const e=_spawn(k,d,na,r);if(e.d.boss){say(e,pick(SAY.boss),3);if(game.wave>=2)setTimeout(()=>{if(!e.dead&&game.inWave&&!RB)rbOpen(e);},2500);}else if(e.aff&&Math.random()<.5)say(e,pick(SAY.elite));return e;};
+const _kill=kill;kill=function(e,t){if(e.dead)return;const c0=game.combo;_kill(e,t);
+ if(e.d.boss)hlNote(`${e.d.name||'ボス'} 撃破！`,'#ffd36b',10,true);else if(e.aff2)hlNote(`二重エリート撃破（${AFFIX[e.aff]?.n||''}+${AFFIX[e.aff2]?.n||''}）`,'#ff9be0',4);
+ if([25,50,100,200].includes(game.combo))hlNote(`${game.combo} COMBO！`,'#ff5c8a',game.combo>=50?7:5,true);
+ for(const o of enemies)if(!o.dead&&o!==e&&!o.say&&(o.x-e.x)**2+(o.y-e.y)**2<70*70&&Math.random()<.25){say(o,pick(SAY.hurt),1.4);break;}};
+const _hurt=hurt;hurt=function(e,dmg,t,o){_hurt(e,dmg,t,o);if(!e.dead&&!e.say&&Math.random()<.004)say(e,pick(SAY.hurt),1.2);};
+const _update=update;update=function(dt){const l0=game.lives;if(game.pactStun>0){game.pactStun-=dt;for(const e of enemies)if(!e.dead)e.stunT=Math.max(e.stunT,.1);}
+ _update(dt);bubbleTick(dt);if(game.lives<l0&&game.lives<=4&&!game.livesLow){game.livesLow=1;hlNote(`ライフ残り${game.lives}！（やばい）`,'#ff6b5c',6,true);}if(game.lives<l0)for(const e of enemies)if(!e.dead&&Math.random()<.05)say(e,'ゴール！やったぜ',1.4);};
+const _draw=draw;draw=function(){_draw();drawBubbles();hlCapture();};
+const _gameOver=gameOver;gameOver=function(){if(game.over)return;hlNote(`BAD END：ウェーブ${game.wave}で床上浸水`,'#ff6b5c',9,true);if(RB){RB=null;$('rb').classList.remove('on');}_gameOver();hlStatsFill();};
+const _win=win;win=function(){hlNote('全ウェーブ突破！（やったぜ）','#ffd36b',10,true);_win();hlStatsFill();};
+const _reset=reset;reset=function(){_reset();Object.assign(game,{hl:[],pact:null,pactOn:null,pactLog:[],rbWin:0,rbStreak:0,rbT:12,sayT:2,ex:null,exLog:[],exElite:0,exDraft:0,exBossHp:0,pactExtra:0,pactStun:0,livesLow:0});RB=null;$('rb')&&$('rb').classList.remove('on');};
+// ---- highlight player ----
+let HLi=0,HLt=null;
+function hlStatsFill(){const mvp=towers.slice().sort((a,b)=>(b.kills||0)-(a.kills||0))[0];
+ $('hlStats').innerHTML=`MVP：${mvp?(TOWERS[mvp.k].name)+' Lv'+mvp.lvl+'（'+(mvp.kills||0)+'撃破）':'なし'}・最大コンボ ${game.maxCombo}・論破 ${game.rbWin}回<br>仕込み：${game.pactLog.slice(-6).join('→')||'なし'}<br>探索ルート：${game.exLog.join('→')||'未探索'}`;
+ const b=$('bHL');if(b){b.style.display=game.hl.length?'':'none';b.textContent=`📼 ハイライト（${game.hl.length}）`;}}
+function hlShow(i){const H=game.hl;if(!H.length)return;HLi=(i+H.length)%H.length;const h=H[HLi];const im=$('hlImg');im.style.animation='none';void im.offsetWidth;im.style.animation='';im.src=h.img||ASSETS.title_senpai;
+ $('hlCap').textContent=`${HLi+1}/${H.length}　W${h.w}　${h.txt}`;$('hlCap').style.color=h.col;snd(400+HLi*40,.05,'triangle',.03);}
+function hlPlay(on){clearInterval(HLt);HLt=null;$('hlPlay').textContent=on?'⏸':'▶';if(on)HLt=setInterval(()=>hlShow(HLi+1),2400);}
+$('hlPrev').onclick=()=>{hlPlay(false);hlShow(HLi-1);};$('hlNext').onclick=()=>{hlPlay(false);hlShow(HLi+1);};$('hlPlay').onclick=()=>hlPlay(!HLt);
+$('hlClose').onclick=()=>{hlPlay(false);$('hl').classList.remove('on');$('end').classList.add('on');};
+{const b=document.createElement('button');b.id='bHL';b.style.display='none';b.textContent='📼 ハイライト';b.onclick=()=>{$('end').classList.remove('on');$('hl').classList.add('on');hlShow(0);hlPlay(true);};document.querySelector('#end .eb').appendChild(b);}
+window.__yajuu12={rbOpen,openExplore,openPact,hlNote,get RB(){return RB}};
+const _loopRB=()=>{};let rbLast=performance.now();(function rbLoop(n){const dt=Math.min(.05,(n-rbLast)/1000);rbLast=n;if(game&&!game.over&&(!paused||RB)&&!$('title').classList.contains('on'))rbTick(dt);requestAnimationFrame(rbLoop);})(rbLast);
 
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
