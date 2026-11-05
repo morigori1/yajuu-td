@@ -94,7 +94,9 @@ body.compact #bWave.go:not(:disabled),body.portrait #bWave.go:not(:disabled){min
 #bossbar img{width:40px;height:40px;border-radius:50%;border:3px solid #e080ff;object-fit:cover;background:#1a0c18}
 #bossbar .bar{flex:1;height:18px;background:#000d;border:3px solid #e080ff;border-radius:9px;overflow:hidden}
 #bossbar .fill{height:100%;background:linear-gradient(90deg,#ff4a7a,#ffd36b 72%,#fff);width:100%}
-#tapHint{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:#000c;border:2px solid #ffd36b;border-radius:20px;padding:4px 12px;font-size:13px;font-weight:700;display:none;z-index:16;pointer-events:none;white-space:nowrap}
+#tapHint{position:absolute;left:50%;top:8px;transform:translateX(-50%);background:#000c;border:2px solid #ffd36b;border-radius:20px;padding:4px 12px;font-size:13px;font-weight:700;display:none;z-index:16;pointer-events:none;white-space:nowrap;max-width:min(92%,360px);overflow:hidden;text-overflow:ellipsis}
+body.portrait #tapHint,body.compact #tapHint{font-size:12px;top:6px}
+body.portrait #toasts,body.compact #toasts{max-width:min(68vw,280px)}
 
 /* ---- compact landscape (phones sideways) ---- */
 body.compact #hud{padding:2px 8px;gap:8px}
@@ -731,7 +733,9 @@ function spawn(k,dist=0,noAff,rIdx){const d=ENEMIES[k];if(!d)return null;let aff
  try{if(d.dash&&!game._seenDash){game._seenDash=1;toast('新敵：野獣ステップ後輩　被弾でサッーと加速するぞ','navy_center_face','',2600);}
   if((aff==='tipsy'||aff2==='tipsy')&&!game._seenTipsy){game._seenTipsy=1;toast('ふらふらエリート！歩幅が揺れる（減速で止めろ）','collar_face','',2200);}
   if(d.jump&&!game._seenJump){game._seenJump=1;toast('跳び後輩！壁を飛び越える（減速で止めろ）','navy_center_face','',2200);}
-  if(d.bomb&&!game._seenBomb){game._seenBomb=1;toast('自爆後輩！塔の近くでドカンだゾ','grimace_face','',2200);}}catch(_){}
+  if(d.bomb&&!game._seenBomb){game._seenBomb=1;toast('自爆後輩！塔の近くでドカンだゾ','grimace_face','',2200);}
+  if(d.burrow&&!game._seenBurrow){game._seenBurrow=1;toast('もぐり後輩！土に潜って射線を切る（視線／ハエで看破）','locker_left_face','',2200);}
+  if(d.jam&&!game._seenJam){game._seenJam=1;toast('嫌がらせ先輩！近くの塔の連射が鈍る','title_senpai','',2200);}}catch(_){}
  return e;}
 
 // ---------- towers ----------
@@ -906,7 +910,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
  const walls=towers.filter(t=>t.k==='wall'),jams=enemies.filter(e=>!e.dead&&e.d.jam);
  if(enemies.some(e=>e&&e.d&&e.d.boss)){game.banT-=dt;if(game.banT<=0){game.banT=7;const b=enemies.find(e=>e&&e.d&&e.d.boss);if(b&&b.d&&b.d.ban){toast(pick(b.d.ban),(b.d.img||'').split('#')[0],'boss',1800);float(b.x,b.y-b.d.r-20,'（迫真）','#ff5c8a',true);}}}
  for(const e of enemies){if(e.dead)continue;const d=e.d;
-  if(d.stealth||e.aff==='phase'||e.aff2==='phase'||e.buried)e.vis=e.buried?false:(!!s.reveal||towers.some(t=>{const dd=TOWERS[t.k];if(!dd)return false;const R=dd.flies?(tStats(t).range):92;return (!dd.onPath||dd.flies)&& (t.x-e.x)**2+(t.y-e.y)**2<R*R;}));
+  if(d.stealth||e.aff==='phase'||e.aff2==='phase'||e.buried)e.vis=e.buried?false:(!!s.reveal||towers.some(t=>{const dd=TOWERS[t.k];if(!dd)return false;const fly=!!(dd.flies||(t.k==='gaze'&&t.over===1));const R=fly?(tStats(t).range):92;return (!dd.onPath||fly)&& (t.x-e.x)**2+(t.y-e.y)**2<R*R;}));
   else if(s.night||game.gazeNight>0)e.vis=towers.some(t=>{const dd=TOWERS[t.k];return dd&&!dd.onPath&&(t.x-e.x)**2+(t.y-e.y)**2<150*150;});
   if(e.mark>0)e.mark-=dt;
   if((e.aff==='regen'||e.aff2==='regen')&&e.hp<e.maxHp)e.hp=Math.min(e.maxHp,e.hp+e.maxHp*.03*dt*(e.poisT>0?.3:1));
@@ -966,8 +970,8 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
   if(d.bank&&t.over===1){const br=tStats(t).range;for(const e of enemies){if(!e.dead&&(e.x-t.x)**2+(e.y-t.y)**2<=br*br){e.slow=Math.max(e.slow,.1);e.slowT=Math.max(e.slowT,.4);}}}
   if(d.aura||d.bank||d.wall||d.hype){continue;}const st=tStats(t);
   let cdr=dt*cRate;if(jams.length&&jams.some(j=>(j.x-t.x)**2+(j.y-t.y)**2<j.d.jam*j.d.jam))cdr*=(s.antiJam?1:.6);t.cd-=cdr;if(t.cd>0)continue;const r2=st.range*st.range;
-  if(d.gaze){const hit=visTargets(t,r2);if(!hit.length)continue;t.cd=st.rate;for(const e of hit){e.mark=t.over===0?6:3;e.markV=Math.max(e.markV,st.markV);if(t.over===1){e.slow=Math.max(e.slow,.12);e.slowT=Math.max(e.slowT,1.2);}hurt(e,st.dmg,t,{noCrit:true});}
-   pushFx({ring:true,x:t.x,y:t.y,r:10,R:st.range,t:.4,T:.4,c:'#6ab8ff',lw:3});if(Math.random()<.18)float(t.x,t.y-24,pick(['見ろよ見ろよ','ガン見','視姦…じゃなくて視察','嘘つけ絶対見てたゾ']),'#6ab8ff',true);continue;}
+  if(d.gaze){const hit=visTargets(t,r2);if(!hit.length)continue;t.cd=st.rate;for(const e of hit){e.mark=t.over===0?6:3;e.markV=Math.max(e.markV,st.markV);if(t.over===1){e.slow=Math.max(e.slow,.12);e.slowT=Math.max(e.slowT,1.2);e.vis=true;if(e.buried){e.buried=0;e.burT=2;}if(fx.length<FX_CAP){const a=Math.random()*6.28;pushFx({x:e.x,y:e.y,vx:Math.cos(a)*55,vy:Math.sin(a)*40-20,t:.4,c:'#9ac84a',spark:true,sz:2});}}if(t.mut===1)poisonE(e,6*(1+.1*t.lvl),2.5,t);hurt(e,st.dmg,t,{noCrit:true,pierce:t.mut===1});}
+   pushFx({ring:true,x:t.x,y:t.y,r:10,R:st.range,t:.4,T:.4,c:t.over===1?'#9ac84a':'#6ab8ff',lw:3});if(Math.random()<.18)float(t.x,t.y-24,t.over===1?'ブーン':t.mut===1?'くっさ！':pick(['見ろよ見ろよ','ガン見','視姦…じゃなくて視察','嘘つけ絶対見てたゾ']),t.over===1?'#9ac84a':t.mut===1?'#8dff6a':'#6ab8ff',true);continue;}
   if(d.flies){const hit=visTargets(t,r2);if(!hit.length)continue;t.cd=st.rate;const dm=st.dmg*(t.mut===0?1.4:1);
    for(const e of hit){e.vis=true;if(e.buried){e.buried=0;e.burT=2;}dot(e,dm*.55,t);hurt(e,dm*.45,t,{noCrit:true});if(t.mut===1)poisonE(e,7*(1+.1*t.lvl),2.5,t);if(t.over===1)e.stunT=Math.max(e.stunT,e.d.boss?.12:.35);
     for(let i=0;i<(RM?1:3)&&fx.length<FX_CAP;i++){const a=Math.random()*6.28;pushFx({x:e.x,y:e.y-e.d.r*.3,vx:Math.cos(a)*55,vy:Math.sin(a)*40-20,t:.4,c:'#9ac84a',spark:true,sz:2});}}
@@ -995,7 +999,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
    projs.push({x:t.x,y:t.y,tg:best,tx:best.x,ty:best.y,sp:useSplash?320:d.poison?300:useFreeze?380:560,dmg:st.dmg,src:t,splash:useSplash?st.splash*(s.splashMul+(mapB().splashMul||0)):0,pois:st.pois,c:d.proj,bounce:(t.k==='senpai'&&t.mut===1&&t.over===1)?2:0,freeze:useFreeze?(d.freeze||.7)*(1+.08*(t.lvl-1)):0,drunk:t.k==='collar'&&t.over===1});
    if(t.k==='senpai'&&t.over===0&&fx.length<FX_CAP)fx.push({line:true,x:t.x,y:t.y,x2:best.x,y2:best.y,t:.22,c:'#7ab8ff',lw:2});}
   try{shotSnd(useSplash?180:d.poison?240:useFreeze?260:(t.k==='navy'?880:600));}catch(_){}}
- for(const p of projs){if(p.done)continue;if(p.tg&&!p.tg.dead){p.tx=p.tg.x;p.ty=p.tg.y;}const dx=p.tx-p.x,dy=p.ty-p.y,dd=Math.hypot(dx,dy),step=p.sp*dt;
+ for(const p of projs){if(p.done)continue;if(!isFinite(p.x+p.y+(p.tx||0)+(p.ty||0))){p.done=true;continue;}if(p.tg&&!p.tg.dead){p.tx=p.tg.x;p.ty=p.tg.y;}const dx=p.tx-p.x,dy=p.ty-p.y,dd=Math.hypot(dx,dy),step=p.sp*dt;
   if(dd<=step+4){p.done=true;
    if(p.splash){pushFx({ring:true,x:p.tx,y:p.ty,r:8,R:p.splash,t:.45,T:.45,c:'#ff8a5c',lw:4});pushFx({ring:true,x:p.tx,y:p.ty,r:4,R:p.splash*.7,t:.35,T:.35,c:'#ffe08a',lw:2});
     float(p.tx,p.ty-12,pick(L.splashFx),'#ff8a5c',Math.random()<.35,.7);shake(3.2);const s2=p.splash*p.splash;
@@ -1415,7 +1419,7 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
    if(d.hype){const k=(t.pulseT*1.5)%1;ring(t.x,t.y,14+k*30,null,`rgba(255,122,80,${(1-k)*.6})`);}
    const recoil=(!d.aura&&!d.pulse&&!d.bank&&t.cd>st.rate-.08)?2:0;
    face(d.img,t.x-Math.cos(t.ang)*recoil,t.y-Math.sin(t.ang)*recoil,19,d.ring);
-   if(t.k==='cannon')text('810',t.x,t.y+27,'#ff5c3c',9);if(t.k==='bank')text('💰',t.x+14,t.y+16,'#ffd36b',11);if(t.k==='hype')text('📣',t.x+14,t.y+16,'#ff7a50',11);if(t.k==='gaze')text('👁',t.x+14,t.y+16,'#6ab8ff',11);if(t.k==='siphon')text('💴',t.x+14,t.y+16,'#ffd36b',11);if(t.k==='iced')text('🧊',t.x+14,t.y+16,'#7fd4ff',11);if(t.k==='mud')text('🟫',t.x+14,t.y+16,'#8a6a40',11);if(t.k==='flies')text('🪰',t.x+14,t.y+16,'#9ac84a',11);
+   if(t.k==='cannon')text('810',t.x,t.y+27,'#ff5c3c',9);if(t.k==='bank')text('💰',t.x+14,t.y+16,'#ffd36b',11);if(t.k==='hype')text('📣',t.x+14,t.y+16,'#ff7a50',11);if(t.k==='gaze')text(t.over===1?'🪰':'👁',t.x+14,t.y+16,t.over===1?'#9ac84a':'#6ab8ff',11);if(t.k==='siphon')text('💴',t.x+14,t.y+16,'#ffd36b',11);if(t.k==='iced')text('🧊',t.x+14,t.y+16,'#7fd4ff',11);if(t.k==='mud')text('🟫',t.x+14,t.y+16,'#8a6a40',11);if(t.k==='flies')text('🪰',t.x+14,t.y+16,'#9ac84a',11);
    if(t.stunT>0){text('くさっ💫',t.x,t.y-22,'#a8ff3c',10);}
    if(st.aura&&!d.aura){ctx.fillStyle='#d9b36a';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('★',bx+T-9,by+12);}}
   ctx.fillStyle='#ffd36b';for(let i=0;i<t.lvl;i++){ctx.beginPath();ctx.arc(bx+8+i*7,by+8,2.5,0,7);ctx.fill();}
@@ -1438,14 +1442,14 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
   if(e.stunT>0){ctx.font=`${fs(11)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText('☆彡',x-r-8,y-r-2);}
   if(e.d.heal){ctx.font=`bold ${fs(12)} sans-serif`;ctx.fillStyle='#8dff6a';ctx.fillText('+',x+r,y-r);}
   if(e.d.steal){ctx.font=`${fs(11)} sans-serif`;ctx.fillText('💸',x+r,y-r);}
-  if(e.d.jam&&e.vis){ring(e.x,e.y,e.d.jam,'rgba(150,150,150,.06)');}
+  if(e.d.jam&&e.vis){ring(e.x,e.y,e.d.jam,'rgba(150,150,150,.14)');ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#9a9a9a';ctx.fillText('妨害',x,y-r-6);}
   if(e.aff&&e.vis&&AFFIX[e.aff]){ctx.font=`bold ${fs(10)} sans-serif`;ctx.fillStyle=AFFIX[e.aff].c;ctx.fillText(AFFIX[e.aff].n+(e.aff2&&AFFIX[e.aff2]?'+'+AFFIX[e.aff2].n:''),x,y+r+12);if((e.aff==='stink'||e.aff2==='stink')&&Math.random()<.15&&fx.length<200)fx.push({x:e.x+(Math.random()-.5)*r,y:e.y-r,vx:(Math.random()-.5)*14,vy:-24,t:.7,c:'#a8ff3c'});}if(e.d.cheer&&e.vis){ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#ff7a50';ctx.fillText('応援',x,y-r-6);}if(e.buried){ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#a09080';ctx.fillText('もぐり',x,y+r+4);}
   if(e.d.dash&&e.vis){ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText(e._dashed?'サッー':'ステップ',x,y-r-6);}
   if(e.d.jump&&e.vis){ctx.font=`bold ${fs(9)} sans-serif`;ctx.fillStyle='#ff7a50';ctx.fillText('跳び',x,y-r-6);}
   if(e.d.bomb&&e.vis){ctx.font=`${fs(11)} sans-serif`;ctx.fillText('💣',x+r,y-r);}
   if(e.d.boss){ctx.font=`bold ${fs(11)} sans-serif`;ctx.fillStyle='#c46bff';ctx.fillText(e.d.name,x,y+r+14);}
   ctx.globalAlpha=1;}
- for(const p of projs){const [x,y]=P(p.x,p.y);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(x,y,p.splash?6:p.pois?5:3.5,0,7);ctx.fill();}
+ for(const p of projs){if(!isFinite(p.x+p.y))continue;const [x,y]=P(p.x,p.y);ctx.fillStyle=p.c||'#ffd36b';ctx.beginPath();ctx.arc(x,y,p.splash?6:p.pois?5:3.5,0,7);ctx.fill();}
  for(const f of fx){
   if(f.ring){const [x,y]=P(f.x,f.y);const life=f.T||Math.max(.35,f.t+.001);const k=Math.max(0,Math.min(1,1-f.t/life));ctx.strokeStyle=f.c;ctx.globalAlpha=Math.max(0,Math.min(1,f.t*2.8));ctx.lineWidth=f.lw||3;ctx.beginPath();ctx.arc(x,y,f.r+(f.R-f.r)*k,0,7);ctx.stroke();}
   else if(f.line){const [x,y]=P(f.x,f.y),[x2,y2]=P(f.x2,f.y2);ctx.strokeStyle=f.c;ctx.globalAlpha=Math.min(1,f.t*5);ctx.lineWidth=f.lw||2.5;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.stroke();ctx.strokeStyle='#fff8';ctx.lineWidth=1;ctx.stroke();}
@@ -1919,7 +1923,7 @@ const V18={
   {h:'第六章　胸ぐらの真実',img:'collar_card',t:'掴むか、掴まれるか。胸ぐらは先輩界における最古の契約形式とされる。'},
   {h:'終章　野獣と化した先輩',img:'grimace_face',t:'真の姿は誰も見ていない。見た者は皆「ファッ！？」と叫んだ後、静かに塔を建て始めるという。'},
   {h:'外典　アイスティー砲の系譜',img:'title_senpai',t:'屋上のもてなしを兵器転用した冷たい砲台。結露で床がぬるぬるになり、俊足後輩が滑って止まる（公式見解）。'},
-  {h:'外典　泥とハエの生態系',img:'grimace_face',t:'道に溜まる泥だまりと、それを好むハエの群れ。資料館は「汚いが戦術的」と評価した。ステルス看破に有効。'},
+  {h:'外典　泥とハエの生態系',img:'grimace_face',t:'810地雷のぬるぬる泥床と、ほら見ろよ塔のハエ大群。泥は道の減速、ハエはステルス看破。資料館は「汚いが戦術的」と評価した。'},
   {h:'外典　新地図三葉',img:'navy_trio_card',t:'十字交差口・汗だくサウナ・下北沢駅前が防衛区域に追加。いずれも汗と泥の気配が濃い。'},
   {h:'外典　v30覚醒革命',img:'senpai_face',t:'21種の塔が8ベース塔へ統合。覚醒で分岐（Mutation／Overwake）。先輩砲台（迫真クリ／サムライブルー／見とけよ狙撃）、部室トリオ（便乗の輪／ホラホラ声援／観葉植物）、胸ぐらスネア（ふっとばし／アイスティー／生ビール）、114514砲（810焦土／円定規／イキスギ電撃）、ほら見ろよ見ろよ塔（晒し上げ／くっさガス／ハエ大群）、810銀行（利息／集金）、迫真バリケード、810地雷（114514爆発／ぬるぬる泥床）。王道を征く。'},
   {h:'外典　デイリー曜日修飾',img:'trio_sepia_face#gold',t:'📅 日替わりデイリーに曜日修飾。日曜：810地雷セール（半額＋威力）、月曜：利息ですねぇ（銀行+50%・利息+3%）、火曜：先輩イキイキ（砲台速度+25%・ダメ+12%）、水曜：撃破報酬ボーナス（+40%・コンボ猶予）、木曜：見とけよ射程（射程+20%・クリ+5%）、金曜：おごりの114514G（+150G・ライフ+2）、土曜：汗だく弱体（敵HP-15%・速度-6%）。曜日ごとに最適戦略が変わる。王道を征く。'},
@@ -1928,6 +1932,7 @@ const V18={
   {h:'外典　v51小さな磨き',img:'collar_card',t:'既存ボスフェーズと被らない予告、タイトル記録の見切れ、凝視は見とけよ狙撃でもマーク。電撃結婚は現行砲向け。王道を征く。'},
   {h:'外典　v52小さな磨き',img:'senpai_face',t:'見とけよ狙撃に光線。晒し上げマークに水色リング。発射音の途切れを直した。王道を征く。'},
   {h:'外典　v53小さな磨き',img:'navy_center_face',t:'イキスギ電撃に紫の連鎖線。跳び／自爆の初出トースト。弾のsrc欠けでupdateが途切れない。王道を征く。'},
+  {h:'外典　v54小さな磨き',img:'locker_right_face',t:'ハエ大群が本当に看破する。くっさガスに毒。もぐり／妨害の初出。王道を征く。'},
  ],
  goroku:[
   ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
@@ -2031,7 +2036,7 @@ const V18={
   map:()=>MAPS.map((m,i)=>ent(['title_senpai','navy_trio_card','trio_sepia_card','locker_right_face','collar_card'][i%5],esc(m.name),esc(m.desc),'攻略：'+esc(m.tip)+'　相性：'+esc(m.fav))).join(''),
   sk:()=>SK.map(s=>`<div class="ent"><div style="font-size:40px">${s.ic}</div><div><h4>${esc(s.n)} <small>(${s.k.toUpperCase()}) 気合${s.cost}／CD${s.cd}s</small></h4><div>${esc(s.d)}</div></div></div>`).join('')+(typeof SKINS!=='undefined'?'<h4 style="color:#ffd36b">塔スキン</h4>'+SKINS.map(s=>'・'+esc(s.n)+'：'+esc(s.d)).join('<br>'):''),
   gal:()=>'<div class="gal">'+Object.keys(ASSETS).filter(n=>!n.startsWith('wiki/')).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
-  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','アイスティー砲（凍結）・泥だまり罠（道の減速床）・ハエ発生器（看破）'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','地雷は一発爆発、泥は何度でも踏める持続減速（汚い）'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）'],['ランが似るのは？','シチュ・舞台・曜日デイリー・野獣ステップ後輩・ふらふら。上段HUDにシチュ名が出る（v48）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
+  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','新塔は出ない。胸ぐらアイスティー・地雷泥床・視線ハエ大群が現行の凍結／減速床／看破'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','同じ810地雷の覚醒差。爆発は一発、泥床は何度でも踏める持続減速'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）'],['ランが似るのは？','シチュ・舞台・曜日デイリー・野獣ステップ後輩・ふらふら。上段HUDにシチュ名が出る（v48）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
  };
  const jumpLore=id=>{show('lore');requestAnimationFrame(()=>{const el=$(id);if(el)el.scrollIntoView({block:'start',behavior:'smooth'});});};
  const show=k=>{o.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.k===k));const c=$('cdx');c.innerHTML=R[k]();c.scrollTop=0;
@@ -2228,7 +2233,7 @@ const V23={ver:'v23',maps:['cross','sauna','station'],towers:['iced','mud','flie
  // dirty ambient: flies orbit iced condensation
  const _up23=update;update=function(dt){_up23(dt);try{if(!game||RM)return;
   for(const t of towers){const d=TOWERS[t.k];if(!d)continue;
-   if(d.flies&&Math.random()<dt*2.2&&fx.length<FX_CAP){const a=game.t*4+t.tx;pushFx({x:t.x+Math.cos(a)*18,y:t.y+Math.sin(a*1.3)*14,vx:Math.cos(a+1)*20,vy:Math.sin(a)*20,t:.35,c:'#9ac84a',spark:true,sz:1.8});}
+   if((d.flies||(t.k==='gaze'&&t.over===1))&&Math.random()<dt*2.2&&fx.length<FX_CAP){const a=game.t*4+t.tx;pushFx({x:t.x+Math.cos(a)*18,y:t.y+Math.sin(a*1.3)*14,vx:Math.cos(a+1)*20,vy:Math.sin(a)*20,t:.35,c:'#9ac84a',spark:true,sz:1.8});}
    if(d.freeze&&Math.random()<dt*1.4&&fx.length<FX_CAP)pushFx({x:t.x+(Math.random()-.5)*20,y:t.y+8,vx:(Math.random()-.5)*10,vy:10+Math.random()*18,t:.5,c:'#cfeeff',drop:true,sz:2});
    if(d.mud&&Math.random()<dt*1.6){decal(t.x+(Math.random()-.5)*10,t.y+(Math.random()-.5)*8,6+Math.random()*6,'#5a403044');}
   }}catch(_){}};
