@@ -970,7 +970,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
     if(p.src.mut===0&&fires.length<14)fires.push({x:p.tx,y:p.ty,r:p.splash*.7,t:p.src.over===0?6:3,dps:p.dmg*(p.src.over===0?.65:.45),src:p.src});
     if(p.src.over===1){for(const e of enemies){if(!e.dead&&(e.x-p.tx)**2+(e.y-p.ty)**2<=p.splash*p.splash)e.stunT=Math.max(e.stunT,.4);}}
    }
-   else if(p.pois){pushFx({ring:true,x:p.tx,y:p.ty,r:6,R:42,t:.5,T:.5,c:'#8dff6a',lw:3});for(let i=0;i<(RM?4:10)&&fx.length<FX_CAP;i++)pushFx({x:p.tx,y:p.ty,vx:(Math.random()-.5)*90,vy:-30-Math.random()*80,t:.7,c:'#8dff6a',drop:true});for(const e of enemies){if(e.dead)continue;if((e.x-p.tx)**2+(e.y-p.ty)**2<=38*38)poisonE(e,p.pois,TOWERS.poison.poisonT+(p.src.over===0?2.5:0),p.src);}if(Math.random()<.22)float(p.tx,p.ty-12,'くっさ！','#8dff6a',true);}
+   else if(p.pois){pushFx({ring:true,x:p.tx,y:p.ty,r:6,R:42,t:.5,T:.5,c:'#8dff6a',lw:3});for(let i=0;i<(RM?4:10)&&fx.length<FX_CAP;i++)pushFx({x:p.tx,y:p.ty,vx:(Math.random()-.5)*90,vy:-30-Math.random()*80,t:.7,c:'#8dff6a',drop:true});for(const e of enemies){if(e.dead)continue;if((e.x-p.tx)**2+(e.y-p.ty)**2<=38*38)poisonE(e,p.pois,3+(p.src&&p.src.over===0?2.5:0),p.src);}if(Math.random()<.22)float(p.tx,p.ty-12,'くっさ！','#8dff6a',true);}
    else if(p.tg&&!p.tg.dead){const tg=p.tg;if(p.src.k==='navy'&&p.src.mut===1){tg.slow=Math.max(tg.slow,.2);tg.slowT=Math.max(tg.slowT,.8);}hurt(tg,p.dmg,p.src);
     if(p.freeze){const fz=p.freeze*(tg.d.boss?.45:1);tg.stunT=Math.max(tg.stunT,fz);tg.slow=Math.max(tg.slow,.35);tg.slowT=Math.max(tg.slowT,fz+0.8);
      pushFx({ring:true,x:tg.x,y:tg.y,r:4,R:28,t:.4,T:.4,c:'#7fd4ff',lw:3});for(let i=0;i<(RM?2:6)&&fx.length<FX_CAP;i++)pushFx({x:tg.x,y:tg.y,vx:(Math.random()-.5)*70,vy:-30-Math.random()*70,t:.5,c:i%2?'#b8ecff':'#e8f4ff',drop:true,sz:2.4});
@@ -1277,7 +1277,7 @@ if(window.ResizeObserver)new ResizeObserver(relayout).observe($('stage'));
 
 // ---------- input (pointer events: mouse = click to place, touch = tap twice to confirm) ----------
 function evTile(ev){const r=cv.getBoundingClientRect();const vx=(ev.clientX-r.left)*VW()/r.width,vy=(ev.clientY-r.top)*VH()/r.height;const [x,y]=portrait?[vy,vx]:[vx,vy];return{tx:Math.floor(x/T),ty:Math.floor(y/T)};}
-let tapHintT=0;function showTapHint(on){const h=$('tapHint');h.style.display=on?'block':'none';}
+function showTapHint(on){const h=$('tapHint');h.style.display=on?'block':'none';}
 cv.addEventListener('pointermove',ev=>{if(ev.pointerType==='mouse')hover=evTile(ev);});
 cv.addEventListener('pointerleave',ev=>{if(ev.pointerType==='mouse')hover=null;});
 cv.addEventListener('contextmenu',ev=>{ev.preventDefault();sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();});
@@ -1290,7 +1290,7 @@ cv.addEventListener('pointerup',ev=>{if(!game||game.over||ev.button>0)return;con
  else{picked=null;pending=null;renderInfo();}});
 addEventListener('keydown',ev=>{if($('title').classList.contains('on'))return;const k=ev.key;
  if(stQ){if(k===' '||k==='Enter'){ev.preventDefault();stAdvance();}else if(k==='Escape')stClose();return;}
- if(HOTKEYS.includes(k.toLowerCase())&&!(k==='e'&&false)){const i=HOTKEYS.indexOf(k.toLowerCase());if(TKEYS[i])selectShop(TKEYS[i]);}else if(k===' '){ev.preventDefault();startWave();}else if(k==='Escape'){sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
+ if(HOTKEYS.includes(k.toLowerCase())){const i=HOTKEYS.indexOf(k.toLowerCase());if(TKEYS[i])selectShop(TKEYS[i]);}else if(k===' '){ev.preventDefault();startWave();}else if(k==='Escape'){sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
  else if(k==='f'||k==='F')$('bSpeed').click();else if(k==='p'||k==='P')$('bPause').click();else if(k==='m'||k==='M')$('bMute').click();
  else if((k==='u'||k==='U')&&picked)$('bUp')&&$('bUp').click();});
 // block pinch / double-tap zoom on iOS (user-scalable=no is ignored there)
@@ -1796,7 +1796,13 @@ function recordRun(){if(game._rec17)return;game._rec17=1;const m=meta();m.runs++
   msg+=`<br><b style="color:#ffd36b">📅 デイリー ${game.daily}：スコア ${sc}（今日の${rank}位${rank===1?'・自己ベスト！やりますねぇ':''}）</b>`;}
  LSset('yajuuTD_meta',m);const nw=unlockCheck();if(nw.length)msg+=`<br><b style="color:#8dff6a">🔓 解放：${nw.join('・')}</b>`;
  msg+=`<br><small>称号：${curTitle}</small>`;try{$('eText').innerHTML+=msg;}catch(_){}_dailyRng=null;}
-const _win17=win;win=function(){_win17();try{recordRun();}catch(_){}};
+function nextDailyHint(){const i=(new Date().getDay()+1)%7,m=DAILY_MODS[i],w='日月火水木金土';return m?`📅 明日（${w[i]}）は「${m.n}」：${m.d}`:'📅 明日もデイリーで汗だく';}
+function appendEndFlavor(){try{const allChap=game.chap!=null&&game.chap>=CHAPS.length-1;if(!(allChap||game.daily&&game.won))return;
+ const g=pick(['いいゾ〜これ','やりますねぇ！','王道を征く','やったぜ。']);
+ let next=nextDailyHint();
+ if(game.daily&&!allChap){const pr=campProg();if(pr<CHAPS.length)next=`📖 次は第${pr+1}章「${CHAPS[pr].t}」を征け`;}
+ $('eText').innerHTML+=`<br><i style="color:#ffe08a">「${g}」</i><br><small style="color:#c9b894">${next}</small>`;}catch(_){}}
+const _win17=win;win=function(){_win17();try{recordRun();appendEndFlavor();}catch(_){}};
 const _go17=gameOver;gameOver=function(){const was=game.over;_go17();if(!was)try{recordRun();}catch(_){}};
 const DAILY_MODS=[
  {n:'810地雷セール',d:'地雷半額！やったぜ',ic:'mine',ap:(g,s)=>{s.mineCost=.5;}},
@@ -2226,7 +2232,7 @@ window.__v24=V24;
 const V25={ver:'v25',lite:LITE};
 (function(){try{
  if(LITE){const _sh=shake;shake=function(a,...r){return _sh(Math.min(a||0,8),...r);};
-  const cv=document.querySelector('canvas');let ft=0,lo=0;const _dr=draw;draw=function(){const t=performance.now();_dr();const d=performance.now()-t;ft=ft*.9+d*.1;if(ft>14){lo=1;if(splats.length>8)splats.splice(0,splats.length-8);if(gibs.length>4)gibs.splice(0,gibs.length-4);}};V25.ft=()=>ft;}
+  const cv=document.querySelector('canvas');let ft=0;const _dr=draw;draw=function(){const t=performance.now();_dr();const d=performance.now()-t;ft=ft*.9+d*.1;if(ft>14){if(splats.length>8)splats.splice(0,splats.length-8);if(gibs.length>4)gibs.splice(0,gibs.length-4);}};V25.ft=()=>ft;}
 }catch(e){console.warn('v25',e);}})();
 window.__v25=V25;
 let last=performance.now();
