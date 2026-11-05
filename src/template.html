@@ -444,8 +444,8 @@ const L={
  loseTip:['ヒント：毒＝装甲、電撃＝盾、狙撃＝応援/看病/自爆優先','ヒント：ヘアピンは壁チョーク、二股は範囲、らせんはハブ','ヒント：橋ラッシュ／一本道が出たら配置をやり直せ','ヒント：銀行・応援・集金は攻撃枠トレード（銃は金より重し）','ヒント：汗だまりは減速か「汗知らず」','ヒント：跳躍は壁を飛び越える→減速/視線/地雷/凍結','ヒント：応援後輩は狙撃か視線で潰せ','ヒント：サウナはアイスティー＋泥床、十字は視線ハブ','ヒント：ハエ発生器でステルス看破・夜戦向き','ヒント：駅前は入口分担＋奥を狙撃'],
  lose:['下北沢陥落…（陥落）','ぬわああん負けたもおおん','あっ…（察し）','これもうわかんねぇな'],
  loseSub:['痛いですね…これは痛い（確信）','また来てくれよな〜頼むよ〜（来るな）','下北沢の地価が810円に暴落した','そうだよ（敗北）','部屋が汗だく（概念）','玄関に後輩の靴が114514足','あっ、そっかぁ（納得できない）'],
- win:['下北沢防衛成功！（成功）','やりますねぇ！完全勝利','いいゾ〜これ（満足）','やったぜ。'],
- winSub:['114514点満点の防衛だった','先輩「お前のことが好きだったんだよ！」（部屋が）','王道を征く、勝利系ですか','そうだよ（便乗）（勝利）','はっきりわかんだね（何が）','屋上で日焼けしながら勝利の一服（屋上はない）','24歳、勝者です'],
+ win:['下北沢防衛成功！（成功）','やりますねぇ！完全勝利','いいゾ〜これ（満足）','やったぜ。','もう一回、王道を征く'],
+ winSub:['114514点満点の防衛だった','先輩「お前のことが好きだったんだよ！」（部屋が）','王道を征く、勝利系ですか','そうだよ（便乗）（勝利）','はっきりわかんだね（何が）','屋上で日焼けしながら勝利の一服（屋上はない）','24歳、勝者です','自己ベスト更新だゾ（してなくても）'],
 };
 const COMBO_MS={5:'5連撃！（いいよ！こいよ！）',10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、多少はね？',20:'20コンボ！やりますねぇ！',25:'25コンボ！ファッ！？',35:'35コンボ！これもうわかんねぇな',50:'50コンボ！ンアッー！（了解）',75:'75コンボ！あ ほ く さ',100:'100コンボ！114514！！（断定）',150:'150コンボ！下北沢が意味不明',200:'200コンボ！？ ファッ！？ ウーン…',300:'300コンボ！？ そうだよ（もう出ないよ）'};
 
@@ -557,14 +557,14 @@ const PERKS=[
  {t:'先輩の汗',d:'【クリ×毒】クリ命中で敵に汗（毒）が付く',img:'title_senpai',tag:'シナジー',max:1,ap:s=>s.critPois=1},
  {t:'ガス抜き（意味深）',d:'【爆発×毒】114514砲と地雷の爆風に毒',img:'senpai_face',tag:'シナジー',max:1,ap:s=>s.boomPois=1},
  {t:'凝視（ガン見）',d:'【視線】被ダメ増加 +15%・狙撃手の命中でもマーク',img:'collar_card',tag:'視線',ap:s=>{s.markAdd+=.15;s.sniperMark=1}},
- {t:'応援団の声援',d:'【応援】応援団1基あたりの強化 +4%',img:'trio_sepia_card',tag:'応援',ap:s=>s.hypeAdd+=.04},
+ {t:'応援団の声援',d:'部室トリオ（ホラホラ声援）1基あたり強化+4%',img:'trio_sepia_card',tag:'応援',ap:s=>s.hypeAdd+=.04},
  {t:'地雷原（810）',d:'【地雷】地雷の威力 +40%・再装填 -35%・最大+4',img:'grimace_face',tag:'地雷',ap:s=>{s.mineDmg+=.4;s.mineRe*=.65;s.mineMax+=4}},
  {t:'汗だく連鎖',d:'【コンボ】25コンボ以上で全タワー攻撃速度 +25%',img:'senpai_face',tag:'コンボ',max:1,ap:s=>s.comboRate=.25},
  {t:'ブラック部活',d:'【呪】タワー代 -20%・売却額 -30%',img:'locker_left_face',tag:'呪',max:1,ap:s=>{s.costMul*=.8;s.sellRate=Math.max(.2,s.sellRate-.3)}},
  {t:'迫真の覚醒',d:'Lv3から覚醒できる・覚醒コスト半額',img:'grimace_face',tag:'覚醒',max:1,ap:s=>{s.mutLvl=3;s.mutCost=.5}},
  {t:'やりますねぇ（借金）',d:'【呪】即 💰+400・以後の敵HP +10%',img:'title_senpai',tag:'呪',ap:s=>{game.gold+=400;s.eHp*=1.1}},
  {t:'下北沢の地主',d:'ライフ +10・撃破報酬 -10%',img:'trio_sepia_card',tag:'防御',max:1,ap:s=>{game.lives+=10;s.bounty-=.1}},
- {t:'集金日',d:'【集金】集金後輩の命中 +1G・上限 +100G',img:'locker_left_face',tag:'経済',ap:s=>{s.sipAdd+=1;s.sipCap+=100}},
+ {t:'集金日',d:'810銀行（集金覚醒）の命中+1G・上限+100G',img:'locker_left_face',tag:'経済',ap:s=>{s.sipAdd+=1;s.sipCap+=100}},
  {t:'汁まみれ（汗）',d:'【減速】減速中の敵の被ダメ +25%',img:'collar_face',tag:'減速',max:1,ap:s=>s.slowVuln=.25},
  {t:'迫真のトドメ',d:'HP30%以下の敵への全ダメージ +35%',img:'grimace_face',tag:'処刑',max:1,ap:s=>s.lowHp=.35},
  {t:'先輩の部屋でひと休み',d:'ウェーブ終了毎にライフ +1',img:'locker_right_face',tag:'防御',max:1,ap:s=>s.lifeRegen+=1},
@@ -576,7 +576,7 @@ const PERKS=[
  {t:'三色の覚醒',d:'異なる塔を3種以上覚醒で全ダメ+25%',img:'navy_trio_card',tag:'覚醒',max:1,ap:s=>s.triAwaken=1},
  {t:'砲視銀の輪',d:'114514砲・視線・銀行が揃うと全ダメ+20%',img:'navy_center_face',tag:'シナジー',max:1,ap:s=>s.triRing=1},
  {t:'二重の汗',d:'二重エリートへのダメ+40%・報酬+1.5倍',img:'navy_right_face',tag:'エリート',max:1,ap:s=>s.dualHunt=1},
- {t:'後輩の結束',d:'集金と銀行が互いの範囲で収入+1G',img:'locker_left_face',tag:'経済',max:1,ap:s=>s.ecoBond=1},
+ {t:'後輩の結束',d:'銀行2基以上で集金+1G・利息+1%',img:'locker_left_face',tag:'経済',max:1,ap:s=>s.ecoBond=1},
  {t:'王道を征く、強化系',d:'強化コスト-20%・Lv上限5のまま',img:'senpai_face',tag:'強化',max:1,ap:s=>s.upCostMul*=.8},
  {t:'飛びもぐり対策',d:'跳躍・もぐり後輩へのダメ+45%',img:'navy_center_face',tag:'対特殊',max:1,ap:s=>s.antiJump=1},
  {t:'妨害遮断',d:'嫌がらせ先輩の減速無効・自爆の気絶半減',img:'title_senpai',tag:'対特殊',max:1,ap:s=>s.antiJam=1},
@@ -653,7 +653,8 @@ function waveCard(){const bossW=game.wave%5===0;const nextBoss=(game.wave+1)%5==
  if(waveHint&&game.wave===1&&game.mode!=='camp')hint='💡 道の外に塔を置け';
  else if(waveHint&&game.wave===2&&towers.length>0&&!towers.some(t=>t.mut!=null))hint='💡 Lv3で覚醒';
  else if(nextBoss)hint='⚠️ 次はボス';
- game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:hint||game.stageEv?'⚠ '+(hint||game.stageEv):'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
+ const bk=bossW?BOSSES[(game.wave/5-1)%4]:null;const bn=bk&&ENEMIES[bk]?ENEMIES[bk].name:'迫真ボス';
+ game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:bossW?`${bn}　${MAP.name}`:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:hint||game.stageEv?'⚠ '+(hint||game.stageEv):'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
 const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ〜これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を征く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ','ｱｰｲｷｿ','ありますあります','いいねぇー','行きませんか？行きましょうよ','痛いですね…これは痛い','おかのした','こ↑こ↓','これもうわかんねぇな','じゃけん夜行きましょうね～','だいぶ溜まってんじゃんアゼルバイジャン','ダメみたいですね','で、出ますよ…','ないです','ヌッ！','喉渇いた…喉渇かない？','白菜かけますね','はっきりわかんだね','バッチェ冷えてますよ','ビール！ビール！','Foo↑気持ちいい～','ブッチッパ！','ほらいくどー','やんほぬ','わかるわかる（タメ口）','ありがとナス！','ウッソだろお前ｗｗｗ','かしこまり！','悲しいなぁ','最後の一発くれてやるよオラ！','もう許せるぞオイ！','知らねーよ、そんなの','いつもの','汚汚汚～～～～～～～～～','オッスオッス！','勝手にたまげてろ','がんばれ！','くさい（確信）','ここすき','すき','誰？','もっとやれ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
 function goro(x,y,txt,force,lv=1){const n=performance.now();if(!force&&n-goroT<(TOUCH?1500:900))return;goroT=n;txt=txt||GORO[Math.floor(Math.random()*GORO.length)];const c=GOROC[Math.floor(Math.random()*GOROC.length)];voice(txt,lv);
@@ -712,7 +713,7 @@ function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math
  for(let i=L2.length-1;i>0;i--){if(!ENEMIES[L2[i].k]||ENEMIES[L2[i].k].boss)continue;const j=Math.floor(Math.random()*(i+1));if(!ENEMIES[L2[j].k]||ENEMIES[L2[j].k].boss)continue;[L2[i],L2[j]]=[L2[j],L2[i]];}
  return L2;}
 function hpScale(w){return Math.pow(1+.30*(w-1),1.5)*(w<=3?.9:1);}
-function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.wave+1);if(STORY[bk]&&!(game.seen&&game.seen[bk])&&storyOn){playStory(bk,startWave);return;}}game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;stageEvent();waveCard();
+function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.wave+1);if(STORY[bk]&&!(game.seen&&game.seen[bk])&&storyOn){playStory(bk,startWave);return;}}game.wave++;game.inWave=true;game._bp50=0;game._bp25=0;spawnQ=waveList(game.wave);game.spawnT=.5;stageEvent();waveCard();
  try{for(const t of towers){if(t.k==='mud'&&t.over===1){const R=tStats(t).range*1.4;siteBurst(t.x,t.y,'#8a6a40',{n:28,R,shake:5,txt:'汚泥噴出！',big:true,sweat:true,sp:220,lw:4,dc:'#5a4030',dr:R*.5,alt:'#6b5232'});for(const e of enemies){if(!e.dead&&(e.x-t.x)**2+(e.y-t.y)**2<=R*R)hurt(e,35+8*t.lvl,t,{noCrit:true});}splat('#6b5232');snd(100,.2,'sawtooth',.05,-40);}}}catch(_){}
  if(game.wave%5===0){const fire=()=>{game._bossToastAt=performance.now();toast(`迫真ボス襲来！ウェーブ ${game.wave}（逃げるんだよォ！）（逃げない）`,'collar_card','boss shake',3200);};
   if(game._leakNow&&performance.now()-game._leakNow<2800)setTimeout(fire,1800);else fire();shake(8);}else{toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);shake(3);}
@@ -772,6 +773,9 @@ function calcStats(t){const d=TOWERS[t&&t.k];if(!d)return{range:0,dmg:0,rate:1,c
  return{range:d.mine?splash:d.mud?mudR:range,dmg,rate,crit,pois,chain,maxHp,aura:a,aur,markV,sip,sipCap,splash:d.mud?mudR:splash};}
 function tStats(t){if(statsDirty){hypeCalc();for(const o of towers)o.st=calcStats(o);statsDirty=false;}return t.st||(t.st=calcStats(t));}
 function bankIncome(t){return Math.round((20+15*t.lvl)*S().bankMul*(1-(S().ecoCut||0)));}
+function bankTot(){let n=0;for(const t of towers)if(t&&t.k==='bank')n+=bankIncome(t);return n;}
+function interestRate(){const s=S();let nb0=0;for(const t of towers)if(t&&t.k==='bank'&&t.mut===0)nb0++;return s.interest+.04*nb0+(s.setEco&&tagN('経済')>=2?.03:0)+(nb0&&s.ecoBond?.01:0);}
+function estInterest(){const rate=interestRate();if(rate<=0||(game&&game.chal==='poor'))return 0;let nb0=0,cap=120;for(const t of towers)if(t&&t.k==='bank'){if(t.mut===0)nb0++;if(t.over===0)cap=240;}return Math.min(120+100*nb0+(cap>120?120:0),Math.floor(game.gold*rate));}
 function canPlace(k,tx,ty){const d=TOWERS[k];if(!d)return false;if(d.wall&&wallCap()<=0)return false;if(tx<0||ty<0||tx>=COLS||ty>=ROWS)return false;if(towers.some(t=>t.tx===tx&&t.ty===ty))return false;if(BLOCK.has(tx+','+ty))return false;const onP=pathTiles.has(tx+','+ty);return d.onPath?onP&&tx>=1:!onP;}
 function placeFail(k){const d=TOWERS[k];if(!d){toast('そこには置けない（迫真）','collar_face','bad',900);return;}if(d.wall&&wallCap()<=0){toast('壁は甘え（置けない）','grimace_face','bad',1400);return;}if(d.mine||d.onPath)toast(d.short+'は道の上だゾ（迫真）','collar_face','bad',1200);else if(d.wall)toast('バリケードは道の横だゾ','collar_face','bad',1200);else toast('そこには置けない（迫真）','collar_face','bad',900);}
 function place(k,tx,ty){if(!canPlace(k,tx,ty))return false;const c=cost(k);setTimeout(()=>goro(tx*T+T/2,ty*T+T/2,null,false,HOT.has(tx+','+ty)?2:1),0);
@@ -810,6 +814,7 @@ function sell(t){const v=Math.round(t.spent*S().sellRate);game.gold+=v;const ox=
  try{const ae=document.activeElement;if(ae&&$('info')&&$('info').contains(ae))ae.blur();}catch(_){}
  float(ox,oy-20,'+'+v+'G','#ffd36b',true,.9);
  siteBurst(ox,oy,'#8a6a40',{n:26,R:54,shake:3.5,txt:Math.random()<.5?'撤去！':'もう許せるぞオイ！',sweat:false,sp:200,lw:3,dc:'#5a4030',dr:20,alt:'#b0b0b0'});
+ toast(`売却 +${v}G（返金${Math.round(S().sellRate*100)}%）`,'navy_trio_card','',1400);
  if(Math.random()<.5)flavor(pick(L.sell),'navy_left_face','',1100,3);renderInfo();updHud();}
 
 // ---------- toasts ----------
@@ -1012,7 +1017,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
  for(const p of splats)p.t-=dt;if(splats.length)splats=splats.filter(p=>p.t>0);
  for(const f of floats){f.t-=dt;f.y-=28*dt;}floats=floats.filter(f=>f.t>0);
  for(const d of decals)d.t-=dt;if(decals.length&&decals[0].t<=0)decals=decals.filter(d=>d.t>0);
- const boss=enemies.find(e=>e.d&&e.d.boss);const bf=$('bossfill'),bb=$('bossbar');if(boss&&bf)bf.style.width=(100*boss.hp/boss.maxHp)+'%';else if(bb&&bb.style.display!=='none')bb.style.display='none';
+ const boss=enemies.find(e=>e.d&&e.d.boss);const bf=$('bossfill'),bb=$('bossbar');if(boss&&bf){bf.style.width=(100*boss.hp/boss.maxHp)+'%';const p=boss.hp/boss.maxHp;if(p<=.5&&!game._bp50){game._bp50=1;try{toast('ボス半減！フェーズ2（やりますねぇ）',(boss.d.img||'').split('#')[0],'boss',1800);}catch(_){}}if(p<=.25&&!game._bp25){game._bp25=1;try{toast('ボス瀕死！トドメだゾ',(boss.d.img||'').split('#')[0],'boss',1600);}catch(_){}}}else if(bb&&bb.style.display!=='none')bb.style.display='none';
  if(game._pendLeak&&performance.now()>=game._pendLeak.at){const p=game._pendLeak;game._pendLeak=null;if(!game.over)toast(p.text,'grimace_face','bad',1300);}
  if(game.inWave&&!spawnQ.length&&!enemies.length&&!game.over)waveClear();
  if(game.gold!==g0||game.lives!==l0)hudDirty=true;}
@@ -1021,7 +1026,7 @@ function waveClear(){const s=S();game.inWave=false;
  if(Math.random()<.65&&!(game.wave>=game.maxWave&&!game.endless))big(pick(clearGoro),'#ffd36b',1.05);
  let inc=20+game.wave*5,lifeUp=0,nb0=0;
  for(const t of towers){if(t.k==='bank'){const n=bankIncome(t);inc+=n;float(t.x,t.y-22,'+'+n+'G','#ffd36b',false,.85);if(t.mut===0)nb0++;if(t.mut===1)lifeUp++;}t.critB=0;t.sipG=0;t.stunT=0;if(t.k==='mine')t.armed=1;if(t.k==='wall')t.hp=tStats(t).maxHp;}
- const rate=s.interest+.04*nb0+(s.setEco&&tagN('経済')>=2?.03:0)+(nb0&&s.ecoBond?.01:0);const intr=(rate>0&&game.chal!=='poor')?Math.min(120+100*nb0+(towers.some(t=>t.k==='bank'&&t.over===0)?120:0),Math.floor(game.gold*rate)):0;
+ const intr=estInterest();
  if(intr){const ib=towers.filter(t=>t.k==='bank'&&t.mut===0);if(ib.length)for(const t of ib)float(t.x,t.y-36,'利息','#ffe08a',false,.9);else float(W/2,80,'利息 +'+intr+'G','#ffe08a',false,.9);}
  game.gold+=inc+intr;game.lives+=lifeUp+s.lifeRegen;fires=[];stageClear();
  if(s.debt){if(game.gold>=s.debt){game.gold-=s.debt;toast(`借金返済 -${s.debt}G（やめてくれよ…）`,'navy_left_face','bad',1600);}else{game.lives-=1;toast('借金払えずライフ-1（取り立て汁まみれ）','navy_left_face','bad shake',1600);if(game.lives<=0){game.lives=0;gameOver();return;}}}
@@ -1125,13 +1130,13 @@ function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(f
 function updHud(){hudDirty=false;try{if($('gold'))$('gold').textContent=game.gold;if($('lives'))$('lives').textContent=game.lives;if($('wave'))$('wave').textContent=game.wave;const bw=$('bWave');if(bw){bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':(TOUCH?'ウェーブ開始':'ウェーブ開始 (Space)');}
  const nw=game.wave+1,slim=document.body.classList.contains('portrait')||document.body.classList.contains('compact');
  if($('nextinfo')){const left=spawnQ.length+enemies.filter(e=>e&&!e.dead).length;
-  if(game.inWave)$('nextinfo').textContent=(game.combo>=3?game.combo+'連撃・':'')+'残'+left;
-  else $('nextinfo').textContent=(nw%5===0?'次:ボス':'次:W'+nw)+(slim||TOUCH?'':'　Space');}
+  if(game.inWave)$('nextinfo').textContent=((game.wave%5===0)?'ボス・':'')+(game.combo>=3?game.combo+'連撃・':'')+'残'+left;
+  else{const eco=bankTot()+estInterest();$('nextinfo').textContent=(nw%5===0?'次:ボス':'次:W'+nw)+(eco?`　収入+${eco}G`:'')+(slim||TOUCH?'':'　Space');}}
  const di=$('dailyInfo');if(di){const bits=[];if(game.situ)bits.push('シチュ：'+game.situ);if(game.stageEv)bits.push('⚠ '+game.stageEv);if(game.dailyMod)bits.push('📅 '+game.dailyMod.n+'：'+game.dailyMod.d);if(bits.length){di.style.display='block';di.textContent=bits.join('　');}else di.style.display='none';}
  try{updShop();if(picked&&TOWERS[picked.k])updInfoBtns();}catch(_){}}catch(_){}}
 function statLine(t){const d=TOWERS[t&&t.k];if(!d)return'';const st=tStats(t),s=S();
  if(d.wall)return `HP ${Math.ceil(t.hp)}/${Math.round(st.maxHp)}${s.wallThorn||t.mut===0?'・トゲあり':''}`;
- if(d.bank)return `毎ウェーブ +${bankIncome(t)}G・範囲撃破 +${t.lvl}G`;
+ if(d.bank){const ir=interestRate();return `毎ウェーブ +${bankIncome(t)}G・範囲撃破 +${t.lvl}G${ir?`・利息${Math.round(ir*100)}%`:''}`;}
  if(d.hype)return `全体 攻撃+${Math.round(game.hypeD*100)}%${game.hypeR?`・速度+${Math.round(game.hypeR*100)}%`:''}（応援団合計）`;
  if(d.mine)return `爆発 ${st.dmg.toFixed(0)}・爆風 ${Math.round(st.splash)}<br>再装填 ${st.rate.toFixed(1)}s・${t.armed?'装填済み':'装填中…'}・撃破 ${t.kills}`;
  if(d.gaze)return `被ダメ +${Math.round(st.markV*100)}%・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}・撃破 ${t.kills}`;
@@ -1834,24 +1839,29 @@ const TITLES=[
  {n:'貧乏汗だく王',d:'114G縛り達成',ok:()=>!!LS('yajuuTD_chal',{}).poor},
  {n:'壁嫌い',d:'壁は甘え達成',ok:()=>!!LS('yajuuTD_chal',{}).nowall},
  {n:'イキスギ速攻',d:'TA 12分以内',ok:()=>{const v=LS('yajuuTD_chal',{}).ta;return v!=null&&v<720;}},
- {n:'迫真部長',d:'クリア5回',ok:m=>m.wins>=5}];
+ {n:'迫真部長',d:'クリア5回',ok:m=>m.wins>=5},
+ {n:'王道を征く男',d:'クリア3回',ok:m=>m.wins>=3},
+ {n:'もう一回の汗',d:'10ランプレイ',ok:m=>m.runs>=10}];
 let curSkin=LS('yajuuTD_skin','none'),curTitle=LS('yajuuTD_title','新入部員');
 function unlockCheck(){const m=meta(),seen=LS('yajuuTD_unl',[]);const nw=[];for(const s of SKINS)if(s.ok(m)&&!seen.includes('s:'+s.id)){seen.push('s:'+s.id);if(s.id!=='none')nw.push('スキン「'+s.n+'」');}for(const t of TITLES)if(t.ok(m)&&!seen.includes('t:'+t.n)){seen.push('t:'+t.n);if(t.n!=='新入部員')nw.push('称号「'+t.n+'」');}LSset('yajuuTD_unl',seen);return nw;}
 unlockCheck();{const m0=meta();if(!(SKINS.find(x=>x.id===curSkin)||{ok:()=>0}).ok(m0))curSkin='none';if(!(TITLES.find(x=>x.n===curTitle)||{ok:()=>0}).ok(m0))curTitle='新入部員';}
 function runScore(){return game.wave*1000+game.kills*3+(game.won?game.lives*120+5000:0)+(V16.best||0)*20;}
-function recordRun(){if(game._rec17)return;game._rec17=1;const m=meta();m.runs++;if(game.won)m.wins++;m.kills+=game.kills||0;m.best=Math.max(m.best,game.wave);m.chain=Math.max(m.chain,V16.best||0);let msg='';
- if(game.daily){m.daily++;const k='yajuuTD_daily_'+game.daily;const b=LS(k,[]);const sc=runScore();const at=new Date();b.push({s:sc,w:game.wave,k:game.kills,won:!!game.won,ti:curTitle,sk:curSkin,at:`${String(at.getHours()).padStart(2,'0')}:${String(at.getMinutes()).padStart(2,'0')}`});b.sort((x,y)=>y.s-x.s);const rank=b.findIndex(x=>x.s===sc)+1;LSset(k,b.slice(0,10));
+function fillBest(){try{const e=$('best');if(!e)return;const w=+localStorage.getItem('yajuuTD_best')||0;const sc=+localStorage.getItem('yajuuTD_bestScore')||0;const m=meta();const bits=[];if(w)bits.push('ベスト：W'+w);if(sc)bits.push('スコア '+sc);if(m.wins)bits.push('クリア'+m.wins+'回');if(curTitle)bits.push('称号：'+curTitle);e.textContent=bits.join('　')||'ベスト記録：まだない（王道を征け）';}catch(_){}}
+function recordRun(){if(game._rec17)return;game._rec17=1;const m=meta();m.runs++;if(game.won)m.wins++;m.kills+=game.kills||0;m.best=Math.max(m.best||0,game.wave);m.chain=Math.max(m.chain||0,V16.best||0);const sc=runScore();let pb=0;try{pb=+localStorage.getItem('yajuuTD_bestScore')||0;}catch(_){}const isPB=sc>pb;try{if(isPB)localStorage.setItem('yajuuTD_bestScore',sc);}catch(_){}
+ let msg='';
+ if(game.daily){m.daily++;const k='yajuuTD_daily_'+game.daily;const b=LS(k,[]);const at=new Date();b.push({s:sc,w:game.wave,k:game.kills,won:!!game.won,ti:curTitle,sk:curSkin,at:`${String(at.getHours()).padStart(2,'0')}:${String(at.getMinutes()).padStart(2,'0')}`});b.sort((x,y)=>y.s-x.s);const rank=b.findIndex(x=>x.s===sc)+1;LSset(k,b.slice(0,10));
   msg+=`<br><b style="color:#ffd36b">📅 デイリー ${game.daily}：スコア ${sc}（今日の${rank}位${rank===1?'・自己ベスト！やりますねぇ':''}）</b>`;}
- LSset('yajuuTD_meta',m);const nw=unlockCheck();if(nw.length)msg+=`<br><b style="color:#8dff6a">🔓 解放：${nw.join('・')}</b>`;
- msg+=`<br><small>称号：${curTitle}</small>`;try{$('eText').innerHTML+=msg;}catch(_){}_dailyRng=null;}
+ else msg+=`<br><b style="color:#ffd36b">スコア ${sc}${isPB?'　自己ベスト！やりますねぇ':(pb?`　自己ベスト ${pb}`:'')}</b>`;
+ LSset('yajuuTD_meta',m);const nw=unlockCheck();if(nw.length){msg+=`<br><b style="color:#8dff6a">🔓 解放：${nw.join('・')}</b>`;try{toast('🔓 '+nw.join('・'),'senpai_face','',2800);}catch(_){}}
+ msg+=`<br><small>称号：${curTitle}　ラン${m.runs}回${m.wins?`・クリア${m.wins}回`:''}</small>`;try{$('eText').innerHTML+=msg;}catch(_){}try{fillBest();}catch(_){}_dailyRng=null;}
 function nextDailyHint(){const i=(new Date().getDay()+1)%7,m=DAILY_MODS[i],w='日月火水木金土';return m?`📅 明日（${w[i]}）は「${m.n}」：${m.d}`:'📅 明日もデイリーで汗だく';}
-function appendEndFlavor(){try{const allChap=game.chap!=null&&game.chap>=CHAPS.length-1;if(!(allChap||game.daily&&game.won))return;
- const g=pick(['いいゾ〜これ','やりますねぇ！','王道を征く','やったぜ。']);
+function appendEndFlavor(){try{const g=pick(game.won?['いいゾ〜これ','やりますねぇ！','王道を征く','やったぜ。']:['もう一回だゾ','ま、多少はね？','王道を征く']);
  let next=nextDailyHint();
- if(game.daily&&!allChap){const pr=campProg();if(pr<CHAPS.length)next=`📖 次は第${pr+1}章「${CHAPS[pr].t}」を征け`;}
+ if(!game.won)next='もう一回、王道を征け';
+ else if(game.daily){const pr=campProg();if(pr<CHAPS.length)next=`📖 次は第${pr+1}章「${CHAPS[pr].t}」を征け`;}
  $('eText').innerHTML+=`<br><i style="color:#ffe08a">「${g}」</i><br><small style="color:#c9b894">${next}</small>`;}catch(_){}}
 const _win17=win;win=function(){_win17();try{recordRun();appendEndFlavor();}catch(_){}};
-const _go17=gameOver;gameOver=function(){const was=game.over;_go17();if(!was)try{recordRun();}catch(_){}};
+const _go17=gameOver;gameOver=function(){const was=game.over;_go17();if(!was)try{recordRun();appendEndFlavor();}catch(_){}};
 const DAILY_MODS=[
  {n:'810地雷セール',d:'地雷半額・威力+20%！やったぜ',ic:'senpai_face',ap:(g,s)=>{s.mineCost=.5;s.mineDmg+=.2;}},
  {n:'利息ですねぇ',d:'銀行+50%・利息+3%（810万円）',ic:'trio_sepia_face#gold',ap:(g,s)=>{s.bankMul+=.5;s.interest+=.03;}},
@@ -1890,7 +1900,7 @@ const _draw17=draw;draw=function(){_draw17();try{drawV17();}catch(_){}};
   for(const s of SKINS){const ok=s.ok(m);const k=document.createElement('button');k.className='card';k.disabled=!ok;k.style.opacity=ok?1:.45;k.innerHTML='<b></b><br><small></small>';k.querySelector('b').textContent=(curSkin===s.id?'✔ ':'')+(ok?s.n:'🔒 '+s.n);k.querySelector('small').textContent=s.d;k.onclick=()=>{curSkin=s.id;LSset('yajuuTD_skin',s.id);showSkin();};SL.appendChild(k);}
   for(const t of TITLES){const ok=t.ok(m);const k=document.createElement('button');k.className='card';k.disabled=!ok;k.style.opacity=ok?1:.45;k.innerHTML='<b></b><br><small></small>';k.querySelector('b').textContent=(curTitle===t.n?'✔ ':'')+(ok?t.n:'🔒 ???');k.querySelector('small').textContent=t.d;k.onclick=()=>{curTitle=t.n;LSset('yajuuTD_title',t.n);showSkin();updT();};TL.appendChild(k);}};
  bk.onclick=()=>{showSkin();so.classList.add('on');};$('skinBack').onclick=()=>so.classList.remove('on');
- const updT=()=>{const e=$('best');if(e){let s=e.dataset.b??(e.dataset.b=e.textContent);e.textContent=`${s?s+'　':''}称号：${curTitle}`;}};updT();})();
+ const updT=()=>{try{fillBest();}catch(_){}};updT();})();
 /* ===== v18+v29: 下北沢公式資料館（Wiki拡張版） ===== */
 const V18={
  lore:[
@@ -1907,6 +1917,7 @@ const V18={
   {h:'外典　v30覚醒革命',img:'senpai_face',t:'21種の塔が8ベース塔へ統合。覚醒で分岐（Mutation／Overwake）。先輩砲台（迫真クリ／サムライブルー／見とけよ狙撃）、部室トリオ（便乗の輪／ホラホラ声援／観葉植物）、胸ぐらスネア（ふっとばし／アイスティー／生ビール）、114514砲（810焦土／円定規／イキスギ電撃）、ほら見ろよ見ろよ塔（晒し上げ／くっさガス／ハエ大群）、810銀行（利息／集金）、迫真バリケード、810地雷（114514爆発／ぬるぬる泥床）。王道を征く。'},
   {h:'外典　デイリー曜日修飾',img:'trio_sepia_face#gold',t:'📅 日替わりデイリーに曜日修飾。日曜：810地雷セール（半額＋威力）、月曜：利息ですねぇ（銀行+50%・利息+3%）、火曜：先輩イキイキ（砲台速度+25%・ダメ+12%）、水曜：撃破報酬ボーナス（+40%・コンボ猶予）、木曜：見とけよ射程（射程+20%・クリ+5%）、金曜：おごりの114514G（+150G・ライフ+2）、土曜：汗だく弱体（敵HP-15%・速度-6%）。曜日ごとに最適戦略が変わる。王道を征く。'},
   {h:'外典　v47ランの変わり味',img:'navy_trio_card',t:'同じ8塔でもランの顔が変わる。シチュに壁は甘え／素の塔で征け／置き直し道場／近道全開／密着指導／サッー道場／見とけよ特訓。舞台に消灯タイム・たかり襲撃・増員コール。野獣ステップ・跳び・自爆は色リングとラベルで判別（v49）。王道を征く。'},
+  {h:'外典　v50もう一回',img:'title_senpai',t:'クリア画面にスコアと自己ベスト、称号「王道を征く男／もう一回の汗」。ボス半減でフェーズ予告。銀行の次ウェーブ収入がHUDに出る。王道を征く。'},
  ],
  goroku:[
   ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
