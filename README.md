@@ -1,9 +1,14 @@
-# 野獣先輩タワーディフェンス ～迫真TD部～ (v25)
+# 野獣先輩タワーディフェンス ～迫真TD部～ (v27)
 
 - index.html + assets/ : multi-file build (relative paths, works offline)
 - yajuu-td-single.html : one-file build, all images embedded as data URLs
 - src/template.html + build.py : source; `python3 build.py` regenerates both
 - crop.py : makes the crops in assets/ from assets/src/ (the original attachments)
+
+## v27: 初回インタラクティブ・チュートリアル
+- 初回起動（localStorage `yajuuTD_tut` 未設定）で練習モード：①塔を置く → ②ウェーブ開始 → ③スキル発動 → ④売却
+- いつでも「スキップ」可。完了／スキップでフラグ保存（次回は出ない）
+- タイトルの「📘 チュートリアル」から何度でもやり直し
 
 ## v25: 安定化＋バグ修正
 - シチュ選択ヒント等の後付けブロックをメインIIFE内へ統合（未定義参照の防止）

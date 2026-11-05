@@ -236,6 +236,24 @@ body.portrait #exMap .nd{width:31%;font-size:12px}
 @keyframes blink{50%{opacity:.3}}
 #hlStats{margin:8px 0;color:#c9b894;font-size:14px;text-align:center;max-width:700px}
 .eb{flex-wrap:wrap;gap:8px}
+
+/* v27 tutorial coach */
+#tut{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:90;width:min(520px,94vw);background:linear-gradient(180deg,#2a180ecc,#140c08ee);border:3px solid #ffd36b;border-radius:16px;padding:12px 14px 10px;box-shadow:0 12px 40px #000a,0 0 0 4px #ff5a2044;pointer-events:auto;display:none}
+#tut.on{display:block;animation:tutIn .35s cubic-bezier(.2,1.4,.4,1)}
+@keyframes tutIn{from{transform:translateX(-50%) translateY(30px) scale(.92);opacity:0}to{transform:translateX(-50%);opacity:1}}
+#tut .row{display:flex;gap:10px;align-items:flex-start}
+#tut img{width:56px;height:56px;border-radius:10px;border:2px solid #ffd36b;object-fit:cover;flex:0 0 auto}
+#tut .body{flex:1;min-width:0}
+#tut .step{font:900 11px sans-serif;color:#ffb03a;letter-spacing:.04em}
+#tut .msg{font:800 15px/1.35 sans-serif;color:#fff;margin:2px 0 6px;text-shadow:0 2px 0 #000}
+#tut .hint{font:700 12px/1.3 sans-serif;color:#c9b894}
+#tut .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;justify-content:flex-end}
+#tut .acts button{min-height:40px;padding:6px 14px;border-radius:10px;border:2px solid #5a3a20;background:#1c100a;color:#ffd36b;font:900 13px sans-serif;cursor:pointer}
+#tut .acts button.go{background:#7a2b12;border-color:#ffd36b;color:#ffe9b0}
+#tut .acts button.dim{opacity:.7}
+#tutPulse{position:fixed;pointer-events:none;z-index:89;border:3px solid #ffd36b;border-radius:12px;box-shadow:0 0 0 4px #ff5a2088,0 0 24px #ffd36b88;animation:tutP 1s ease-in-out infinite;display:none}
+@keyframes tutP{50%{box-shadow:0 0 0 8px #ff5a2044,0 0 36px #ffd36bcc;transform:scale(1.02)}}
+body.tut-lock #draft,body.tut-lock #story,body.tut-lock #explore,body.tut-lock #hl,body.tut-lock #camp,body.tut-lock #end{pointer-events:none!important}
 </style>
 </head>
 <body>
@@ -272,12 +290,23 @@ body.portrait #exMap .nd{width:31%;font-size:12px}
   </div>
   <div id="foot">クリック/タップで設置 ・ タワーを選んで強化・売却 ・ 1-9,0,Q-R,T,A,S 選択 / U 強化 / Space 開始 / Esc 解除 / F 速度 / P 停止 — 下北沢（ゴール）を守れ！演出は暑苦しく汚い（そうだよ）</div>
 </div>
+
+<div id="tutPulse"></div>
+<div id="tut">
+  <div class="row"><img id="tutImg" alt=""><div class="body">
+    <div class="step" id="tutStep">STEP 1/4</div>
+    <div class="msg" id="tutMsg">塔を置け</div>
+    <div class="hint" id="tutHint">ショップから選んでマップをタップ</div>
+    <div class="acts"><button id="tutSkip" class="dim">スキップ</button><button id="tutNext" class="go" style="display:none">次へ</button></div>
+  </div></div>
+</div>
 <div class="ov on" id="title">
   <div class="imgs"><img class="hero" id="tHero" alt=""><img class="side" id="tSide" alt=""></div>
   <div class="logo">野獣先輩<br class="pbr">タワーディフェンス</div>
   <div class="sub">～ 迫真TD部・下北沢防衛の裏技 ～</div>
   <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！17種は役割が違う：<b>壁チョーク</b>・<b>範囲レーン</b>・<b>オーラ／応援ハブ</b>・<b>地雷／泥床</b>・<b>視線デバフ</b>・<b>凍結</b>・<b>ハエ看破</b>。毒＝装甲、電撃＝盾、狙撃＝特殊優先、アイスティー＝俊足止め、泥だまり＝道の持続減速。マップ8種（十字・サウナ・駅前ほか）。ウェーブ中の<b>橋ラッシュ・一本道・工事・汗だまり</b>で配置のやり直し。銀行／集金／応援は攻撃枠トレード。覚醒後Lv5で<b>極覚醒</b>。15突破でクリア。<b>演出は汁と汗と泥とハエで汚い</b>（PG）。<br><span id="ctlHelp"></span></div>
   <button class="go" id="bStart">はじめる（いいよ！こいよ！）</button>
+  <button id="bTut" style="margin-top:8px;min-height:44px">📘 チュートリアル（初回練習）</button>
   <button id="bCamp" style="margin-top:8px;min-height:48px;background:#7a2b12;color:#ffe9b0">📖 キャンペーン（章選択）</button>
   <button id="bStory" style="margin-top:8px;min-height:44px">ストーリー：ON</button>
   <div class="help" id="best" style="margin-top:8px"></div>
@@ -2092,7 +2121,62 @@ function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!$('title').classList.contains('on'))draw();
  requestAnimationFrame(loop);}
 layout();reset();requestAnimationFrame(loop);
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,SKINS,TITLES,recordRun,runScore,meta};
+
+/* ===== v27: first-run interactive tutorial ===== */
+const V27={ver:'v27',on:false,step:0,force:false,placed:0,skUsed0:0,sold:0,pulse:null};
+const TUT_LS='yajuuTD_tut';
+function tutSeen(){try{return localStorage.getItem(TUT_LS)==='1';}catch(e){return true;}}
+function tutMark(){try{localStorage.setItem(TUT_LS,'1');}catch(e){}}
+function tutClearFlag(){try{localStorage.removeItem(TUT_LS);}catch(e){}}
+const TUT_STEPS=[
+ {id:'place',n:'1/4',msg:'塔を1本置け（いいよ！こいよ！）',hint:'右のショップでタワーを選んで、道の外のマスをタップ／クリック。安いやつでOK。',pulse:'#shop'},
+ {id:'wave',n:'2/4',msg:'ウェーブを開始しろ',hint:'上の「ウェーブ開始」か Space。敵が来たら塔が勝手に撃つゾ。',pulse:'#bWave'},
+ {id:'skill',n:'3/4',msg:'スキルを1回使え',hint:'気合ゲージが溜まってる。✋暴れんなよ（X）か💪先輩ラッシュ（V）を押せ。戦闘中だけ！',pulse:'#skbar'},
+ {id:'sell',n:'4/4',msg:'塔を売却してみろ',hint:'マップ上の塔をタップ→右パネルの「売却」。ゴールドが戻る（70%）。',pulse:null}
+];
+function tutPulse(sel){const el=$('tutPulse');if(!sel){el.style.display='none';return;}
+ const t=document.querySelector(sel);if(!t){el.style.display='none';return;}
+ const r=t.getBoundingClientRect();el.style.display='block';el.style.left=(r.left-6)+'px';el.style.top=(r.top-6)+'px';el.style.width=(r.width+12)+'px';el.style.height=(r.height+12)+'px';}
+function tutShow(){const s=TUT_STEPS[V27.step];if(!s){tutFinish(true);return;}
+ $('tut').classList.add('on');$('tutStep').textContent='STEP '+s.n;$('tutMsg').textContent=s.msg;$('tutHint').textContent=s.hint;
+ try{$('tutImg').src=ASSETS.senpai_face;}catch(_){}
+ $('tutNext').style.display='none';tutPulse(s.pulse);document.body.classList.add('tut-lock');
+ toast('📘 チュートリアル：'+s.msg,'senpai_face','',1800);}
+function tutAdvance(){V27.step++;if(V27.step>=TUT_STEPS.length)tutFinish(true);else tutShow();}
+function tutFinish(ok){V27.on=false;V27.step=0;$('tut').classList.remove('on');tutPulse(null);document.body.classList.remove('tut-lock');tutMark();
+ if(V27._story!=null){storyOn=V27._story;V27._story=null;}
+ if(ok){big('チュートリアル完了','#ffd36b',1.2);toast('おかのした！本番いこう（汗）','senpai_face','combo',2200);snd(660,.2,'triangle',.06,880);}
+ else toast('チュートリアル省略（わかってる奴）','collar_face','',1600);
+ try{if(game&&!game.situ&&!game.inWave&&!game.over&&towers.length===0)openSitu();}catch(_){}}
+function tutSkip(){if(!V27.on)return;tutFinish(false);}
+function tutStart(force){if(V27.on)return;if(!force&&tutSeen())return false;
+ V27.on=true;V27.force=!!force;V27.step=0;V27.placed=towers.length;V27.skUsed0=game.skUsed||0;V27.sold=0;
+ // prep: skip overlays, give gold/ki, kill story for a bit
+ try{$('draft').classList.remove('on');$('story').classList.remove('on');paused=false;$('bPause').textContent='⏸';}catch(_){}
+ game.gold=Math.max(game.gold,400);game.ki=100;game.skCd={};game.situ=game.situ||'チュートリアル（練習）';hudDirty=true;updHud();skRender();renderPerks();
+ V27._story=storyOn;storyOn=false;try{stQ=null;}catch(_){};
+ tutShow();return true;}
+// hooks
+const _place27=place;place=function(k,tx,ty){const n0=towers.length;const r=_place27(k,tx,ty);if(V27.on&&TUT_STEPS[V27.step]?.id==='place'&&towers.length>n0){float(tx*T+T/2,ty*T+T/2-20,'設置OK！','#ffd36b',true);setTimeout(tutAdvance,450);}return r;};
+const _sw27=startWave;startWave=function(){const w0=game.wave;_sw27();if(V27.on&&TUT_STEPS[V27.step]?.id==='wave'&&game.wave>w0){game.ki=100;game.skCd={};skRender();setTimeout(tutAdvance,500);}};
+const _sk27=skUse;skUse=function(s,wx,wy){const u0=game.skUsed||0;_sk27(s,wx,wy);if(V27.on&&TUT_STEPS[V27.step]?.id==='skill'&&(game.skUsed||0)>u0){setTimeout(tutAdvance,500);}};
+const _sell27=sell;sell=function(t){if(!V27.on||TUT_STEPS[V27.step]?.id!=='sell'){return _sell27(t);}
+ _sell27(t);setTimeout(tutAdvance,400);};
+// keep pulse aligned
+const _up27t=update;update=function(dt){_up27t(dt);if(V27.on){V27._pt=(V27._pt||0)-dt;if(V27._pt<=0){V27._pt=.25;try{tutPulse(TUT_STEPS[V27.step]?.pulse);}catch(_){}}
+ if(TUT_STEPS[V27.step]?.id==='skill'){game.ki=Math.max(game.ki,60);}}};
+$('tutSkip').onclick=tutSkip;
+(function(){const bs=$('bStart');if(!bs)return;const o=bs.onclick;bs.onclick=function(...a){
+  if(tutSeen()&&!V27.force){return o&&o.apply(this,a);}
+  try{if(typeof V16!=='undefined')V16.pend=null;if(typeof V17!=='undefined')V17.pendDaily=false;if(typeof V21!=='undefined'){V21.pendRaid=false;V21.pendChaos=false;}if(typeof V22!=='undefined')V22.pend=false;}catch(_){}
+  $('title').classList.remove('on');reset();snd(523,.1,'triangle',.06);toast('おっすお願いしまーす（お願いしない）','senpai_face','',1800);
+  V27.force=false;if(tutStart(false))return;openSitu();};
+})();
+if($('bTut'))$('bTut').onclick=()=>{try{if(typeof V16!=='undefined')V16.pend=null;if(typeof V17!=='undefined')V17.pendDaily=false;if(typeof V21!=='undefined'){V21.pendRaid=false;V21.pendChaos=false;}if(typeof V22!=='undefined')V22.pend=false;}catch(_){}
+ $('title').classList.remove('on');reset();snd(392,.15,'triangle',.06);tutClearFlag();V27.force=true;tutStart(true);V27.force=false;};
+window.__v27=V27;
+
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,V27,SKINS,TITLES,recordRun,runScore,meta};
 })();
 
 </script>
