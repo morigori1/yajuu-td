@@ -470,13 +470,13 @@ const ENEMIES={
  kohai:{name:'後輩',img:'navy_left_face',hp:42,speed:55,bounty:7,r:15,col:'#3d7bff',wd:8},
  sprint:{name:'俊足後輩',img:'navy_right_face',hp:28,speed:100,bounty:8,r:13,col:'#7fe0ff',wd:6},
  bushitsu:{name:'部室の主',img:'locker_left_face',hp:130,speed:38,bounty:14,r:19,col:'#c49a52',wd:20},
- armor:{name:'鉄壁の見学者',img:'locker_right_face',hp:95,speed:48,bounty:13,r:17,col:'#9aa0a8',armor:7,wd:12},
+ armor:{name:'鉄壁の見学者',img:'locker_right_face',hp:95,speed:48,bounty:13,r:17,col:'#9aa0a8',armor:9,wd:12},
  shield:{name:'盾持ち後輩',img:'navy_center_face',hp:70,speed:50,bounty:12,r:16,col:'#6ab8ff',shield:.9,wd:10},
  healer:{name:'看病する先輩',img:'trio_sepia_face',hp:85,speed:45,bounty:15,r:17,col:'#8dff6a',heal:.06,healR:95,wd:8},
  splitter:{name:'分身後輩',img:'navy_left_face#purple',hp:90,speed:46,bounty:10,r:18,col:'#c98aff',split:'mini',wd:10},
  mini:{name:'ちび後輩',img:'navy_left_face',hp:22,speed:85,bounty:3,r:10,col:'#c98aff',wd:4},
  thief:{name:'たかり後輩',img:'navy_right_face#gold',hp:45,speed:92,bounty:16,r:14,col:'#ffd36b',steal:.10,wd:4},
- ghost:{name:'覗き見学者',img:'locker_right_face#gray',hp:60,speed:58,bounty:14,r:15,col:'#bbbbbb',stealth:true,wd:8},
+ ghost:{name:'覗き見学者',img:'locker_right_face#gray',hp:60,speed:58,bounty:14,r:15,col:'#bbbbbb',stealth:true,stealthLv:1,wd:8},
  boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:32,bounty:150,r:34,col:'#c46bff',armor:3,boss:true,phaseEnr:1,wd:60,
   intro:['迫真ボス「ファッ！？ お前ら何してんの」','迫真ボス襲来！（顔がうるさい）'],
   ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」','迫真ボス「イキスギィ！（お前が）」','迫真ボス「ま、多少はね？（効いてる）」','迫真ボス「王道を征く、ボス系ですか」'],
@@ -495,7 +495,7 @@ const ENEMIES={
  bomber:{name:'自爆後輩',img:'navy_left_face#red',hp:50,speed:70,bounty:12,r:14,col:'#ff5c3c',bomb:70,wd:6},
  burrow:{name:'もぐり後輩',img:'locker_left_face#gray',hp:80,speed:52,bounty:15,r:15,col:'#a09080',burrow:1,wd:10},
  toono:{name:'屈託のない笑顔',img:'navy_center_face#cyan',hp:110,speed:44,bounty:17,r:18,col:'#7fd4ff',heal:.04,healR:85,shield:.25,wd:12},
- ngm:{name:'ンギモッヂイイ！',img:'grimace_face#red',hp:95,speed:82,bounty:14,r:16,col:'#ff7a50',sprint:1,wd:8},
+ ngm:{name:'ンギモッヂイイ！',img:'grimace_face#red',hp:95,speed:90,bounty:14,r:16,col:'#ff7a50',sprint:1,wd:8},
  kokoko:{name:'こ↑こ↓',img:'locker_right_face#purple',hp:75,speed:60,bounty:13,r:15,col:'#c98aff',teleport:.15,wd:8},
  mur:{name:'MURさん',img:'trio_sepia_face#gold',hp:140,speed:36,bounty:20,r:20,col:'#ffd36b',cheer:100,armor:4,wd:16},
  boss4:{name:'迫真の淫獣',img:'grimace_face#gold',hp:3400,speed:30,bounty:600,r:40,col:'#ffd36b',armor:5,boss:true,phases:true,wd:150,
@@ -688,7 +688,7 @@ function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math
 function hpScale(w){return Math.pow(1+.30*(w-1),1.5)*(w<=3?.9:1);}
 function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.wave+1);if(STORY[bk]&&!(game.seen&&game.seen[bk])&&storyOn){playStory(bk,startWave);return;}}game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;stageEvent();waveCard();
  try{for(const t of towers){if(t.k==='mud'&&t.over===1){const R=tStats(t).range*1.4;siteBurst(t.x,t.y,'#8a6a40',{n:28,R,shake:5,txt:'汚泥噴出！',big:true,sweat:true,sp:220,lw:4,dc:'#5a4030',dr:R*.5,alt:'#6b5232'});for(const e of enemies){if(!e.dead&&(e.x-t.x)**2+(e.y-t.y)**2<=R*R)hurt(e,35+8*t.lvl,t,{noCrit:true});}splat('#6b5232');snd(100,.2,'sawtooth',.05,-40);}}}catch(_){}
- if(game.wave%5===0)toast(`迫真ボス襲来！ウェーブ ${game.wave}（逃げるんだよォ！）（逃げない）`,'collar_card','boss shake',3200);else toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);
+ if(game.wave%5===0){toast(`迫真ボス襲来！ウェーブ ${game.wave}（逃げるんだよォ！）（逃げない）`,'collar_card','boss shake',3200);shake(8);}else{toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);shake(3);}
  snd(220,.25,'sawtooth',.05,220);updHud();}
 function spawn(k,dist=0,noAff,rIdx){const d=ENEMIES[k];let aff=null;const rI=rIdx!=null?rIdx:pickRoute();
  let aff2=null;if(!noAff&&!d.boss&&k!=='mini'&&game.wave>=6&&Math.random()<Math.min(.5,(game.wave-5)*.028*S().eliteMul))aff=AFK[Math.floor(Math.random()*AFK.length)];
@@ -1344,7 +1344,7 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
   ctx.fillStyle='#ffd36b';for(let i=0;i<t.lvl;i++){ctx.beginPath();ctx.arc(bx+8+i*7,by+8,2.5,0,7);ctx.fill();}
   if(t.mut!=null){ctx.fillStyle='#c98aff';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText('AB'[t.mut],bx+T-9,by+T-9);}if(t.over!=null){ctx.fillStyle='#ffd36b';ctx.font='bold 9px sans-serif';ctx.textAlign='center';ctx.fillText('極'+'AB'[t.over],bx+T-11,by+11);}}
  for(const e of enemies){const r=e.d.r;const bob=Math.sin(game.t*10+e.id*50)*1.5+(e.stunT>0?Math.sin(game.t*60)*2:0);
-  if(!e.vis)ctx.globalAlpha=.22;
+  if(!e.vis){const stLv=e.d.stealthLv||0;ctx.globalAlpha=stLv>=2?.12:stLv>=1?.18:.22;}
   if(e.aff&&e.vis){const ac=AFFIX[e.aff].c;ring(e.x,e.y+bob,r+5+Math.sin(game.t*9+e.id*9)*2,null,ac);if(e.aff2)ring(e.x,e.y+bob,r+8+Math.sin(game.t*7+e.id)*2,null,AFFIX[e.aff2].c);}if(e.buried){ctx.globalAlpha=.35;}
   face(e.d.img,e.x,e.y+bob,(e.aff==='giant'||e.aff2==='giant')?r*1.3:r,e.enr?'#ff3c3c':e.slow?'#5cd6a8':e.cheerT?'#ff7a50':e.d.col,{flash:e.hitT>0?.45:0,lw:e.d.boss?4:2.5,tint:e.poisT>0?'rgba(120,255,80,.25)':e.slow?'rgba(92,214,168,.18)':e.buried?'rgba(80,70,50,.45)':null});if(e.buried)ctx.globalAlpha=1;
   const [x,y]=P(e.x,e.y+bob);
@@ -1510,7 +1510,7 @@ const _waveClear=waveClear;waveClear=function(){pactRevert();if(game.pactExtra){
  if(game.lives>0&&game.livesLow&&game.lives>=8)hlNote('ピンチから立て直した','#8dff6a',4);_waveClear();};
 const _spawn=spawn;spawn=function(k,d,na,r){const e=_spawn(k,d,na,r);if(e.d.boss){say(e,pick(SAY.boss),3);if(game.wave>=2)setTimeout(()=>{if(!e.dead&&game.inWave&&!RB)rbOpen(e);},2500);}else if(e.aff&&Math.random()<.5)say(e,pick(SAY.elite));return e;};
 const _kill=kill;kill=function(e,t){if(e.dead)return;const c0=game.combo;_kill(e,t);
- if(e.d.boss)hlNote(`${e.d.name||'ボス'} 撃破！`,'#ffd36b',10,true);else if(e.aff2)hlNote(`二重エリート撃破（${AFFIX[e.aff]?.n||''}+${AFFIX[e.aff2]?.n||''}）`,'#ff9be0',4);
+ if(e.d.boss){hlNote(`${e.d.name||'ボス'} 撃破！`,'#ffd36b',10,true);shake(12);big('ボス撃破！','#c46bff',1.3);}else if(e.aff2)hlNote(`二重エリート撃破（${AFFIX[e.aff]?.n||''}+${AFFIX[e.aff2]?.n||''}）`,'#ff9be0',4);
  if([25,50,100,200].includes(game.combo))hlNote(`${game.combo} COMBO！`,'#ff5c8a',game.combo>=50?7:5,true);
  for(const o of enemies)if(!o.dead&&o!==e&&!o.say&&(o.x-e.x)**2+(o.y-e.y)**2<70*70&&Math.random()<.25){say(o,pick(SAY.hurt),1.4);break;}};
 const _hurt=hurt;hurt=function(e,dmg,t,o){_hurt(e,dmg,t,o);if(!e.dead&&!e.say&&Math.random()<.004)say(e,pick(SAY.hurt),1.2);};
@@ -1710,8 +1710,8 @@ const fmtT=s=>`${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`;
 const _reset16=reset;reset=function(){_reset16();V16.chain=0;V16.chainT=0;V16.best=0;const c=V16.pend;game.chal=c;game.ta=c==='ta';game.taT=0;game.taBonus=0;
  if(c==='life1')game.lives=1;if(c==='poor')game.gold=114;if(c)toast(`チャレンジ：${CHALS.find(x=>x.id===c).n}`,'collar_face','',2000);updHud();};
 const _cp16=canPlace;canPlace=function(k,tx,ty){if(game&&game.chal==='five'&&towers.length>=5)return false;return _cp16(k,tx,ty);};
-const _sp16=spawn;spawn=function(...a){const r=_sp16(...a);try{const e=r||enemies[enemies.length-1];if(e&&!e._v16){e._v16=1;if(game.chal==='hard'){e.hp*=1.45;if(e.maxHp)e.maxHp*=1.45;if(e.spd)e.spd*=1.1;}}}catch(_){}return r;};
-const _k16b=kill;kill=function(e,t){const g0=game.gold,was=e&&e.dead;_k16b(e,t);if(!was&&game.chal==='life1'){game.gold+=Math.round(Math.max(0,game.gold-g0)*.3);}};
+const _sp16=spawn;spawn=function(...a){const r=_sp16(...a);try{const e=r||enemies[enemies.length-1];if(e&&!e._v16){e._v16=1;if(game.chal==='hard'){e.hp*=1.45;if(e.maxHp)e.maxHp*=1.45;if(e.spd)e.spd*=1.1;}if(game._dailyHpMul){e.hp*=game._dailyHpMul;if(e.maxHp)e.maxHp*=game._dailyHpMul;}}}catch(_){}return r;};
+const _k16b=kill;kill=function(e,t){const g0=game.gold,was=e&&e.dead;_k16b(e,t);if(!was){if(game.chal==='life1'){game.gold+=Math.round(Math.max(0,game.gold-g0)*.3);}if(game._dailyBounty){game.gold+=Math.round(Math.max(0,game.gold-g0)*game._dailyBounty);}}};
 const _win16=win;win=function(){_win16();try{if(!game.chal)return;let msg;if(game.ta){const s=Math.max(0,game.taT-game.taBonus);const nb=chalSave('ta',+s.toFixed(1),true);msg=`⏱ タイム ${fmtT(s)}${nb?'（自己ベスト更新！やりますねぇ）':''}`;}else{chalSave(game.chal,1);msg=`チャレンジ「${CHALS.find(x=>x.id===game.chal).n}」達成！`;}
  $('eText').innerHTML=`<b style="color:#c9b08a">${msg}</b><br>最大連鎖 ${V16.best}<br>`+$('eText').innerHTML;}catch(_){}};
 const _go16=gameOver;gameOver=function(){_go16();try{$('eText').innerHTML+=`<br>最大連鎖 ${V16.best}${game.chal?'・チャレンジ失敗（ざぁこ♡）':''}`;}catch(_){}};
@@ -1770,7 +1770,15 @@ function recordRun(){if(game._rec17)return;game._rec17=1;const m=meta();m.runs++
  msg+=`<br><small>称号：${curTitle}</small>`;try{$('eText').innerHTML+=msg;}catch(_){}_dailyRng=null;}
 const _win17=win;win=function(){_win17();try{recordRun();}catch(_){}};
 const _go17=gameOver;gameOver=function(){const was=game.over;_go17();if(!was)try{recordRun();}catch(_){}};
-const _reset17=reset;reset=function(){if(V17.pendDaily){const k=todayKey();_dailyRng=mulberry(seedOf('yajuu'+k));V17.daily=k;}else{_dailyRng=null;V17.daily=false;}_reset17();game.daily=V17.daily;game._rec17=0;if(game.daily)toast(`📅 デイリーシード ${game.daily}：全員同じ展開（ズルなし）`,'senpai_face','',2400);};
+const DAILY_MODS=[
+ {n:'地雷半額の日',d:'810地雷のコスト-50%',ic:'mine',ap:(g,s)=>{s.tCost.mine=.5;}},
+ {n:'銀行利息アップ',d:'810銀行の利息効果+50%',ic:'bank',ap:(g,s)=>{s.bankMul+=.5;}},
+ {n:'先輩強化の日',d:'先輩砲台の攻撃速度+25%',ic:'senpai',ap:(g,s)=>{s.tRate.senpai+=.25;}},
+ {n:'報酬増額の日',d:'敵の撃破報酬+30%',ic:'senpai_face',ap:g=>{g._dailyBounty=.3;}},
+ {n:'射程延長の日',d:'全タワーの射程+20%',ic:'gaze',ap:(g,s)=>{s.gRange+=.2;}},
+ {n:'初期資金ボーナス',d:'初期資金+100G',ic:'trio_sepia_face#gold',ap:g=>{g.gold+=100;}},
+ {n:'敵弱体の日',d:'敵のHP-15%',ic:'collar_face',ap:g=>{g._dailyHpMul=.85;}}];
+const _reset17=reset;reset=function(){if(V17.pendDaily){const k=todayKey();_dailyRng=mulberry(seedOf('yajuu'+k));V17.daily=k;}else{_dailyRng=null;V17.daily=false;}_reset17();game.daily=V17.daily;game._rec17=0;const dayIdx=game.daily?new Date().getDay():null;if(dayIdx!=null){const mod=DAILY_MODS[dayIdx];game.dailyMod=mod;if(mod.ap)mod.ap(game,game.stats);toast(`📅 デイリー ${game.daily}：${mod.n}（${mod.d}）`,mod.ic,'',3000);}else if(game.daily){toast(`📅 デイリーシード ${game.daily}：全員同じ展開（ズルなし）`,'senpai_face','',2400);}};
 const SKC={sweat:'#9fd8ff',gold:'#ffd36b',mud:'#7a5a30',crown:'#ffcc33',rainbow:null,black:'#111'};
 function drawV17(){if(!game||curSkin==='none'&&!game.daily)return;const sc=view.k*view.dpr,_z=CAM.z;const [vx,vy]=P(CAM.x,CAM.y);const _cx=vx*sc,_cy=vy*sc;ctx.save();ctx.setTransform(sc*_z,0,0,sc*_z,_cx*(1-_z),_cy*(1-_z));const tt=performance.now()/1000;
  if(curSkin!=='none')for(const t of towers){const [x,y]=P(t.x,t.y);const ph=tt*3+t.tx;let col=SKC[curSkin]||`hsl(${(tt*120+t.tx*40)%360},90%,60%)`;
