@@ -1754,6 +1754,65 @@ const V18={
  o.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>show(x.dataset.k));
  b.onclick=()=>{show('lore');o.classList.add('on');};$('cdxBack').onclick=()=>o.classList.remove('on');
 })();
+// ===== v19: 何が起きてるか分かるHUD =====
+const V19={dmg:LS('yajuuTD_dmgnum',false),clear:LS('yajuuTD_clear',false),log:[],tq:{}};
+(function(){const st=document.createElement('style');st.textContent=`
+#v19i{position:absolute;right:8px;top:8px;z-index:16;pointer-events:none;display:flex;flex-direction:column;gap:4px;align-items:flex-end;font-weight:900;font-size:13px}
+#v19i .r{background:rgba(20,14,8,.86);border:2px solid #ffd36b55;border-radius:10px;padding:3px 9px;color:#fff;max-width:300px;text-align:right}
+#v19i .ev{border-color:#ff7a3c;color:#ffb03a;animation:v19p 1s infinite}
+#v19i .th{border-color:#ff5c8a}
+#v19i .ki{display:flex;align-items:center;gap:6px}#v19i .ki i{display:block;width:90px;height:8px;background:#000;border-radius:4px;overflow:hidden}#v19i .ki i b{display:block;height:100%;background:linear-gradient(90deg,#ff8a3c,#ffd36b)}
+@keyframes v19p{50%{box-shadow:0 0 12px #ff7a3c}}
+#v19log{position:absolute;left:8px;bottom:8px;z-index:16;pointer-events:none;font-size:12px;font-weight:700;background:rgba(10,8,5,.7);border-radius:8px;padding:4px 8px;max-width:46%;display:none}
+#v19log.on{display:block}#v19log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.toast .n19{background:#ff3c3c;color:#fff;border-radius:10px;padding:0 6px;margin-left:6px;font-size:12px}
+.toast.pin{outline:2px solid #fff6}
+body.portrait #v19i,body.compact #v19i{font-size:11px}body.portrait #v19i .r{max-width:200px}
+`;document.head.appendChild(st);
+const stg=$('stage');const i=document.createElement('div');i.id='v19i';stg.appendChild(i);const lg=document.createElement('div');lg.id='v19log';stg.appendChild(lg);
+const ctl=document.querySelector('#hud .ctl');const mk=(id,t,f)=>{const b=document.createElement('button');b.id=id;b.title=t;b.onclick=f;ctl.insertBefore(b,ctl.firstChild);return b;};
+const lab=()=>{$('b19d').textContent=V19.dmg?'🔢ON':'🔢';$('b19c').textContent=V19.clear?'👁見やすい':'👁';$('b19l').textContent=V19.logOn?'📜ON':'📜';};
+mk('b19l','イベントログ (L)',()=>{V19.logOn=!V19.logOn;lg.classList.toggle('on',V19.logOn);lab();});
+mk('b19c','見やすさモード：揺れ・フラッシュ控えめ (K)',()=>{V19.clear=!V19.clear;LSset('yajuuTD_clear',V19.clear);lab();});
+mk('b19d','ダメージ数値表示 (N)',()=>{V19.dmg=!V19.dmg;LSset('yajuuTD_dmgnum',V19.dmg);lab();});
+lab();V19.lab=lab;
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT')return;const k=e.key.toLowerCase();if(k==='n')$('b19d').click();else if(k==='k')$('b19c').click();else if(k==='l')$('b19l').click();});})();
+// toast queue: 同文まとめ×N、重要は長め、ログに残す
+const _toast19=toast;toast=function(text,img,cls='',ms=1800){const key=String(text);const now=performance.now();const q=V19.tq[key];
+ V19.log.unshift((game?`W${game.wave} `:'')+key);if(V19.log.length>8)V19.log.pop();
+ if(q&&q.el.isConnected&&now-q.at<2500){q.n++;q.at=now;let b=q.el.querySelector('.n19');if(!b){b=document.createElement('span');b.className='n19';q.el.appendChild(b);}b.textContent='×'+q.n;return;}
+ const imp=/boss|bad/.test(cls);_toast19(text,img,cls+(imp?' pin':''),imp?ms*1.4:ms);const box=$('toasts');const el=box.lastChild;if(el)V19.tq[key]={el,at:now,n:1};
+ // 重要でないものから先に消す
+ const max=document.body.classList.contains('portrait')||document.body.classList.contains('compact')?2:3;const kids=[...box.children];if(kids.length>max){const v=kids.find(k=>!k.classList.contains('pin'))||kids[0];v.remove();}};
+const _shake19=shake;shake=function(v){_shake19(V19.clear?v*.35:v);};
+const _flash19=flash;flash=function(){if(V19.clear){if(Math.random()<.3)_flash19();return;}_flash19();};
+// damage numbers
+const _hurt19=hurt;hurt=function(e,dmg,srcT,o){const h0=e.hp;_hurt19(e,dmg,srcT,o);if(V19.dmg&&!e.d.boss||V19.dmg&&Math.random()<.5){const d=Math.round(h0-Math.max(0,e.hp));if(d>0&&e.vis!==false)float(e.x+(Math.random()-.5)*14,e.y-e.d.r-6,String(d),d>=60?'#ffd36b':'#ffffff',d>=60,.55);}};
+// info panel
+let v19T=0;function v19Panel(){const el=$('v19i');if(!el||!game)return;const alive=enemies.filter(e=>!e.dead);const boss=alive.filter(e=>e.d.boss).length,el2=alive.filter(e=>e.aff).length,hunt=alive.filter(e=>e.hunt).length;
+ const hurtT=towers.filter(t=>t.thp!=null&&t.thp<t.tmax*.5).length;const rts=ROUTES.filter(r=>r.open!==false).length;
+ let h=`<div class="r">🗺 ${MAP.name}${game.act?`（第${game.act+1}幕）`:''}　<small>向き:${MAP.fav||'-'}</small></div>`;
+ if(game.stageEv)h+=`<div class="r ev">⚠ ${game.stageEv}</div>`;
+ h+=`<div class="r">🛣 進入路 ${rts}本${game.bridgeRush?'・橋ラッシュ':''}　${game.inWave?`残敵 ${alive.length}+${spawnQ.length}`:'準備中'}</div>`;
+ const th=[];if(boss)th.push(`👑ボス${boss}`);if(el2)th.push(`✦エリート${el2}`);if(hunt)th.push(`🔨塔狙い${hunt}`);if(hurtT)th.push(`🩹瀕死塔${hurtT}`);if(th.length)h+=`<div class="r th">${th.join('　')}</div>`;
+ if(game.ki!=null){const rdy=(typeof SK!=='undefined'?SK:[]).filter(s=>game.ki>=s.cost&&(game.skCd[s.id]||0)<=0).map(s=>s.ic).join('');h+=`<div class="r ki">気合<i><b style="width:${Math.min(100,game.ki)}%"></b></i>${Math.floor(game.ki)}${rdy?' 使える:'+rdy:''}</div>`;}
+ el.innerHTML=h;const lg=$('v19log');if(V19.logOn)lg.innerHTML=V19.log.map(t=>`<div>${t.replace(/[<>&]/g,'')}</div>`).join('');}
+// canvas overlay
+function drawV19(){if(!game)return;const sc=view.k*view.dpr,_z=CAM.z;const [vx,vy]=P(CAM.x,CAM.y);const _cx=vx*sc,_cy=vy*sc;ctx.save();ctx.setTransform(sc*_z,0,0,sc*_z,_cx*(1-_z),_cy*(1-_z));ctx.textAlign='center';ctx.textBaseline='middle';const tt=performance.now()/1000;
+ // tower HP + stun
+ for(const t of towers){const [x,y]=P(t.x,t.y);if(t.thp!=null&&t.thp<t.tmax){const k=Math.max(0,t.thp/t.tmax);ctx.fillStyle='#000c';ctx.fillRect(x-17,y-25,34,6);ctx.fillStyle=k>.5?'#5cff8a':k>.25?'#ffd36b':'#ff3c3c';ctx.fillRect(x-16,y-24,32*k,4);if(k<.3){ctx.font=`900 ${fs(11)} sans-serif`;ctx.fillStyle=Math.sin(tt*10)>0?'#ff3c3c':'#fff';ctx.fillText('危険!',x,y-33);}}
+  if(t.stunT>0){ctx.font=`900 ${fs(11)} sans-serif`;ctx.fillStyle='#c9a8ff';ctx.fillText('💫停止',x,y+26);}}
+ // hunter target lines
+ ctx.setLineDash([6,5]);ctx.lineWidth=2;for(const e of enemies){if(e.dead||!e.hunt||!e.hTgt||!towers.includes(e.hTgt))continue;const [x1,y1]=P(e.x,e.y),[x2,y2]=P(e.hTgt.x,e.hTgt.y);ctx.strokeStyle='rgba(255,60,60,.75)';ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.beginPath();ctx.arc(x2,y2,20+Math.sin(tt*8)*3,0,7);ctx.stroke();}ctx.setLineDash([]);
+ // route entry warnings: count queued per open route
+ if(game.inWave&&spawnQ.length){ROUTES.forEach((r,i)=>{if(r.open===false||!r.wp||!r.wp.length)return;const a=r.wp[0],b=r.wp[1]||a;const px=Math.max(14,Math.min(W-14,a.x!=null?a.x:a[0])),py=Math.max(14,Math.min(H-14,a.y!=null?a.y:a[1]));const [x,y]=P(px,py);ctx.globalAlpha=.6+.4*Math.sin(tt*6+i);ctx.fillStyle='#ff3c3c';ctx.beginPath();ctx.arc(x,y,13,0,7);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle='#fff';ctx.font=`900 ${fs(12)} sans-serif`;ctx.fillText('▶',x,y);});}
+ // selected tower status card
+ if(picked&&towers.includes(picked)){const t=picked,d=TOWERS[t.k],[x,y]=P(t.x,t.y);const ln=[`${d.name} Lv${t.lvl}${t.over!=null?' ★極':t.mut!=null?' ◆覚醒':''}`];
+  if(d.wall)ln.push(`HP ${Math.ceil(t.hp)}/${Math.round(tStats(t).maxHp)}`);else if(t.thp!=null)ln.push(`耐久 ${Math.ceil(t.thp)}/${t.tmax}`);ln.push(`撃破 ${t.kills||0}${t.stunT>0?'・停止中':''}`);if(d.role)ln.push(`役割:${d.role}`);
+  ctx.font=`bold ${fs(11)} sans-serif`;const w=Math.max(...ln.map(s=>ctx.measureText(s).width))+14,h=ln.length*14+8;let bx=x+28,by=y-h/2;if(bx+w>VW())bx=x-28-w;by=Math.max(2,Math.min(VH()-h-2,by));
+  ctx.fillStyle='rgba(15,10,5,.9)';ctx.strokeStyle='#ffd36b';ctx.lineWidth=2;ctx.fillRect(bx,by,w,h);ctx.strokeRect(bx,by,w,h);ctx.textAlign='left';ln.forEach((s,i)=>{ctx.fillStyle=i?'#e8dcc0':'#ffd36b';ctx.fillText(s,bx+7,by+11+i*14);});}
+ ctx.restore();}
+const _draw19=draw;draw=function(){_draw19();try{drawV19();}catch(_){}const n=performance.now();if(n-v19T>250){v19T=n;try{v19Panel();}catch(_){}}};
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
@@ -1761,7 +1820,7 @@ function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!$('title').classList.contains('on'))draw();
  requestAnimationFrame(loop);}
 layout();reset();requestAnimationFrame(loop);
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,SKINS,TITLES,recordRun,runScore,meta};
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,SKINS,TITLES,recordRun,runScore,meta};
 })();
 </script>
 </body>
