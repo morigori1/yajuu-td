@@ -456,7 +456,7 @@ const TOWERS={
  bank:{name:'810銀行',short:'810銀行',img:'trio_sepia_face#gold',cost:175,range:110,dmg:0,rate:0,ring:'#ffb84a',role:'経済',vs:'攻撃枠を食う。序盤投資・後半は火力に換金せよ',desc:'【経済】利息／集金後輩を覚醒で選択。火力とトレード',bank:true,proj:'#ffe08a',
   muts:[{n:'利息ですねぇ',d:'毎ウェーブ所持金の4%（上限120）'},{n:'集金後輩',d:'攻撃開始・命中毎+1G（上限100G）'}],
   overs:[{n:'810万円',d:'利息上限+120'},{n:'高利貸し',d:'集金が命中毎+2G・上限200G'}]},
- wall:{name:'迫真バリケード',short:'バリケード',img:'collar_face#gray',cost:90,range:0,dmg:0,rate:0,ring:'#b0b0b0',role:'壁',vs:'ヘアピン/迷路のチョーク。跳躍は飛び越える',desc:'【壁】道に置くチョーク。跳躍は飛び越え注意',wall:true,hp:260,
+ wall:{name:'迫真バリケード',short:'バリケード',img:'collar_face#gray',cost:90,range:0,dmg:0,rate:0,ring:'#b0b0b0',role:'壁',vs:'ヘアピン/迷路のチョーク。跳躍は飛び越える',desc:'【壁】道の横に置くチョーク。跳躍は飛び越え注意',wall:true,hp:260,
   muts:[{n:'トゲトゲ',d:'接触中の敵に毎秒反撃ダメ'},{n:'迫真復活',d:'毎秒HP5%回復'}],
   overs:[{n:'爆ぜる壁',d:'破壊時に周囲ダメ'},{n:'連結壁',d:'隣接壁とHPを分け合う'}]},
  mine:{name:'810地雷',short:'810地雷',img:'senpai_face#gray',cost:65,range:58,dmg:90,rate:5,ring:'#ff6a3c',role:'罠',vs:'道に置く。爆発／減速床の2本柱',desc:'【罠】道に置く。114514爆発／ぬるぬる泥床を覚醒で選択',onPath:true,mine:true,
@@ -627,9 +627,9 @@ function camTick(dt){if(CAM.t>0){CAM.t-=dt;}else CAM.tz=1;CAM.z+=(CAM.tz-CAM.z)*
 const STREAK=[[10,'いいゾ〜これ','#ffd36b'],[25,'ホラホラホラホラ','#ff8a5c'],[50,'暴れんなよ…暴れんなよ…','#ff3c8a'],[100,'イキスギィ！イクイクイク','#c98aff'],[200,'迫真空手部、極','#fff']];
 function streakCheck(c,x,y){for(const [n,txt,col] of STREAK)if(c===n){game.streak={n,txt,col,t:2,T:2};big(`${n} STREAK`,col,1.2);punch(x,y,1.12+n/1000,.6,n>=50?.5:0,n>=50?1.2:0,col);shake(6+n/20);flash();snd(440+n*2,.25,'square',.05,300);goro(x,y,null,true,n>=50?3:2);}}
 function waveCard(){const bossW=game.wave%5===0;const nextBoss=(game.wave+1)%5===0&&game.wave<game.maxWave;let hint='';
- if(game.wave===1&&game.mode!=='camp')hint='💡 タワーを置いて後輩を止めろ（やめてくださいよ本当に）';
- else if(game.wave===2&&towers.length>0&&!towers.some(t=>t.mut!=null))hint='💡 Lv3で覚醒できる（もっと強く…なりたい）';
- else if(nextBoss)hint='⚠️ 次はボス戦！準備しろ（イキスギィ！）';
+ if(waveHint&&game.wave===1&&game.mode!=='camp')hint='💡 道の外に塔を置け';
+ else if(waveHint&&game.wave===2&&towers.length>0&&!towers.some(t=>t.mut!=null))hint='💡 Lv3で覚醒';
+ else if(nextBoss)hint='⚠️ 次はボス';
  game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:hint||game.stageEv?'⚠ '+(hint||game.stageEv):'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
 const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を征く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ','ｱｰｲｷｿ','ありますあります','いいねぇー','行きませんか？行きましょうよ','痛いですね…これは痛い','おかのした','こ↑こ↓','これもうわかんねぇな','じゃけん夜行きましょうね～','だいぶ溜まってんじゃんアゼルバイジャン','ダメみたいですね','で、出ますよ…','ないです','ヌッ！','喉渇いた…喉渇かない？','白菜かけますね','はっきりわかんだね','バッチェ冷えてますよ','ビール！ビール！','Foo↑気持ちいい～','ブッチッパ！','ほらいくどー','やんほぬ','わかるわかる（タメ口）','ありがとナス！','ウッソだろお前ｗｗｗ','かしこまり！','悲しいなぁ','最後の一発くれてやるよオラ！','もう許せるぞオイ！','知らねーよ、そんなの','いつもの','汚汚汚～～～～～～～～～','オッスオッス！','勝手にたまげてろ','がんばれ！','くさい（確信）','ここすき','すき','誰？','もっとやれ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
@@ -744,6 +744,7 @@ function calcStats(t){const d=TOWERS[t.k],s=S(),mb=mapB(),Lv=t.lvl-1,a=(d.aura||
 function tStats(t){if(statsDirty){hypeCalc();for(const o of towers)o.st=calcStats(o);statsDirty=false;}return t.st||(t.st=calcStats(t));}
 function bankIncome(t){return Math.round((20+15*t.lvl)*S().bankMul*(1-(S().ecoCut||0)));}
 function canPlace(k,tx,ty){if(tx<0||ty<0||tx>=COLS||ty>=ROWS)return false;if(towers.some(t=>t.tx===tx&&t.ty===ty))return false;if(BLOCK.has(tx+','+ty))return false;const onP=pathTiles.has(tx+','+ty);return TOWERS[k].onPath?onP&&tx>=1:!onP;}
+function placeFail(k){const d=TOWERS[k];if(d.mine||d.onPath)toast(d.short+'は道の上だゾ（迫真）','collar_face','bad',1200);else if(d.wall)toast('バリケードは道の横だゾ','collar_face','bad',1200);else toast('そこには置けない（迫真）','collar_face','bad',900);}
 function place(k,tx,ty){if(!canPlace(k,tx,ty))return false;const c=cost(k);setTimeout(()=>goro(tx*T+T/2,ty*T+T/2,null,false,HOT.has(tx+','+ty)?2:1),0);
  if(game.gold<c){toast(pick(L.poor),'navy_left_face','bad',1200);snd(120,.15);return false;}
  if(TOWERS[k].wall&&towers.filter(t=>t.k==='wall').length>=wallCap()){toast(`バリケードは${wallCap()}個まで（欲張りすぎィ！）`,'collar_face','bad',1400);return false;}
@@ -892,6 +893,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
    if(navigator.vibrate&&TOUCH)try{navigator.vibrate(d.boss?120:40)}catch(_){}
    if(d.steal&&!s.noSteal){const st=Math.min(game.gold,Math.max(20,Math.floor(game.gold*d.steal)));game.gold-=st;game.stolen+=st;toast(`たかり後輩に ${st}G 盗まれた！（やめちくり〜）（あっ、そっかぁ）`,'navy_right_face','bad shake',1600);}
    else toast(d.boss?`ボスが下北沢に到達！ -${dmg}（入って、どうぞ）`:`${pick(L.leak)} ライフ -1`,'grimace_face','bad',1300);
+   flash();float(e.x,e.y-18,d.boss?'ボス漏れ！':`漏れた！ -${dmg}`,'#ff5c3c',true,.9);
    if(game.lives<=0){game.lives=0;gameOver();}}}
  for(const w of walls){if(w.hitT>0)w.hitT-=dt;if(w.mut===1)w.hp=Math.min(tStats(w).maxHp,w.hp+tStats(w).maxHp*.05*dt);
   if(w.over===1){for(const o of walls){if(o===w||o.hp<=0)continue;if(Math.abs(o.tx-w.tx)+Math.abs(o.ty-w.ty)===1){const avg=(w.hp+o.hp)/2;w.hp+=(avg-w.hp)*Math.min(1,dt*1.5);o.hp+=(avg-o.hp)*Math.min(1,dt*1.5);}}}
@@ -1217,6 +1219,7 @@ const LOSE_STORY=[
 let storyOn=true;try{storyOn=localStorage.getItem('yajuuTD_story')!=='0';}catch(e){}
 let showDmgNum=true;try{showDmgNum=localStorage.getItem('yajuuTD_dmgNum')!=='0';}catch(e){}
 let goroLevel=1;try{goroLevel=+localStorage.getItem('yajuuTD_goro')||1;}catch(e){}
+let waveHint=true;try{waveHint=localStorage.getItem('yajuuTD_waveHint')!=='0';}catch(e){}
 let stQ=null;
 function epiKey(){const sc={poison:0,chain:0,econ:0,fort:0,crit:0,hype:0},m={poison:'poison',chain:'chain',bank:'econ',siphon:'econ',wall:'fort',mine:'fort',sniper:'crit',senpai:'crit',cannon:'crit',hype:'hype',gaze:'hype',trio:'hype'};
  for(const t of towers){const c=m[t.k];if(c)sc[c]+=TOWERS[t.k].cost*t.lvl;}const tm={'毒':'poison','電撃':'chain','経済':'econ','壁':'fort','地雷':'fort','クリ':'crit','狙撃':'crit','応援':'hype','視線':'hype'};
@@ -1266,8 +1269,8 @@ cv.addEventListener('pointerup',ev=>{if(!game||game.over||ev.button>0)return;con
  const t=towers.find(o=>o.tx===tx&&o.ty===ty);
  if(t){picked=t;sel=null;pending=null;hover=null;showTapHint(false);updShop();renderInfo();snd(500,.03,'triangle',.03);return;}
  if(sel){const ok=canPlace(sel,tx,ty);
-  if(isTouch&&!(pending&&pending.tx===tx&&pending.ty===ty)){if(ok){pending={tx,ty};hover={tx,ty};showTapHint(true);snd(400,.03,'triangle',.03);}else{pending=null;hover={tx,ty};showTapHint(false);if(TOWERS[sel].onPath)toast(TOWERS[sel].name+'は道の上に置くんだよ（迫真）','collar_face','bad',1200);}return;}
-  pending=null;showTapHint(false);if(!ok){if(TOWERS[sel].onPath)toast(TOWERS[sel].name+'は道の上に置くんだよ（迫真）','collar_face','bad',1200);return;}place(sel,tx,ty);if(isTouch)hover=null;if(game.gold<cost(sel))sel=null;updShop();renderInfo();}
+  if(isTouch&&!(pending&&pending.tx===tx&&pending.ty===ty)){if(ok){pending={tx,ty};hover={tx,ty};showTapHint(true);snd(400,.03,'triangle',.03);}else{pending=null;hover={tx,ty};showTapHint(false);placeFail(sel);}return;}
+  pending=null;showTapHint(false);if(!ok){placeFail(sel);return;}place(sel,tx,ty);if(isTouch)hover=null;if(game.gold<cost(sel))sel=null;updShop();renderInfo();}
  else{picked=null;pending=null;renderInfo();}});
 addEventListener('keydown',ev=>{if($('title').classList.contains('on'))return;const k=ev.key;
  if(stQ){if(k===' '||k==='Enter'){ev.preventDefault();stAdvance();}else if(k==='Escape')stClose();return;}
@@ -1310,6 +1313,7 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
  ctx.drawImage(mapCache,ox*view.k*view.dpr,oy*view.k*view.dpr);const sc=view.k*view.dpr;ST(sc,0,0,sc,ox*sc,oy*sc);const s=S();
  stageDraw();for(const d of decals){const [x,y]=P(d.x,d.y);ctx.globalAlpha=Math.min(.62,d.t/5);ctx.fillStyle=d.c;ctx.beginPath();ctx.ellipse(x,y,d.r,d.r*d.rx,0,0,7);ctx.fill();}ctx.globalAlpha=1;
  for(const f of fires){const a=Math.min(1,f.t)*(.25+.1*Math.sin(game.t*20+f.x));ring(f.x,f.y,f.r,`rgba(255,110,40,${a})`);if(Math.random()<.3&&fx.length<220)fx.push({x:f.x+(Math.random()-.5)*f.r,y:f.y+(Math.random()-.5)*f.r,vx:0,vy:-40,t:.4,c:'#ffb040'});}
+ if(sel&&!game.over&&(TOWERS[sel].mine||TOWERS[sel].wall)){ctx.globalAlpha=.32;if(TOWERS[sel].mine){for(const k of pathTiles){const [x,y]=k.split(',').map(Number);if(x<1)continue;const [a,b]=P(x*T,y*T);ctx.fillStyle='#ff6a3c66';ctx.fillRect(a+3,b+3,T-6,T-6);}}else{for(let x=0;x<COLS;x++)for(let y=0;y<ROWS;y++){if(pathTiles.has(x+','+y)||BLOCK.has(x+','+y))continue;let near=false;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])if(pathTiles.has((x+dx)+','+(y+dy)))near=true;if(!near)continue;const [a,b]=P(x*T,y*T);ctx.fillStyle='#c8c8c866';ctx.fillRect(a+3,b+3,T-6,T-6);}}ctx.globalAlpha=1;}
  if(hover&&sel&&!game.over){const ok=canPlace(sel,hover.tx,hover.ty);const cx=hover.tx*T+T/2,cy=hover.ty*T+T/2;const pul=.55+.45*Math.sin(game.t*7);
   const r=TOWERS[sel].wall?22:TOWERS[sel].hype?30:TOWERS[sel].mud?TOWERS[sel].range:TOWERS[sel].range*(1+s.gRange)*(TOWERS[sel].aura?1+s.auraRange:1);
   ring(cx,cy,r,ok?`rgba(255,211,107,${.1+.08*pul})`:'rgba(255,60,60,.18)',ok?'#ffd36bcc':'#ff3c3ccc');
@@ -2058,7 +2062,7 @@ function setP2Sel(k){V22.p2.sel=V22.p2.sel===k?null:k;V22.p2.pending=null;try{up
 function p2Move(dx,dy){if(!coopOn())return;V22.p2.tx=Math.max(0,Math.min(COLS-1,V22.p2.tx+dx));V22.p2.ty=Math.max(0,Math.min(ROWS-1,V22.p2.ty+dy));V22.flash=.25;}
 function p2Place(){if(!coopOn()||game.over)return;const k=V22.p2.sel;if(!k){toast('P2：塔を選んでから Enter（YUIOP[];-=NM,.）','navy_left_face','bad',1200);return;}
  const tx=V22.p2.tx,ty=V22.p2.ty;const ok=canPlace(k,tx,ty);
- if(!ok){if(TOWERS[k].onPath)toast('P2：'+TOWERS[k].name+'は道の上に置くんだよ','collar_face','bad',1100);else toast('P2：そこには置けない（迫真）','collar_face','bad',900);return;}
+ if(!ok){placeFail(k);return;}
  if(place(k,tx,ty)){const t=towers[towers.length-1];if(t){t.owner=2;t._coopBurst=1;}V22.flash=.5;toast(`P2 配置：${TOWERS[k].name}`,'navy_right_face','',900);snd(720,.08,'triangle',.05,180);if(game.gold<cost(k))V22.p2.sel=null;updShop();renderInfo();v22Hud();}}
 function p2Skill(i){if(!coopOn())return;const s=SK[i];if(!s||!game)return;if(!game.inWave){toast('P2スキルは戦闘中だけ','collar_face','bad',900);return;}
  if(!skOk(s)){toast(game.ki<s.cost?`P2：気合不足（${Math.floor(game.ki)}/${s.cost}）`:'P2：CD中','collar_face','bad',900);return;}
@@ -2218,10 +2222,10 @@ function tutSeen(){try{return localStorage.getItem(TUT_LS)==='1';}catch(e){retur
 function tutMark(){try{localStorage.setItem(TUT_LS,'1');}catch(e){}}
 function tutClearFlag(){try{localStorage.removeItem(TUT_LS);}catch(e){}}
 const TUT_STEPS=[
- {id:'place',n:'1/4',msg:'塔を1本置け（いいよ！こいよ！）',hint:'右のショップでタワーを選んで、道の外のマスをタップ／クリック。安いやつでOK。',pulse:'#shop'},
- {id:'wave',n:'2/4',msg:'ウェーブを開始しろ',hint:'上の「ウェーブ開始」か Space。敵が来たら塔が勝手に撃つゾ。',pulse:'#bWave'},
- {id:'skill',n:'3/4',msg:'スキルを1回使え',hint:'気合ゲージが溜まってる。✋暴れんなよ（X）か💪先輩ラッシュ（V）を押せ。戦闘中だけ！',pulse:'#skbar'},
- {id:'sell',n:'4/4',msg:'塔を売却してみろ',hint:'マップ上の塔をタップ→右パネルの「売却」。ゴールドが戻る（70%）。',pulse:null}
+ {id:'place',n:'1/4',msg:'塔を1本置け',hint:'ショップで選んで、道の外をクリック／タップ。',pulse:'#shop'},
+ {id:'wave',n:'2/4',msg:'ウェーブ開始',hint:'「ウェーブ開始」か Space。',pulse:'#bWave'},
+ {id:'skill',n:'3/4',msg:'スキルを1回',hint:'戦闘中に気合スキル（X / V）。',pulse:'#skbar'},
+ {id:'sell',n:'4/4',msg:'塔を売却',hint:'塔を選んで右パネルの売却。',pulse:null}
 ];
 function tutPulse(sel){const el=$('tutPulse');if(!sel){el.style.display='none';return;}
  const t=document.querySelector(sel);if(!t){el.style.display='none';return;}
@@ -2279,6 +2283,7 @@ const d=document.createElement('div');d.id='v28';d.innerHTML=`<div class="bx"><h
 <div class="row">ダメージ数値<button id="s28d"></button></div>
 <div class="row">語録ポップ量<button id="s28g"></button></div>
 <div class="row">ストーリー<button id="s28s"></button></div>
+<div class="row">序盤ヒント<button id="s28h"></button></div>
 <div class="row">チュートリアル<button id="s28t">もう一度出す</button></div>
 <small style="color:#c9b08a;margin-top:8px">ヒント：PC版はホットキー1-8でタワー選択、Uで強化、Spaceでウェーブ開始。モバイルは2回タップで設置。</small>
 <h3>💾 セーブ引継ぎ</h3><small>スキン・称号・日替わりランキング・章進行・チャレンジ記録・設定をまとめてJSONで持ち出し／読み込み。</small>
@@ -2286,7 +2291,7 @@ const d=document.createElement('div');d.id='v28';d.innerHTML=`<div class="bx"><h
 <div class="bt"><button id="s28e">書き出し（表示）</button><button id="s28cp">コピー</button><button id="s28f">ファイル保存</button><button id="s28o">ファイル読込</button><button id="s28i" class="go">テキスト読込</button><input type="file" id="s28fi" accept=".json,application/json,text/plain" style="display:none"></div>
 <div class="ms" id="s28ms"></div><div class="bt"><button id="s28z">閉じる</button></div></div>`;document.body.appendChild(d);
 const on=b=>b?'ON':'OFF',ms=t=>$('s28ms').textContent=t;
-const lab=()=>{$('s28m').textContent=muted?'🔇 OFF':'🔊 ON';$('s28v').textContent=on(vOn);$('s28c').textContent=on(V19.clear);$('s28d').textContent=on(V19.dmg);$('s28g').textContent=goroLevel===0?'少なめ':goroLevel===1?'普通':'多め';$('s28s').textContent=on(storyOn);};
+const lab=()=>{$('s28m').textContent=muted?'🔇 OFF':'🔊 ON';$('s28v').textContent=on(vOn);$('s28c').textContent=on(V19.clear);$('s28d').textContent=on(V19.dmg);$('s28g').textContent=goroLevel===0?'少なめ':goroLevel===1?'普通':'多め';$('s28s').textContent=on(storyOn);$('s28h').textContent=on(waveHint);};
 muted=!!LS('yajuuTD_muted',false);vOn=LS('yajuuTD_voice',true)!==false;if($('bMute'))$('bMute').textContent=muted?'🔇':'🔊';
 $('bMute').addEventListener('click',()=>{LSset('yajuuTD_muted',muted);lab();});
 $('s28m').onclick=()=>$('bMute').click();
@@ -2294,6 +2299,7 @@ $('s28v').onclick=()=>{vOn=!vOn;LSset('yajuuTD_voice',vOn);if(!vOn&&window.speec
 $('s28c').onclick=()=>{$('b19c').click();lab();};$('s28d').onclick=()=>{$('b19d').click();lab();};
 $('s28g').onclick=()=>{goroLevel=(goroLevel+1)%3;try{localStorage.setItem('yajuuTD_goro',goroLevel)}catch(e){}lab();};
 $('s28s').onclick=()=>{$('bStory').click();lab();};
+$('s28h').onclick=()=>{waveHint=!waveHint;try{localStorage.setItem('yajuuTD_waveHint',waveHint?'1':'0')}catch(e){}lab();};
 $('s28t').onclick=()=>{tutClearFlag();ms('次の「はじめる」でチュートリアルが出るゾ');};
 const keep=k=>/^yajuuTD_/.test(k);
 function dump(){const o={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(keep(k))o[k]=localStorage.getItem(k);}return JSON.stringify({game:'yajuu-td',v:28,at:new Date().toISOString(),data:o});}
