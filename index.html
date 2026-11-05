@@ -1864,6 +1864,75 @@ window.__v21=V21;const _draw21=draw;draw=function(){_draw21();try{drawV21();}cat
  const bs=$('bStart'),o=bs.onclick;bs.onclick=()=>{V21.pendRaid=false;V21.pendChaos=false;o();};
  const bc=$('bChal');if(bc){const oc=bc.onclick;bc.onclick=()=>{V21.pendRaid=false;V21.pendChaos=false;oc();};}})();
 
+/* ===== v22: LOCAL COOP 2P（同一端末・共有ライフ/ゴールド） ===== */
+const V22={pend:false,on:false,p2:{tx:6,ty:5,sel:null,pending:null},flash:0,tips:0};
+function coopOn(){return !!(game&&game.coop);}
+function p2Sel(){return V22.p2.sel;}
+function setP2Sel(k){V22.p2.sel=V22.p2.sel===k?null:k;V22.p2.pending=null;try{updShop();}catch(_){}try{renderInfo();}catch(_){}try{v22Hud();}catch(_){}}
+function p2Move(dx,dy){if(!coopOn())return;V22.p2.tx=Math.max(0,Math.min(COLS-1,V22.p2.tx+dx));V22.p2.ty=Math.max(0,Math.min(ROWS-1,V22.p2.ty+dy));V22.flash=.25;}
+function p2Place(){if(!coopOn()||game.over)return;const k=V22.p2.sel;if(!k){toast('P2：塔を選んでから Enter（YUIOP[];-=NM,.）','navy_left_face','bad',1200);return;}
+ const tx=V22.p2.tx,ty=V22.p2.ty;const ok=canPlace(k,tx,ty);
+ if(!ok){if(TOWERS[k].onPath)toast('P2：'+TOWERS[k].name+'は道の上に置くんだよ','collar_face','bad',1100);else toast('P2：そこには置けない（迫真）','collar_face','bad',900);return;}
+ if(place(k,tx,ty)){const t=towers[towers.length-1];if(t){t.owner=2;t._coopBurst=1;}V22.flash=.5;toast(`P2 配置：${TOWERS[k].name}`,'navy_right_face','',900);snd(720,.08,'triangle',.05,180);if(game.gold<cost(k))V22.p2.sel=null;updShop();renderInfo();v22Hud();}}
+function p2Skill(i){if(!coopOn())return;const s=SK[i];if(!s||!game)return;if(!game.inWave){toast('P2スキルは戦闘中だけ','collar_face','bad',900);return;}
+ if(!skOk(s)){toast(game.ki<s.cost?`P2：気合不足（${Math.floor(game.ki)}/${s.cost}）`:'P2：CD中','collar_face','bad',900);return;}
+ if(s.aim){const wx=V22.p2.tx*T+T/2,wy=V22.p2.ty*T+T/2;skUse(s,wx,wy);toast(`P2：${s.n}`,'senpai_face','',900);return;}skUse(s);toast(`P2：${s.n}`,'senpai_face','',900);}
+const P2_SHOP_KEYS=['y','u','i','o','p','[',']',';','-','=','n','m',',','.'];
+const _reset22=reset;reset=function(){_reset22();game.coop=V22.pend;V22.on=!!game.coop;V22.p2.sel=null;V22.p2.pending=null;V22.p2.tx=Math.min(COLS-2,Math.max(2,Math.floor(COLS/3)));V22.p2.ty=Math.min(ROWS-2,Math.max(2,Math.floor(ROWS/2)));V22.tips=0;V22.flash=0;
+ if(game.coop){game.gold+=180;game.lives+=5;toast('👥 ローカル協力2P：ゴールド・ライフ共有。P1=マウス+ZXCV / P2=矢印+Enter+HJKL','title_senpai','boss shake',3600);try{voice('二人でやれよ',1.15);}catch(_){}setTimeout(()=>{try{v22Hud(true);toast('P2ショップ：YUIOP[];-=NM,.　スキル：H J K L　ウェーブ：G','navy_left_face','',3200);}catch(_){}},900);}
+ try{v22Hud();}catch(_){}updHud();};
+const _place22=place;place=function(k,tx,ty){const n0=towers.length;const r=_place22(k,tx,ty);const t=towers[towers.length-1];if(t&&towers.length>n0&&t.owner==null)t.owner=1;return r;};
+function v22Hud(force){let el=$('coopHud');if(!coopOn()){if(el)el.style.display='none';return;}
+ if(!el){el=document.createElement('div');el.id='coopHud';el.style.cssText='position:absolute;top:4px;left:50%;transform:translateX(-50%);z-index:14;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;pointer-events:none;max-width:96%';
+  const css=document.createElement('style');css.textContent=`#coopHud .p{background:#000c;border:2px solid #ffd36b;border-radius:10px;padding:3px 8px;font:800 11px/1.25 sans-serif;color:#ffd36b;text-shadow:0 1px 0 #000}#coopHud .p2{border-color:#6ab8ff;color:#9ad8ff}#coopHud b{color:#fff}`;document.head.appendChild(css);($('stage')||document.body).appendChild(el);}
+ el.style.display='flex';
+ const p1n=sel?TOWERS[sel].short:'（未選択）';const p2n=V22.p2.sel?TOWERS[V22.p2.sel].short:'（未選択）';
+ el.innerHTML=`<div class="p">P1 🖱 <b>${p1n}</b> · 配置クリック · スキル Z/X/C/V</div><div class="p p2">P2 ⌨ <b>${p2n}</b> · 矢印移動 · Enter配置 · H/J/K/L</div>`;}
+const _updShop22=updShop;updShop=function(){_updShop22();try{if(!coopOn())return;const box=$('shop');if(!box)return;box.querySelectorAll('.shop').forEach((el,i)=>{const k=el.dataset.k;el.style.outline=V22.p2.sel===k?'2px solid #6ab8ff':'';el.style.boxShadow=sel===k?'0 0 8px #ffd36b88':V22.p2.sel===k?'0 0 8px #6ab8ff88':'';
+  let tag=el.querySelector('.p2k');if(!tag){tag=document.createElement('div');tag.className='p2k';tag.style.cssText='position:absolute;left:6px;top:2px;font:900 9px sans-serif;color:#6ab8ff;opacity:.85';el.appendChild(tag);}tag.textContent=P2_SHOP_KEYS[i]?('P2:'+P2_SHOP_KEYS[i].toUpperCase()):'';});}catch(_){}};
+document.addEventListener('keydown',ev=>{if(!coopOn()||!game||game.over||$('title').classList.contains('on'))return;if(stQ||RB)return;if(ev.target&&(ev.target.tagName==='INPUT'||ev.target.tagName==='TEXTAREA'))return;
+ const k=ev.key;const kl=k.toLowerCase();
+ if(k==='ArrowUp'){ev.preventDefault();p2Move(0,-1);return;}
+ if(k==='ArrowDown'){ev.preventDefault();p2Move(0,1);return;}
+ if(k==='ArrowLeft'){ev.preventDefault();p2Move(-1,0);return;}
+ if(k==='ArrowRight'){ev.preventDefault();p2Move(1,0);return;}
+ if(k==='Enter'){ev.preventDefault();ev.stopImmediatePropagation();p2Place();return;}
+ if(kl==='g'){ev.preventDefault();startWave();return;}
+ const hi='hjkl'.indexOf(kl);if(hi>=0){ev.preventDefault();ev.stopImmediatePropagation();p2Skill(hi);return;}
+ const si=P2_SHOP_KEYS.indexOf(kl);if(si>=0&&TKEYS[si]){ev.preventDefault();ev.stopImmediatePropagation();setP2Sel(TKEYS[si]);snd(480,.03,'triangle',.03);return;}if(si>=0&&TKEYS[si]){ev.preventDefault();ev.stopImmediatePropagation();setP2Sel(TKEYS[si]);snd(480,.03,'triangle',.03);return;}
+ if(k==='Backspace'||k==='Delete'){ev.preventDefault();V22.p2.sel=null;V22.p2.pending=null;updShop();v22Hud();}},true);
+// also allow WASD for P2 cursor (shop keys qwer take priority only without shift) — use numpad / dedicated:
+document.addEventListener('keydown',ev=>{if(!coopOn()||!game||game.over||$('title').classList.contains('on')||stQ||RB)return;
+ if(ev.shiftKey&&['KeyW','KeyA','KeyS','KeyD'].includes(ev.code)){ev.preventDefault();const m={KeyW:[0,-1],KeyS:[0,1],KeyA:[-1,0],KeyD:[1,0]}[ev.code];p2Move(m[0],m[1]);}},true);
+function drawV22(){if(!coopOn()||!game)return;const c=ctx;c.save();
+ // P2 cursor
+ const tx=V22.p2.tx,ty=V22.p2.ty,cx=tx*T+T/2,cy=ty*T+T/2;const pul=.55+.45*Math.sin(game.t*8);const ok=V22.p2.sel&&canPlace(V22.p2.sel,tx,ty);
+ if(V22.p2.sel){const d=TOWERS[V22.p2.sel];const r=d.wall?22:d.hype?30:d.range*(1+S().gRange)*(d.aura?1+S().auraRange:1);
+  ring(cx,cy,r,ok?`rgba(106,184,255,${.1+.08*pul})`:'rgba(255,60,60,.16)',ok?'#6ab8ffcc':'#ff3c3ccc');
+  c.globalAlpha=.5+.2*pul;face(d.img,cx,cy,18,ok?'#6ab8ff':'#f33');c.globalAlpha=1;}
+ const [px,py]=P(tx*T,ty*T);c.strokeStyle='#6ab8ff';c.lineWidth=2.5+pul;c.setLineDash([5,4]);c.strokeRect(px+2,py+2,T-4,T-4);c.setLineDash([]);
+ text('P2',cx,cy-T*.55,'#9ad8ff',12,true);
+ if(V22.flash>0){ring(cx,cy,14+V22.flash*40,null,`rgba(106,184,255,${V22.flash})`);}
+ // owner rings on towers
+ for(const t of towers){if(!t.owner)continue;const [x,y]=P(t.x,t.y);c.globalAlpha=.55;c.strokeStyle=t.owner===2?'#6ab8ff':'#ffd36b';c.lineWidth=2;c.beginPath();c.arc(x,y,15,0,7);c.stroke();
+  c.globalAlpha=.9;c.font=`bold ${fs(9)} sans-serif`;c.textAlign='center';c.fillStyle=t.owner===2?'#9ad8ff':'#ffd36b';c.fillText(t.owner===2?'P2':'P1',x,y+T*.55);c.globalAlpha=1;
+  if(t._coopBurst){t._coopBurst=0;siteBurst(t.x,t.y,t.owner===2?'#6ab8ff':'#ffd36b',{n:28,R:55,txt:t.owner===2?'P2配置！':'P1配置！',sp:220,lw:4});}}
+ // banner
+ c.setTransform(1,0,0,1,0,0);const d=view.dpr,W=c.canvas.width;c.font=`bold ${11*d}px sans-serif`;c.textAlign='center';c.fillStyle='#9ad8ff';c.strokeStyle='#000';c.lineWidth=3*d;const s='👥 COOP 共有💰❤️ ｜ P1マウス ｜ P2矢印+Enter';c.strokeText(s,W/2,28*d);c.fillText(s,W/2,28*d);
+ c.restore();}
+const _draw22=draw;draw=function(){_draw22();try{drawV22();}catch(_){}};
+const _up22=update;update=function(dt){_up22(dt);if(V22.flash>0)V22.flash-=dt;if(coopOn()){V22.tips=(V22.tips||0)+dt;if(V22.tips>1.2){V22.tips=0;try{v22Hud();}catch(_){}}}};
+window.__v22=V22;
+(function(){const tb=$('bRaid')||$('bChaos')||$('bChal')||$('bStory');
+ const b=document.createElement('button');b.id='bCoop';b.className='go';b.textContent='👥 ローカル協力2P（同一端末）';b.style.cssText='margin-top:8px;min-height:48px;font-size:16px';
+ b.onclick=()=>{V22.pend=true;V16.pend=null;V21.pendRaid=false;V21.pendChaos=false;V17.pendDaily=false;$('title').classList.remove('on');reset();V22.pend=false;snd(392,.18,'sawtooth',.06,784);try{openSitu();}catch(_){}};
+ if(tb)tb.after(b);else($('bStart')||document.body).after(b);
+ const tip=document.createElement('div');tip.style.cssText='color:#9ad8ff;font:700 12px sans-serif;margin-top:4px;max-width:420px;line-height:1.35';tip.textContent='P1：マウス＋1-0QWER＋ZXCV　P2：矢印＋Enter＋YUIOP[];-=NM,.＋HJKL　💰❤️共有';b.after(tip);
+ const clear=()=>{V22.pend=false;};
+ const bs=$('bStart');if(bs){const o=bs.onclick;bs.onclick=()=>{clear();o();};}
+ ['bChal','bDaily','bRaid','bChaos'].forEach(id=>{const el=$(id);if(!el)return;const o=el.onclick;el.onclick=function(...a){clear();return o&&o.apply(this,a);};});
+})();
+
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
@@ -1871,7 +1940,7 @@ function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!$('title').classList.contains('on'))draw();
  requestAnimationFrame(loop);}
 layout();reset();requestAnimationFrame(loop);
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,SKINS,TITLES,recordRun,runScore,meta};
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,SKINS,TITLES,recordRun,runScore,meta};
 })();
 
 // ---------- v20: balance + bugfix ----------
