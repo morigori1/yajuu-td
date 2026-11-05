@@ -403,14 +403,14 @@ const MAPS=[
  {id:'fork',name:'二股の路地',desc:'上下の二股。片方は途中で通行止めになる',tip:'両レーンに範囲砲か地雷。片側封鎖に備えよ',fav:'範囲・地雷',buff:{splashMul:.12,mineDmg:.12},routes:[[[-1,6],[3,6],[3,2],[11,2],[11,4],[16,4],[16,6],[20.5,6]],[[-1,6],[3,6],[3,10],[11,10],[11,8],[16,8],[16,6],[20.5,6]]],bridges:[[[-1,6],[3,6],[11,6],[16,6],[20.5,6]]],hot:[[7,6],[13,6],[18,4]],eSp:.95},
  {id:'spiral',name:'らせん高架',desc:'外周から内へ潜って立体交差。中央が激戦区',tip:'中央にトリオ声援ハブ。視線で中央支配',fav:'オーラ・声援・視線',buff:{auraRange:.18,hypeAdd:.02,markAdd:.05},routes:[[[-1,1],[16,1],[16,8],[3,8],[3,4],[12,4],[12,10],[20.5,10]]],bridges:[[[-1,1],[16,1],[16,8],[12,8],[12,10],[20.5,10]]],hot:[[8,6],[14,6],[10,2]],eSp:1.1},
  {id:'maze',name:'部室迷路',desc:'長いクネクネ。壁と地雷が映える',tip:'壁で塞いで地雷を敷く。時間を稼げ',fav:'壁・地雷',buff:{wallHp:.3,mineDmg:.18,wallMaxAdd:2},routes:[[[-1,10],[2,10],[2,1],[6,1],[6,10],[10,10],[10,1],[14,1],[14,10],[18,10],[18,3],[20.5,3]]],bridges:[[[-1,10],[2,10],[2,5],[6,5],[6,10],[10,10],[10,5],[14,5],[14,10],[18,10],[18,3],[20.5,3]]],hot:[[4,5],[8,5],[12,5],[16,6]],eSp:1.08},
- {id:'deadline',name:'直線デッドライン',desc:'上下2本が中央で合流。短いので敵は遅め',tip:'短い道。狙撃と視線で特殊／ボス優先',fav:'狙撃・視線・減速',buff:{gRange:.1,markAdd:.08,slowAdd:.05},routes:[[[-1,2],[10,2],[10,6],[20.5,6]],[[-1,10],[10,10],[10,6],[20.5,6]]],bridges:[[[-1,2],[5,2],[5,10],[10,10],[10,6],[20.5,6]]],hot:[[9,4],[11,8],[14,5],[14,7]],eSp:.78},
+ {id:'deadline',name:'直線デッドライン',desc:'上下2本が中央で合流。短いので敵は遅め',tip:'短い道。見とけよと視線で特殊／ボス優先',fav:'見とけよ・視線・減速',buff:{gRange:.1,markAdd:.08,slowAdd:.05},routes:[[[-1,2],[10,2],[10,6],[20.5,6]],[[-1,10],[10,10],[10,6],[20.5,6]]],bridges:[[[-1,2],[5,2],[5,10],[10,10],[10,6],[20.5,6]]],hot:[[9,4],[11,8],[14,5],[14,7]],eSp:.78},
  {id:'cross',name:'十字交差口',desc:'上下から中央交差へ合流。交差点が激戦',tip:'交差点に視線／オーラ／範囲。両レーンを同時に見ろ',fav:'視線・オーラ・範囲',buff:{markAdd:.07,auraRange:.12,splashMul:.1},routes:[[[-1,2],[7,2],[7,6],[20.5,6]],[[-1,10],[7,10],[7,6],[20.5,6]]],bridges:[[[-1,6],[7,6],[20.5,6]]],hot:[[7,4],[7,8],[12,6],[15,5]],eSp:1},
- {id:'sauna',name:'汗だくサウナ',desc:'長いクネクネ。床がぬるぬるで足止め向き',tip:'減速・凍結・泥床で時間を稼げ。毒も刺さる',fav:'減速・凍結・泥床',buff:{slowAdd:.1},routes:[[[-1,1],[15,1],[15,5],[4,5],[4,9],[17,9],[17,6],[20.5,6]]],bridges:[[[-1,1],[15,1],[15,9],[17,9],[17,6],[20.5,6]]],hot:[[9,3],[9,7],[13,7],[16,4]],eSp:1.05},
+ {id:'sauna',name:'汗だくサウナ',desc:'長いクネクネ。床がぬるぬるで足止め向き',tip:'減速・アイスティー・泥床地雷で時間を稼げ。くっさも刺さる',fav:'減速・凍結・泥床地雷',buff:{slowAdd:.1},routes:[[[-1,1],[15,1],[15,5],[4,5],[4,9],[17,9],[17,6],[20.5,6]]],bridges:[[[-1,1],[15,1],[15,9],[17,9],[17,6],[20.5,6]]],hot:[[9,3],[9,7],[13,7],[16,4]],eSp:1.05},
  {id:'station',name:'下北沢駅前',desc:'三方向から広場へ。短いが入口が多い',tip:'入口ごとに役割分担。見とけよで奥を刈り、前線は範囲／地雷',fav:'見とけよ・範囲・地雷',buff:{gRange:.08,splashMul:.08,mineDmg:.08},routes:[[[-1,2],[5,2],[5,7],[12,7],[12,5],[20.5,5]],[[-1,10],[5,10],[5,7],[12,7],[12,5],[20.5,5]],[[-1,5],[12,5],[20.5,5]]],bridges:[[[-1,7],[12,7],[12,5],[20.5,5]]],hot:[[6,5],[10,4],[10,8],[15,5]],eSp:.92},
- {id:'kitazawa',name:'北沢公園',desc:'中央広場から放射状。短いが同時攻撃が必要',tip:'中央にオーラ／範囲。外周に狙撃で奥を狩れ',fav:'オーラ・範囲・狙撃',buff:{auraRange:.15,splashMul:.12,gRange:.08},routes:[[[-1,6],[8,6],[8,1],[14,1],[14,6],[20.5,6]],[[-1,6],[8,6],[8,11],[14,11],[14,6],[20.5,6]],[[-1,1],[8,1],[8,6],[20.5,6]],[[-1,11],[8,11],[8,6],[20.5,6]]],bridges:[[[-1,6],[14,6],[20.5,6]]],hot:[[8,4],[8,8],[11,6],[16,3],[16,9]],eSp:.88},
+ {id:'kitazawa',name:'北沢公園',desc:'中央広場から放射状。短いが同時攻撃が必要',tip:'中央にオーラ／範囲。外周に見とけよで奥を狩れ',fav:'オーラ・範囲・見とけよ',buff:{auraRange:.15,splashMul:.12,gRange:.08},routes:[[[-1,6],[8,6],[8,1],[14,1],[14,6],[20.5,6]],[[-1,6],[8,6],[8,11],[14,11],[14,6],[20.5,6]],[[-1,1],[8,1],[8,6],[20.5,6]],[[-1,11],[8,11],[8,6],[20.5,6]]],bridges:[[[-1,6],[14,6],[20.5,6]]],hot:[[8,4],[8,8],[11,6],[16,3],[16,9]],eSp:.88},
  {id:'azuma',name:'あずま寿し',desc:'カウンター型。敵が並んで来る狭い道',tip:'連射とくっさガスで処理。泥床地雷で時間稼ぎ',fav:'連射・くっさ・泥床地雷',buff:{tRate:{senpai:.15},poisonMul:.15,slowAdd:.08},routes:[[[-1,6],[18,6],[18,3],[20.5,3]],[[-1,6],[18,6],[18,9],[20.5,9]]],bridges:[[[-1,6],[10,6],[10,3],[20.5,3]]],hot:[[8,6],[12,5],[12,7],[16,4],[16,8]],eSp:.95},
  {id:'laundry',name:'コインランドリー森',desc:'ぐるぐる回る洗濯機ルート。目が回る',tip:'中央ハブに集中砲火。回転を止めろ（無理）',fav:'オーラ・視線・電撃',buff:{auraRange:.18,markAdd:.08,splashMul:.12},routes:[[[-1,6],[3,6],[3,2],[9,2],[9,10],[15,10],[15,4],[20.5,4]]],bridges:[[[-1,6],[9,6],[15,6],[15,4],[20.5,4]]],hot:[[6,6],[12,6],[17,7]],eSp:1.08},
- {id:'setagaya',name:'世田谷公園',desc:'広々とした芝生。敵が散らばる',tip:'射程と範囲で広域をカバー。狙撃で奥を狩れ',fav:'範囲・狙撃・視線',buff:{gRange:.12,splashMul:.15,markAdd:.06},routes:[[[-1,2],[6,2],[6,6],[14,6],[14,2],[20.5,2]],[[-1,10],[6,10],[6,6],[14,6],[14,10],[20.5,10]],[[-1,6],[14,6],[20.5,6]]],bridges:[[[-1,6],[6,6],[14,6],[20.5,6]]],hot:[[10,4],[10,8],[17,4],[17,8]],eSp:.9}];
+ {id:'setagaya',name:'世田谷公園',desc:'広々とした芝生。敵が散らばる',tip:'射程と範囲で広域をカバー。見とけよで奥を狩れ',fav:'範囲・見とけよ・視線',buff:{gRange:.12,splashMul:.15,markAdd:.06},routes:[[[-1,2],[6,2],[6,6],[14,6],[14,2],[20.5,2]],[[-1,10],[6,10],[6,6],[14,6],[14,10],[20.5,10]],[[-1,6],[14,6],[20.5,6]]],bridges:[[[-1,6],[6,6],[14,6],[20.5,6]]],hot:[[10,4],[10,8],[17,4],[17,8]],eSp:.9}];
 function mkRoute(pts,br){const wp=pts.map(([x,y])=>({x:x*T+T/2,y:y*T+T/2}));const seg=[];let total=0;for(let i=0;i<wp.length-1;i++){const l=Math.hypot(wp[i+1].x-wp[i].x,wp[i+1].y-wp[i].y);seg.push(l);total+=l;}return{wp,seg,total,open:!br,br:!!br};}
 function routeTiles(r,set){const WP=r.wp;for(let i=0;i<WP.length-1;i++){const a=WP[i],b=WP[i+1];const ax=Math.floor(a.x/T),ay=Math.floor(a.y/T),bx=Math.floor(b.x/T),by=Math.floor(b.y/T);for(let x=Math.min(ax,bx);x<=Math.max(ax,bx);x++)for(let y=Math.min(ay,by);y<=Math.max(ay,by);y++)set.add(x+','+y);}return set;}
 let MAP=MAPS[0],ROUTES=[],pathTiles=new Set(),deco=[],BLOCK=new Set(),HOT=new Set(),PUDDLE=[],mapIdx=0,mapOrder=[0];
@@ -443,7 +443,7 @@ const L={
  poor:['お金が足りないですよ！','810円しかない（大嘘）（本当）','金ねぇのかよ（素）','財布が汗だく','あ ほ く さ（金欠）','ちょっと待ってくださいよォ！（貧乏）','は？（残高）'],
  bossDown:['迫真ボス撃破！いいゾ〜これ','ボス「あっ、そっかぁ…」（完）','ボス「やめてくれよ…（満足）」','ボス、昇天（意味不明）','ボス「24歳、学生でした」','ボス、顔面から床にペチャ','ボス「ファッ！？ ウーン…」（爆散）','トドメだゾ（フェーズ終わり）'],
  wallDown:['バリケード崩壊！ぬわああん','壁「痛いですね…」（全壊）（元気）','壁が壊れた！まずいですよ！（まずくない）'],
- loseTip:['ヒント：くっさガス＝装甲、イキスギ電撃＝盾、見とけよ狙撃＝応援/看病/自爆','ヒント：ヘアピンは壁チョーク、二股は範囲、らせんはハブ','ヒント：橋ラッシュ／一本道が出たら配置をやり直せ','ヒント：銀行・トリオ声援・集金覚醒は攻撃枠トレード（銃は金より重し）','ヒント：汗だまりは減速か「汗知らず」','ヒント：跳躍は壁を飛び越える→減速/視線/地雷/凍結','ヒント：応援後輩は見とけよ狙撃か視線で潰せ','ヒント：サウナはアイスティー＋泥床、十字は視線ハブ','ヒント：ハエ大群でステルス看破・夜戦向き','ヒント：駅前は入口分担＋奥を見とけよ狙撃'],
+ loseTip:['ヒント：くっさガス＝装甲、イキスギ電撃＝盾、見とけよ狙撃＝応援/看病/自爆','ヒント：ヘアピンは壁チョーク、二股は範囲、らせんはハブ','ヒント：橋ラッシュ／一本道が出たら配置をやり直せ','ヒント：銀行・トリオ声援・集金覚醒は攻撃枠トレード（銃は金より重し）','ヒント：汗だまりは減速か「汗知らず」','ヒント：跳躍は壁を飛び越える→減速/視線/地雷/凍結','ヒント：応援後輩は見とけよ狙撃か視線で潰せ','ヒント：サウナはアイスティー＋泥床地雷、十字は視線ハブ','ヒント：ハエ大群でステルス看破・夜戦向き','ヒント：駅前は入口分担＋奥を見とけよ狙撃'],
  lose:['下北沢陥落…（陥落）','ぬわああん負けたもおおん','あっ…（察し）','これもうわかんねぇな'],
  loseSub:['痛いですね…これは痛い（確信）','また来てくれよな〜頼むよ〜（来るな）','下北沢の地価が810円に暴落した','そうだよ（敗北）','部屋が汗だく（概念）','玄関に後輩の靴が114514足','あっ、そっかぁ（納得できない）'],
  win:['下北沢防衛成功！（成功）','やりますねぇ！完全勝利','いいゾ〜これ（満足）','やったぜ。','もう一回、王道を征く'],
@@ -729,7 +729,9 @@ function spawn(k,dist=0,noAff,rIdx){const d=ENEMIES[k];if(!d)return null;let aff
  if(d.boss){$('bossbar').style.display='flex';if($('bossimg')){$('bossimg').src=src(d.img);$('bossimg').style.cssText=cssf(d.img);}snd(90,.6,'sawtooth',.08,-40);
   const cool=!(game._bossToastAt&&performance.now()-game._bossToastAt<2800);game._bossToastAt=performance.now();if(cool)toast(pick(d.intro),(d.img||'').split('#')[0],'boss shake',3000);big('迫真','#ff3c8a',1.4);shake(10);if(navigator.vibrate&&TOUCH)try{navigator.vibrate([60,40,60])}catch(_){}}
  try{if(d.dash&&!game._seenDash){game._seenDash=1;toast('新敵：野獣ステップ後輩　被弾でサッーと加速するぞ','navy_center_face','',2600);}
-  if((aff==='tipsy'||aff2==='tipsy')&&!game._seenTipsy){game._seenTipsy=1;toast('ふらふらエリート！歩幅が揺れる（減速で止めろ）','collar_face','',2200);}}catch(_){}
+  if((aff==='tipsy'||aff2==='tipsy')&&!game._seenTipsy){game._seenTipsy=1;toast('ふらふらエリート！歩幅が揺れる（減速で止めろ）','collar_face','',2200);}
+  if(d.jump&&!game._seenJump){game._seenJump=1;toast('跳び後輩！壁を飛び越える（減速で止めろ）','navy_center_face','',2200);}
+  if(d.bomb&&!game._seenBomb){game._seenBomb=1;toast('自爆後輩！塔の近くでドカンだゾ','grimace_face','',2200);}}catch(_){}
  return e;}
 
 // ---------- towers ----------
@@ -998,21 +1000,21 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
    if(p.splash){pushFx({ring:true,x:p.tx,y:p.ty,r:8,R:p.splash,t:.45,T:.45,c:'#ff8a5c',lw:4});pushFx({ring:true,x:p.tx,y:p.ty,r:4,R:p.splash*.7,t:.35,T:.35,c:'#ffe08a',lw:2});
     float(p.tx,p.ty-12,pick(L.splashFx),'#ff8a5c',Math.random()<.35,.7);shake(3.2);const s2=p.splash*p.splash;
     for(let i=0;i<(RM?6:14)&&fx.length<FX_CAP;i++)pushFx({x:p.tx,y:p.ty,vx:(Math.random()-.5)*280,vy:-Math.random()*220,t:.55,c:i%2?'#ff8a5c':'#e8f4ff',drop:true,spark:i%3===0,sz:3});
-    for(const e of enemies){if(e.dead)continue;const ex=e.x-p.tx,ey=e.y-p.ty;if(ex*ex+ey*ey<=s2){hurt(e,p.dmg,p.src);if(s.boomPois)poisonE(e,p.dmg*.12,3,p.src);}}
-    if(p.src.mut===0&&fires.length<14)fires.push({x:p.tx,y:p.ty,r:p.splash*.7,t:p.src.over===0?6:3,dps:p.dmg*(p.src.over===0?.65:.45),src:p.src});
-    if(p.src.over===1){for(const e of enemies){if(!e.dead&&(e.x-p.tx)**2+(e.y-p.ty)**2<=p.splash*p.splash)e.stunT=Math.max(e.stunT,.4);}}
-   }
+    const hitE=[];for(const e of enemies){if(e.dead)continue;const ex=e.x-p.tx,ey=e.y-p.ty;if(ex*ex+ey*ey<=s2){hurt(e,p.dmg,p.src);if(s.boomPois)poisonE(e,p.dmg*.12,3,p.src);hitE.push(e);}}
+    if(p.src&&p.src.mut===0&&fires.length<14)fires.push({x:p.tx,y:p.ty,r:p.splash*.7,t:p.src.over===0?6:3,dps:p.dmg*(p.src.over===0?.65:.45),src:p.src});
+    if(p.src&&p.src.over===1){for(const e of enemies){if(!e.dead&&(e.x-p.tx)**2+(e.y-p.ty)**2<=p.splash*p.splash)e.stunT=Math.max(e.stunT,.4);}}
+    if(p.src&&p.src.k==='cannon'&&p.src.over===1&&hitE.length>=2&&fx.length<FX_CAP)fx.push({bolt:[[p.tx,p.ty],...hitE.slice(0,4).map(e=>[e.x,e.y])],t:.2,c:'#e2c4ff'});}
    else if(p.pois){pushFx({ring:true,x:p.tx,y:p.ty,r:6,R:42,t:.5,T:.5,c:'#8dff6a',lw:3});for(let i=0;i<(RM?4:10)&&fx.length<FX_CAP;i++)pushFx({x:p.tx,y:p.ty,vx:(Math.random()-.5)*90,vy:-30-Math.random()*80,t:.7,c:'#8dff6a',drop:true});for(const e of enemies){if(e.dead)continue;if((e.x-p.tx)**2+(e.y-p.ty)**2<=38*38)poisonE(e,p.pois,3+(p.src&&p.src.over===0?2.5:0),p.src);}if(Math.random()<.22)float(p.tx,p.ty-12,'くっさ！','#8dff6a',true);}
-   else if(p.tg&&!p.tg.dead){const tg=p.tg;if(p.src.k==='navy'&&p.src.mut===1){tg.slow=Math.max(tg.slow,.2);tg.slowT=Math.max(tg.slowT,.8);}hurt(tg,p.dmg,p.src);
+   else if(p.tg&&!p.tg.dead){const tg=p.tg;if(p.src&&p.src.k==='navy'&&p.src.mut===1){tg.slow=Math.max(tg.slow,.2);tg.slowT=Math.max(tg.slowT,.8);}hurt(tg,p.dmg,p.src);
     if(p.freeze){const fz=p.freeze*(tg.d.boss?.45:1);tg.stunT=Math.max(tg.stunT,fz);tg.slow=Math.max(tg.slow,.35);tg.slowT=Math.max(tg.slowT,fz+0.8);
      pushFx({ring:true,x:tg.x,y:tg.y,r:4,R:28,t:.4,T:.4,c:'#7fd4ff',lw:3});for(let i=0;i<(RM?2:6)&&fx.length<FX_CAP;i++)pushFx({x:tg.x,y:tg.y,vx:(Math.random()-.5)*70,vy:-30-Math.random()*70,t:.5,c:i%2?'#b8ecff':'#e8f4ff',drop:true,sz:2.4});
      if(Math.random()<.3)float(tg.x,tg.y-tg.d.r-6,pick(['冷ッ','アイスティー','固まッ','ぬる…']),'#7fd4ff');
-     if(p.src.mut===0){for(const e of enemies){if(e.dead||e===tg)continue;if((e.x-tg.x)**2+(e.y-tg.y)**2<48*48){e.stunT=Math.max(e.stunT,fz*.55);e.slow=Math.max(e.slow,.25);e.slowT=Math.max(e.slowT,1);}}}
-     if(p.src.mut===1)poisonE(tg,8*(1+.1*p.src.lvl),2.5,p.src);
-     if(p.src.over===0){let nx=null,nd=70*70;for(const e of enemies){if(e.dead||e===tg)continue;const q=(e.x-tg.x)**2+(e.y-tg.y)**2;if(q<nd){nd=q;nx=e;}}if(nx){nx.stunT=Math.max(nx.stunT,fz*.8);nx.slow=Math.max(nx.slow,.3);nx.slowT=Math.max(nx.slowT,1.2);pushFx({ring:true,x:nx.x,y:nx.y,r:3,R:22,t:.3,T:.3,c:'#7fd4ff',lw:2});}}
-     if(p.src.over===1&&fires.length<14){fires.push({x:p.tx,y:p.ty,r:36,t:3,dps:0,src:p.src,slip:1});decal(p.tx,p.ty,22,'#7fd4ff55');}}
+     if(p.src&&p.src.mut===0){for(const e of enemies){if(e.dead||e===tg)continue;if((e.x-tg.x)**2+(e.y-tg.y)**2<48*48){e.stunT=Math.max(e.stunT,fz*.55);e.slow=Math.max(e.slow,.25);e.slowT=Math.max(e.slowT,1);}}}
+     if(p.src&&p.src.mut===1)poisonE(tg,8*(1+.1*p.src.lvl),2.5,p.src);
+     if(p.src&&p.src.over===0){let nx=null,nd=70*70;for(const e of enemies){if(e.dead||e===tg)continue;const q=(e.x-tg.x)**2+(e.y-tg.y)**2;if(q<nd){nd=q;nx=e;}}if(nx){nx.stunT=Math.max(nx.stunT,fz*.8);nx.slow=Math.max(nx.slow,.3);nx.slowT=Math.max(nx.slowT,1.2);pushFx({ring:true,x:nx.x,y:nx.y,r:3,R:22,t:.3,T:.3,c:'#7fd4ff',lw:2});}}
+     if(p.src&&p.src.over===1&&fires.length<14){fires.push({x:p.tx,y:p.ty,r:36,t:3,dps:0,src:p.src,slip:1});decal(p.tx,p.ty,22,'#7fd4ff55');}}
     if(p.bounce){let nx=null,nd=90*90;for(const e of enemies){if(e.dead||e===tg||!e.vis)continue;const q=(e.x-p.tx)**2+(e.y-p.ty)**2;if(q<nd){nd=q;nx=e;}}if(nx)projs.push({x:p.tx,y:p.ty,tg:nx,tx:nx.x,ty:nx.y,sp:560,dmg:p.dmg*.8,src:p.src,c:p.c,bounce:Math.max(0,p.bounce-1)});}}}
-  else{p.x+=dx/dd*step;p.y+=dy/dd*step;}}
+  else if(dd>0.001){p.x+=dx/dd*step;p.y+=dy/dd*step;}else p.done=true;}
  for(const f of fires){f.t-=dt;for(const e of enemies){if(e.dead||(e.x-f.x)**2+(e.y-f.y)**2>f.r*f.r)continue;if(f.slip){e.slow=Math.max(e.slow,.45);e.slowT=Math.max(e.slowT,.3);if(Math.random()<dt*2)decal(e.x,e.y,6,'#7fd4ff44');}else if(f.dps)dot(e,f.dps*dt,f.src);}}fires=fires.filter(f=>f.t>0);
  projs=projs.filter(p=>!p.done);enemies=enemies.filter(e=>!e.dead);
  for(const f of fx){f.t-=dt;if(!f.ring&&!f.line&&!f.bolt){f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.drop){f.vy+=f.sticky?520*dt:420*dt;if(f.sticky){f.vx*=.96;if(f.vy>0)f.sz=(f.sz||2.4)+dt*1.2;}}} }fx=fx.filter(f=>f.t>0);
@@ -1925,6 +1927,7 @@ const V18={
   {h:'外典　v50もう一回',img:'title_senpai',t:'クリア画面にスコアと自己ベスト、称号「王道を征く男／もう一回の汗」。ボス半減でフェーズ予告。銀行の次ウェーブ収入がHUDに出る。王道を征く。'},
   {h:'外典　v51小さな磨き',img:'collar_card',t:'既存ボスフェーズと被らない予告、タイトル記録の見切れ、凝視は見とけよ狙撃でもマーク。電撃結婚は現行砲向け。王道を征く。'},
   {h:'外典　v52小さな磨き',img:'senpai_face',t:'見とけよ狙撃に光線。晒し上げマークに水色リング。発射音の途切れを直した。王道を征く。'},
+  {h:'外典　v53小さな磨き',img:'navy_center_face',t:'イキスギ電撃に紫の連鎖線。跳び／自爆の初出トースト。弾のsrc欠けでupdateが途切れない。王道を征く。'},
  ],
  goroku:[
   ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
