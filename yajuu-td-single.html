@@ -477,15 +477,18 @@ const ENEMIES={
  mini:{name:'ちび後輩',img:'navy_left_face',hp:22,speed:85,bounty:3,r:10,col:'#c98aff',wd:4},
  thief:{name:'たかり後輩',img:'navy_right_face#gold',hp:45,speed:92,bounty:16,r:14,col:'#ffd36b',steal:.10,wd:4},
  ghost:{name:'覗き見学者',img:'locker_right_face#gray',hp:60,speed:58,bounty:14,r:15,col:'#bbbbbb',stealth:true,wd:8},
- boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:30,bounty:150,r:34,col:'#c46bff',armor:3,boss:true,phaseEnr:1,wd:60,
+ boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:32,bounty:150,r:34,col:'#c46bff',armor:3,boss:true,phaseEnr:1,wd:60,
   intro:['迫真ボス「ファッ！？ お前ら何してんの」','迫真ボス襲来！（顔がうるさい）'],
-  ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」','迫真ボス「イキスギィ！（お前が）」','迫真ボス「ま、多少はね？（効いてる）」','迫真ボス「王道を征く、ボス系ですか」']},
- boss2:{name:'部室の主・真',img:'locker_left_face#red',hp:1650,speed:26,bounty:250,r:36,col:'#ff5c3c',armor:5,boss:true,summon:3,phaseSum:1,wd:90,
+  ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」','迫真ボス「イキスギィ！（お前が）」','迫真ボス「ま、多少はね？（効いてる）」','迫真ボス「王道を征く、ボス系ですか」'],
+  die:['迫真ボス「やめてくださいよ本当に！（乾燥）」','迫真ボス「あっ、そっかぁ…（倒された）」']},
+ boss2:{name:'部室の主・真',img:'locker_left_face#red',hp:1650,speed:24,bounty:250,r:36,col:'#ff5c3c',armor:5,boss:true,summon:3,phaseSum:1,wd:90,
   intro:['部室の主・真「ぬわああん、後輩呼ぶぞ」','部室の主・真 降臨（部屋が汗臭い）'],
-  ban:['部室の主・真「ロッカー、あるんだけど…（ない）」','部室の主・真「まずうちさぁ…部室あんだけど…」','部室の主・真「疲れたもおおん（3秒）」','部室の主・真「24歳、部室です」','部室の主・真「見とけよ見とけよ～（見ない）」','部室の主・真「あーいいっすね～（棒）」','部室の主・真「じゃけん後輩召喚しましょうね～」']},
- boss3:{name:'野獣の眼光',img:'grimace_face#purple',hp:2600,speed:32,bounty:400,r:38,col:'#ff3c8a',armor:4,boss:true,shield:.35,shieldRegen:.03,enrage:true,phaseGaze:1,wd:120,
+  ban:['部室の主・真「ロッカー、あるんだけど…（ない）」','部室の主・真「まずうちさぁ…部室あんだけど…」','部室の主・真「疲れたもおおん（3秒）」','部室の主・真「24歳、部室です」','部室の主・真「見とけよ見とけよ～（見ない）」','部室の主・真「あーいいっすね～（棒）」','部室の主・真「じゃけん後輩召喚しましょうね～」'],
+  die:['部室の主・真「もう許せるぞオイ！（撤退）」','部室の主・真「ロッカーに逃げ込むゾ（入れない）」']},
+ boss3:{name:'野獣の眼光',img:'grimace_face#purple',hp:2600,speed:28,bounty:400,r:38,col:'#ff3c8a',armor:4,boss:true,shield:.35,shieldRegen:.03,enrage:true,phaseGaze:1,wd:120,
   intro:['野獣の眼光「お前のことが好きだったんだよ！」','最終形態：野獣の眼光（眼光が鋭い）'],
-  ban:['野獣の眼光「見とけよ（見ないで）」','野獣の眼光「ちょっと汗かいてきたな…（乾燥）」','野獣の眼光「やりますねぇ！（自分に）」','野獣の眼光「は？（眼光）」','野獣の眼光「ンギモッヂイイ！（盾が）」','野獣の眼光「サッー！（迫真）」','野獣の眼光「ヤジュ立ちで威圧するぞ」','野獣の眼光「こ↑こ↓で止まれ（無理）」']},
+  ban:['野獣の眼光「見とけよ（見ないで）」','野獣の眼光「ちょっと汗かいてきたな…（乾燥）」','野獣の眼光「やりますねぇ！（自分に）」','野獣の眼光「は？（眼光）」','野獣の眼光「ンギモッヂイイ！（盾が）」','野獣の眼光「サッー！（迫真）」','野獣の眼光「ヤジュ立ちで威圧するぞ」','野獣の眼光「こ↑こ↓で止まれ（無理）」'],
+  die:['野獣の眼光「サッー！（敗北）」','野獣の眼光「目、目が…（眼光消灯）」']},
  jumper:{name:'跳び後輩',img:'navy_center_face#red',hp:55,speed:50,bounty:11,r:15,col:'#ff7a50',jump:70,wd:6},
  jammer:{name:'嫌がらせ先輩',img:'title_senpai#gray',hp:120,speed:40,bounty:18,r:18,col:'#9a9a9a',jam:90,wd:14},
  cheer:{name:'応援後輩',img:'trio_sepia_face#red',hp:70,speed:48,bounty:14,r:16,col:'#ff7a50',cheer:85,wd:8},
@@ -632,7 +635,7 @@ function goro(x,y,txt,force,lv=1){const n=performance.now();if(!force&&n-goroT<(
  if(x!=null){float(x,y-30,txt,c,true,1.3);pushFx({ring:true,x,y,r:6,R:70*lv,t:.55,T:.55,c,lw:5});pushFx({ring:true,x,y,r:3,R:40*lv,t:.4,T:.4,c:'#fff',lw:2});for(let i=0;i<10*lv&&fx.length<FX_CAP;i++)pushFx({x,y,vx:(Math.random()-.5)*260,vy:-50-Math.random()*170,t:.65,c:i%3?'#cfe8ff':'#c9b08a',drop:true,sticky:i%4===0,sz:2.5+Math.random()*2});}
  if(lv>=2||force){const b=document.createElement('div');b.className='goroBan';b.textContent=txt;b.style.color=c;document.body.appendChild(b);setTimeout(()=>b.remove(),1300);shake(4+lv*2);snd(180+Math.random()*200,.12,'sawtooth',.04,120);}}
 function flash(){const f=$('flash');f.classList.remove('on');void f.offsetWidth;f.classList.add('on');}
-function float(x,y,txt,c,bigF,t=.8){if(floats.length<(RM?28:55))floats.push({x,y,t,txt,c,big:bigF});}
+function float(x,y,txt,c,bigF,t=.8){const cap=RM?28:bigF?55:45;if(floats.length<cap)floats.push({x,y,t,txt,c,big:bigF});}
 const FX_CAP=RM?180:340;
 function pushFx(o){if(fx.length>=FX_CAP)return false;fx.push(o);return true;}
 function siteBurst(x,y,col,o={}){
@@ -792,9 +795,9 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
  if(!pierce)dmg=Math.max(1,dmg-(e.d.armor||0)-((e.aff==='hard'||e.aff2==='hard')?6:0));
  if(e.shield>0){const sx=o.shieldX||1,a=dmg*sx;if(a<e.shield){e.shield-=a;dmg=0;}else{dmg=(a-e.shield)/sx;e.shield=0;float(e.x,e.y-e.d.r-14,'ガード崩壊！','#6ab8ff',true);snd(1200,.08,'square',.04,-800);}}
  e.hp-=dmg;e.hitT=.12;if(Math.random()<.55)sweat(e,RM?2:4+Math.floor(Math.random()*3));
- if(dmg>=25&&Math.random()<(crit?.8:.3))float(e.x,e.y-e.d.r-4,Math.round(dmg),crit?'#ffe08a':'#e0e0e0',crit,.5);
- else if(Math.random()<.12&&!crit)float(e.x,e.y-e.d.r-4,pick(L.hitFx),Math.random()<.5?'#cfe6ff':'#c9b08a',false,.5);
- if(!RM&&Math.random()<.08)decal(e.x,e.y,6,'#8a6a4088');
+ if(dmg>=30&&Math.random()<(crit?.7:.22)&&floats.length<40)float(e.x,e.y-e.d.r-4,Math.round(dmg),crit?'#ffe08a':'#e0e0e0',crit,.5);
+ else if(Math.random()<.08&&!crit)float(e.x,e.y-e.d.r-4,pick(L.hitFx),Math.random()<.5?'#cfe6ff':'#c9b08a',false,.5);
+ if(!RM&&Math.random()<.06)decal(e.x,e.y,6,'#8a6a4088');
  if((e.aff==='haste'||e.aff2==='haste')&&!e.d.boss){e.haste=Math.min(.6,(e.haste||0)+.08);e.slow=0;e.slowT=0;}
  if((e.aff==='reflect'||e.aff2==='reflect')&&srcT&&!TOWERS[srcT.k].onPath&&Math.random()<.18){srcT.stunT=Math.max(srcT.stunT,.7);float(srcT.x,srcT.y-16,'跳ね返し！','#ff9a6a');}
  if((e.aff==='link'||e.aff2==='link')&&e.linkId&&!s.noLink&&dmg>0){const o=enemies.find(x=>!x.dead&&x.id===e.linkId);if(o){o.hp-=dmg*.45;o.hitT=.12;if(o.hp<=0)kill(o,srcT);}}
@@ -812,14 +815,16 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
   if(s.critKB&&srcT.k==='senpai'&&!e.d.boss){e.dist=Math.max(0,e.dist-22);}
   if(game.t-game.lastCritToast>6){game.lastCritToast=game.t;goro(e.x,e.y,null,true,2);toast(pick(L.critToast),'grimace_face','',1100);}}
  if(srcT&&srcT.k==='senpai'&&srcT.over===0&&!e.d.boss&&e.hp>0&&e.hp<e.maxHp*.2){e.hp=0;float(e.x,e.y-e.d.r-6,'処刑（は？）','#7ab8ff',true);}
- if(e.hp<=0){kill(e,srcT);if(Math.random()<.18)float(e.x,e.y-e.d.r-8,pick(['あっ、そっかぁ','やりますねぇ','ファッ！？','ンアッー！','いいゾ〜これ']),'#ffd36b',false,.9);}}
+ if(e.hp<=0){kill(e,srcT);if(Math.random()<.15&&floats.length<45)float(e.x,e.y-e.d.r-8,pick(['あっ、そっかぁ','やりますねぇ','ファッ！？','ンアッー！','いいゾ〜これ']),'#ffd36b',false,.9);}}
 function splat(c){if(splats.length>=(RM?8:LITE?14:32))splats.shift();const dirt=['#c9b08a','#8a6a40','#6b5232','#4a3a1c','#7a7a2a','#5a2a1a','#3b3020'];splats.push({x:Math.random(),y:Math.random(),r:22+Math.random()*48,c:c||dirt[Math.floor(Math.random()*dirt.length)],t:3.6,T:3.6,n:4+Math.floor(Math.random()*5),s:Math.random()*9});}
 function gib(e){if(gibs.length>=(RM?5:LITE?7:16))return;gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*260,vy:-180-Math.random()*160,a:0,va:(Math.random()-.5)*16,r:e.d.r,t:1.15});if(!RM&&!LITE&&Math.random()<.6)gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*180,vy:-100-Math.random()*100,a:0,va:(Math.random()-.5)*10,r:e.d.r*.55,t:.8});}
 function stunTowers(x,y,R,dur){let n=0;for(const t of towers){if(TOWERS[t.k].onPath)continue;if((t.x-x)**2+(t.y-y)**2<R*R){t.stunT=Math.max(t.stunT,dur);n++;}}
  siteBurst(x,y,'#a8ff3c',{n:18,R:R,shake:2,txt:n?'くっさ！タワー気絶':null,big:true,sweat:true,sp:140,lw:3,decal:false});}
 function dot(e,dmg,srcT){if(e.dead)return;e.hp-=dmg;if(e.hp<=0)kill(e,srcT);}
 function poisonE(e,dps,dur,srcT){if(e.pois<dps)e.pois=dps;e.poisT=Math.max(e.poisT,dur);e.poisSrc=srcT;}
-function kill(e,srcT){if(e.dead)return;e.dead=true;const s=S();if(e.d.boss)goro(e.x,e.y,'イキスギィ！',true,3);else if(e.aff||Math.random()<.12)goro(e.x,e.y,null,false,e.aff?2:1);
+function kill(e,srcT){if(e.dead)return;e.dead=true;const s=S();
+ if(e.d.boss){goro(e.x,e.y,'イキスギィ！',true,3);if(e.d.die)setTimeout(()=>toast(pick(e.d.die),e.d.img.split('#')[0],'boss shake',2200),600);}
+ else if(e.aff||Math.random()<.12)goro(e.x,e.y,null,false,e.aff?2:1);
  game.combo=game.comboT>0?game.combo+1:1;streakCheck(game.combo,e.x,e.y);if(e.d.boss){punch(e.x,e.y,1.45,1.1,1,1.6,'#ffffff');}else if(e.aff2)punch(e.x,e.y,1.12,.3,.25,0);game.comboT=s.comboT;game.maxCombo=Math.max(game.maxCombo,game.combo);
  let b=Math.round(e.d.bounty*Math.max(.2,1+s.bounty)*(e.aff?(s.eliteHunt?3.2:1.6):1)*(e.aff2?(s.dualHunt?1.5:1.25):1))+(e.d.cheer&&s.noCheer?8:0);
  if(e.mark>0&&towers.some(t=>t.k==='gaze'&&t.mut===1))b+=4;if(game.combo>=10)b+=Math.round(1*s.comboMul*(game.combo>=50?3:game.combo>=25?2:1)*(towers.some(t=>t.k==='hype'&&t.mut===1)?2:1));
@@ -1024,14 +1029,20 @@ function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;con
 
 // ---------- end ----------
 function saveBest(){try{const b=+localStorage.getItem('yajuuTD_best')||0;if(game.wave>b)localStorage.setItem('yajuuTD_best',game.wave);}catch(e){}}
-function endStats(){return `撃破数 ${game.kills}・最大コンボ ${game.maxCombo}${game.elites?`・エリート出現 ${game.elites}`:''}${game.stolen?`・盗まれた ${game.stolen}G`:''}${game.situ?`<br>シチュ：${game.situ}`:''}`;}
+function endStats(){let rank='';const kps=game.kills/(game.t/60)||0;
+ if(game.kills>=500)rank='<b style="color:#ffd36b">🏆 撃破王（114514点）</b>';
+ else if(game.kills>=300)rank='<b style="color:#8aff6a">👍 いいゾ〜これ（810点）</b>';
+ else if(game.kills>=150)rank='<b style="color:#6ab8ff">💪 やりますねぇ！（合格）</b>';
+ else rank='<b style="color:#c9b08a">🤔 ま、多少はね？（精進しろ）</b>';
+ const kpd=game.maxCombo>=50?'コンボマスター':'コンボ'+game.maxCombo;
+ return `${rank}<br>撃破数 ${game.kills}（${kpd}）・DPS ${kps.toFixed(1)}/分${game.elites?`・エリート ${game.elites}匹狩り`:''}<br>${game.stolen?`盗まれ ${game.stolen}G・`:''}ビルド：${buildName()}${game.situ?`<br>シチュ：${game.situ}`:''}`;}
 function buildName(){const c={};for(const t of towers)c[t.k]=(c[t.k]||0)+t.lvl;const top=Object.keys(c).sort((a,b)=>c[b]-c[a])[0];
  const tags={};for(const p of game.perks){const q=PERKS.find(x=>x.t===p);if(q&&q.tag)tags[q.tag]=(tags[q.tag]||0)+1;}const tg=Object.keys(tags).sort((a,b)=>tags[b]-tags[a])[0];
- return `${tg?tg+'型':'脳筋'}・${top?TOWERS[top].short+'過多':'素手'}（汗だく）`;}
+ return `${tg?tg+'型':'脳筋'}${top?'・'+TOWERS[top].short+'依存':'・素手'}（王道を征く）`;}
 function gameOver(){if(game.over)return;game.over=true;game.inWave=false;saveBest();$('eTitle').textContent=pick(L.lose);$('eImg').src=ASSETS.grimace_face;
  $('eText').innerHTML=`ウェーブ ${game.wave} で力尽きた（${pick(L.loseSub)}）<br>${endStats()}<br><small>${pick(L.loseTip)}</small>`;for(let i=0;i<6;i++)splat(i%2?'#c9b08a':'#e8f4ff');$('bEndless').style.display='none';const ls=pick(LOSE_STORY);setTimeout(()=>playScene('BAD END「床上浸水」',ls,()=>$('end').classList.add('on')),900);snd(110,.8,'sawtooth',.08,-60);shake(14);}
 function win(){game.over=true;game.won=true;saveBest();$('eTitle').textContent=pick(L.win);$('eImg').src=ASSETS.senpai_face;
- $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}・${endStats()}<br><small>ビルド：${buildName()}</small>`;for(let i=0;i<8;i++)splat(i%2?'#ffffff':'#ffd36b');$('bEndless').style.display='';const ek=epiKey(),ep=EPI[ek];$('eText').innerHTML+=`<br><b style="color:#ffd36b">${ep.t}</b>`;if(game.chap!=null){const ci=game.chap,c=CHAPS[ci];campUnlock(ci+1);$('eTitle').textContent=`第${ci+1}章「${c.t}」制覇！`;$('bEndless').style.display='none';$('bNextCh').style.display=ci+1<CHAPS.length?'':'none';$('bChSel').style.display='';$('eText').innerHTML+=ci+1<CHAPS.length?`<br><b style="color:#ff9a5a">第${ci+2}章「${CHAPS[ci+1].t}」解禁（汗）</b>`:'<br><b style="color:#ff9a5a">全章制覇！下北沢は救われた（湿度は救われない）</b>';playScene(`第${ci+1}章 完`,c.out,()=>$('end').classList.add('on'));return;}playScene(ep.t,ep.L.concat(EPI_END),()=>$('end').classList.add('on'));}
+ $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}<br>${endStats()}`;for(let i=0;i<8;i++)splat(i%2?'#ffffff':'#ffd36b');$('bEndless').style.display='';const ek=epiKey(),ep=EPI[ek];$('eText').innerHTML+=`<br><b style="color:#ffd36b">${ep.t}</b>`;if(game.chap!=null){const ci=game.chap,c=CHAPS[ci];campUnlock(ci+1);$('eTitle').textContent=`第${ci+1}章「${c.t}」制覇！`;$('bEndless').style.display='none';$('bNextCh').style.display=ci+1<CHAPS.length?'':'none';$('bChSel').style.display='';$('eText').innerHTML+=ci+1<CHAPS.length?`<br><b style="color:#ff9a5a">🔓 第${ci+2}章「${CHAPS[ci+1].t}」解禁（じゃけん次行きましょうね）</b>`:'<br><b style="color:#ff9a5a">🏆 全章制覇！下北沢は救われた（湿度は救われない）</b>';playScene(`第${ci+1}章 完`,c.out,()=>$('end').classList.add('on'));return;}playScene(ep.t,ep.L.concat(EPI_END),()=>$('end').classList.add('on'));}
 $('bRetry').onclick=()=>{$('end').classList.remove('on');const ch=game.chap;if(ch!=null){startChap(ch);return;}reset();openSitu();};
 const CHAPS=[
  {t:'迫真部活編',map:0,w:8,g:340,lv:22,in:[['narr','真夏の放課後。部室のエアコンは今日も死んでいる（迫真）'],['senpai','おっ、後輩ども来てんじゃん。今日は坂の防衛練習だゾ',1],['kohai','先輩、もう汗でシャツが透けてます…'],['senpai','いいよ！こいよ！汗は部の誇りだルォ！',2]],out:[['senpai','ま、多少はね？（部活は勝った）'],['kohai','先輩の背中、湯気出てます…'],['narr','部室の窓が曇った。外から見えないのは好都合だ（何が）']]},
