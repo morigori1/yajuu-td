@@ -1791,7 +1791,7 @@ const V18={
   lore:()=>V18.lore.map(l=>ent(l.img,esc(l.h),esc(l.t))).join('')+'<div class="stamp">極秘</div>',
   gor:()=>V18.goroku.map(([g,d,n])=>`<div class="ent" data-say="${esc(g)}" style="cursor:pointer"><div><h4><span class="no">${n}</span>「${esc(g)}」</h4><small>${esc(d)}　🔊タップで再生</small></div></div>`).join(''),
   tw:()=>Object.entries(TOWERS).map(([k,t])=>ent(t.img,esc(t.name)+(t.role?` <small>［${esc(t.role)}］</small>`:''),esc(t.desc||''),`💰${t.cost??'-'}　射程${t.range??'-'}　火力${t.dmg??'-'}<br>${esc(t.vs||'')}<br>${(t.muts||[]).map(m=>'◆'+esc(m.n)+'：'+esc(m.d)).join('<br>')}${(t.overs||[]).map(m=>'<br>★'+esc(m.n)+'：'+esc(m.d)).join('')}`)).join(''),
-  en:()=>Object.entries(ENEMIES).map(([k,e])=>ent(e.img,esc(e.name),`HP ${e.hp}　速度 ${e.speed}　賞金 ${e.bounty}`,`危険度：${'💀'.repeat(Math.min(5,Math.ceil((e.hp||1)/120)))}　識別子 ${esc(k)}`)).join(''),
+  en:()=>Object.entries(ENEMIES).map(([k,e])=>ent(e.img,esc(e.name),`HP ${e.hp}　速度 ${e.speed}　賞金 ${e.bounty}`,`${e.desc?esc(e.desc)+'　':''}危険度：${'💀'.repeat(Math.min(5,Math.ceil((e.hp||1)/120)))}　識別子 ${esc(k)}`)).join(''),
   map:()=>MAPS.map((m,i)=>ent(['title_senpai','navy_trio_card','trio_sepia_card','locker_right_face','collar_card'][i%5],esc(m.name),esc(m.desc),'攻略：'+esc(m.tip)+'　相性：'+esc(m.fav))).join(''),
   sk:()=>SK.map(s=>`<div class="ent"><div style="font-size:40px">${s.ic}</div><div><h4>${esc(s.n)} <small>(${s.k.toUpperCase()}) 気合${s.cost}／CD${s.cd}s</small></h4><div>${esc(s.d)}</div></div></div>`).join('')+(typeof SKINS!=='undefined'?'<h4 style="color:#ffd36b">塔スキン</h4>'+SKINS.map(s=>'・'+esc(s.n)+'：'+esc(s.d)).join('<br>'):''),
   gal:()=>'<div class="gal">'+Object.keys(ASSETS).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
@@ -1982,17 +1982,6 @@ window.__v22=V22;
  ['bChal','bDaily','bRaid','bChaos'].forEach(id=>{const el=$(id);if(!el)return;const o=el.onclick;el.onclick=function(...a){clear();return o&&o.apply(this,a);};});
 })();
 
-let last=performance.now();
-function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
- if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
- if(game&&hudDirty)updHud();
- if(game&&!$('title').classList.contains('on'))draw();
- requestAnimationFrame(loop);}
-layout();reset();requestAnimationFrame(loop);
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,SKINS,TITLES,recordRun,runScore,meta};
-})();
-
-
 /* ===== v23: NEW MAPS + TOWERS (dirty FX) ===== */
 const V23={ver:'v23',maps:['cross','sauna','station'],towers:['iced','mud','flies']};
 (function(){try{
@@ -2007,6 +1996,69 @@ const V23={ver:'v23',maps:['cross','sauna','station'],towers:['iced','mud','flie
  const _vis=null;
 }catch(e){console.warn('v23',e);}})();
 window.__v23=V23;
+/* ===== v24: NEW ENEMIES + BOSS (dirty FX) ===== */
+const V24={ver:'v24',enemies:['sweaty','stinker','mudcoat','leech'],boss:'boss5'};
+(function(){try{
+ Object.assign(ENEMIES,{
+  sweaty:{name:'汗だく後輩【新】',img:'navy_right_face#red',hp:60,speed:60,bounty:11,r:15,col:'#7fe0ff',sweatTrail:1,wd:8,desc:'通った道に汗溜まり。上を通る敵が加速する'},
+  stinker:{name:'激臭先輩【新】',img:'title_senpai#purple',hp:140,speed:40,bounty:20,r:18,col:'#a8ff3c',stinkDeath:110,wd:16,desc:'倒すと悪臭ガス。周囲の塔が3秒止まり、敵が回復'},
+  mudcoat:{name:'泥まみれ後輩【新】',img:'locker_left_face#gold',hp:75,speed:46,bounty:14,r:16,col:'#8a6a40',mudHits:4,wd:12,desc:'泥コーティングで最初の4発を半減。剥がれると泥が飛び散る'},
+  leech:{name:'たかり汁後輩【新】',img:'navy_center_face#purple',hp:55,speed:72,bounty:13,r:14,col:'#ff7ad8',leechR:80,wd:6,desc:'近くの塔にまとわりつき攻撃を遅らせる。優先撃破推奨'},
+  boss5:{name:'汁の王【新BOSS】',img:'grimace_face#red',hp:3000,speed:28,bounty:500,r:40,col:'#8aff3c',armor:4,boss:true,juice:1,wd:140,
+   desc:'汁噴射で塔を麻痺、泥の轍、HP50%で2体に分裂',
+   intro:['汁の王「ンアッー！ 汁が止まらねぇ」','汁の王 降臨（床がぬるぬる）'],
+   ban:['汁の王「汁だくで頼むよ（頼まない）」','汁の王「くさっ！（自分）」','汁の王「まだ出るぞ（出すな）」','汁の王「114514リットル（多い）」']},
+ });
+ const seen={};
+ const _wl24=waveList;waveList=function(w){const L=_wl24(w);const m=S().eCount||1;const add=(k,n,gap)=>{n=Math.round(n*m);for(let i=0;i<n;i++)L.splice(Math.floor(Math.random()*(L.length+1)),0,{k,gap});};
+  if(w>=4)add('sweaty',Math.floor(w/3),.7);
+  if(w>=7)add('mudcoat',Math.floor((w-4)/3),1.0);
+  if(w>=9)add('leech',Math.floor((w-6)/3),.8);
+  if(w>=12)add('stinker',Math.floor((w-9)/3),1.3);
+  if(w===10||(w>=20&&w%10===0))L.push({k:'boss5',gap:3});
+  return L;};
+ const _sp24=spawn;spawn=function(k,...a){const e=_sp24(k,...a);try{if(e.d.mudHits)e.mudH=e.d.mudHits;e.trT=0;e.jT=4;
+  if(V24.enemies.includes(k)&&!seen[k]){seen[k]=1;toast('新敵出現：'+e.d.name.replace('【新】','')+' ─ '+e.d.desc,e.d.img.split('#')[0],'',3000);}}catch(_){}return e;};
+ const _h24=hurt;hurt=function(e,dmg,t,o={}){if(e&&!e.dead&&e.mudH>0){e.mudH--;dmg*=.5;if(Math.random()<.6)pushFx({x:e.x,y:e.y,vx:(Math.random()-.5)*120,vy:-60-Math.random()*60,t:.6,c:'#6b5232',drop:true,sz:3});if(e.mudH===0){decal(e.x,e.y,22,'#5a403066');siteBurst(e.x,e.y,'#8a6a40',{n:14,R:40,txt:'泥剥がれ！',sweat:true,sp:150});}}
+  const was=e&&!e.dead;const r=_h24(e,dmg,t,o);
+  try{if(was&&e.dead){if(e.d.stinkDeath){const R=e.d.stinkDeath;siteBurst(e.x,e.y,'#a8ff3c',{n:30,R,shake:4,txt:'激臭ガス！',big:true,sweat:true,sp:160,dc:'#7a7a2a',dr:R*.6});splat('#7a7a2a');
+    for(const tw of towers)if((tw.x-e.x)**2+(tw.y-e.y)**2<R*R){tw.cd=Math.max(tw.cd||0,3);tw.v24stink=3;}
+    for(const o2 of enemies)if(!o2.dead&&(o2.x-e.x)**2+(o2.y-e.y)**2<R*R)o2.hp=Math.min(o2.maxHp,o2.hp+o2.maxHp*.15);}
+   if(e.d.juice&&!e.v24split){splat('#8aff3c');splat('#6b5232');}}}catch(_){}
+  return r;};
+ const puddles=[];V24.puddles=puddles;
+ const _up24=update;update=function(dt){_up24(dt);try{if(!game)return;
+  for(let i=puddles.length-1;i>=0;i--){const p=puddles[i];p.t-=dt;if(p.t<=0)puddles.splice(i,1);}
+  for(const e of enemies){if(e.dead)continue;const d=e.d;
+   if(d.sweatTrail){e.trT-=dt;if(e.trT<=0){e.trT=.5;puddles.push({x:e.x,y:e.y,t:6});if(puddles.length>60)puddles.shift();decal(e.x,e.y,9,'#7fe0ff33');}}
+   if(!d.sweatTrail&&!d.boss){for(const p of puddles)if((p.x-e.x)**2+(p.y-e.y)**2<324){e.dist+=d.speed*.35*dt;if(Math.random()<dt*3&&!RM)pushFx({x:e.x,y:e.y,vx:(Math.random()-.5)*40,vy:-30,t:.3,c:'#bfefff',drop:true,sz:2});break;}}
+   if(d.leechR){for(const tw of towers){if((tw.x-e.x)**2+(tw.y-e.y)**2<d.leechR*d.leechR){tw.cd=(tw.cd||0)+dt*.45;if(Math.random()<dt*4&&!RM)pushFx({x:tw.x+(Math.random()-.5)*16,y:tw.y-6,vx:0,vy:30,t:.5,c:'#ff7ad8',drop:true,sz:2});}}}
+   if(d.stinkDeath&&!RM&&Math.random()<dt*3)pushFx({x:e.x+(Math.random()-.5)*20,y:e.y-10,vx:(Math.random()-.5)*15,vy:-25,t:.8,c:'#a8ff3c',spark:true,sz:3});
+   if(d.juice){e.trT-=dt;if(e.trT<=0){e.trT=.35;decal(e.x,e.y,18,'#6b8a2a55');puddles.push({x:e.x,y:e.y,t:8});}
+    e.jT-=dt;if(e.jT<=0){e.jT=e.enr?3.2:5;let best=null,bd=1e9;for(const tw of towers){const q=(tw.x-e.x)**2+(tw.y-e.y)**2;if(q<bd){bd=q;best=tw;}}
+     if(best&&bd<220*220){best.cd=Math.max(best.cd||0,2.5);siteBurst(best.x,best.y,'#8aff3c',{n:26,R:50,shake:6,txt:'汁噴射！麻痺',sweat:true,sp:200,dc:'#6b8a2a'});splat('#8aff3c');say(e,pick(d.ban),2);
+      for(let i=0;i<10;i++){const f=i/10;pushFx({x:e.x+(best.x-e.x)*f,y:e.y+(best.y-e.y)*f,vx:(Math.random()-.5)*60,vy:(Math.random()-.5)*60,t:.5,c:'#b8ff6a',drop:true,sz:4});}}}
+    if(!e.v24split&&e.hp<e.maxHp*.5){e.v24split=1;e.enr=true;big('汁の王 分裂！','#8aff3c',1.4);shake(12);splat('#8aff3c');splat('#5a4030');
+     try{const c=_sp24('boss5',Math.max(0,e.dist-30),true,e.r);c.v24split=1;c.hp=c.maxHp=e.hp*.6;c.enr=true;c.d=Object.assign({},d,{name:'汁の王・分身',bounty:150});}catch(_){}}}
+  }}catch(_){}};
+ // HUD: draw puddles + stink tag via small overlay text in status line
+ const st=document.createElement('div');st.id='v24hud';st.style.cssText='position:fixed;left:6px;bottom:6px;font:bold 11px sans-serif;color:#a8ff3c;background:#0008;padding:3px 6px;border-radius:6px;pointer-events:none;z-index:50';document.body.appendChild(st);
+ setInterval(()=>{try{const c={};for(const e of enemies)if(!e.dead&&(V24.enemies.includes(e.k)||e.k==='boss5'))c[e.k]=(c[e.k]||0)+1;const s=Object.entries(c).map(([k,n])=>ENEMIES[k].name.replace(/【.*】/,'')+'×'+n).join(' ');st.textContent=s?'⚠ '+s+(puddles.length?'　汗溜まり'+puddles.length:''):'';st.style.display=s?'block':'none';}catch(_){}},400);
+}catch(e){console.warn('v24',e);}})();
+window.__v24=V24;
+let last=performance.now();
+function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
+ if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
+ if(game&&hudDirty)updHud();
+ if(game&&!$('title').classList.contains('on'))draw();
+ requestAnimationFrame(loop);}
+layout();reset();requestAnimationFrame(loop);
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,SKINS,TITLES,recordRun,runScore,meta};
+})();
+
+
+
+
 
 // ---------- v20: balance + bugfix ----------
 (function(){try{

@@ -1,25 +1,9 @@
-# 野獣先輩タワーディフェンス ～迫真TD部～ (v23)
+# 野獣先輩タワーディフェンス ～迫真TD部～ (v13)
 
 - index.html + assets/ : multi-file build (relative paths, works offline)
 - yajuu-td-single.html : one-file build, all images embedded as data URLs
 - src/template.html + build.py : source; `python3 build.py` regenerates both
 - crop.py : makes the crops in assets/ from assets/src/ (the original attachments)
-
-## v23: 新マップ＋新タワー
-- マップ追加：十字交差口／汗だくサウナ／下北沢駅前（計8種）
-- タワー追加：アイスティー砲（凍結）／泥だまり罠（道の持続減速床）／ハエ発生器（ステルス看破）
-- ホットキー：T / A / S、P2：B V /
-- 汚い演出：結露・汚泥シミ・ハエ軌道、極覚醒「汚泥噴出」
-- 資料館：外典・語録・FAQ 更新
-
-## v22: ローカル協力2P
-- タイトル「👥 ローカル協力2P」：同一端末・共有💰❤️
-- P1：マウス配置＋ショップ1-0/QWER＋スキル Z/X/C/V
-- P2：矢印カーソル＋Enter配置＋ショップ YUIOP[];-=NM,.＋スキル H/J/K/L（エイムはカーソル地点）／Gでウェーブ
-- 二重カーソル（P2シアン）・配置オーナー色リング・開始ボーナス +180G / +5❤
-
-## v21: RAID + メタ暴走
-- 巨大ボスRAID（10戦）と毎ウェーブルール改変
 
 ## v11 戦術見直し + 汚い演出
 - タワー役割 niche（壁チョーク／範囲レーン／オーラ・応援ハブ／地雷／視線デバフ）と soft counter
