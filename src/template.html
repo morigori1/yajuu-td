@@ -344,7 +344,7 @@ let AC=null,muted=false;
 function snd(f=440,d=.06,type='square',v=.05,slide=0){if(muted)return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();const o=AC.createOscillator(),g=AC.createGain();o.type=type;o.frequency.value=f;if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(40,f+slide),AC.currentTime+d);g.gain.value=v;g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+d);}catch(e){}}
 let vT=0,vOn=true;
 function bark(lv=1){if(muted)return;const b=120+Math.random()*60;snd(b,.12,'sawtooth',.06,lv*80);setTimeout(()=>snd(b*1.5,.18,'square',.04,-b),90);if(lv>1)setTimeout(()=>snd(b*2,.25,'sawtooth',.05,-b*1.2),200);}
-function voice(txt,lv=1,pitch){if(muted||!vOn||!txt)return;const n=performance.now();if(lv<2&&n-vT<1400)return;vT=n;bark(lv);try{const S=window.speechSynthesis;if(!S)return;if(lv>=2)S.cancel();else if(S.speaking)return;const u=new SpeechSynthesisUtterance(String(txt).replace(/[!！?？…ー〜]+$/,'').slice(0,24));u.lang='ja-JP';const jv=S.getVoices().find(x=>/ja/i.test(x.lang));if(jv)u.voice=jv;u.pitch=pitch??Math.max(.1,.6-lv*.15+Math.random()*.2);u.rate=1+lv*.15;u.volume=1;S.speak(u);}catch(e){}}
+function voice(txt,lv=1,pitch){if(muted||!vOn||!txt)return;const n=performance.now();if(lv<2&&n-vT<1400)return;vT=n;bark(lv);try{const S=window.speechSynthesis;if(!S)return;if(lv>=2)S.cancel();else if(S.speaking)return;const u=new SpeechSynthesisUtterance(String(txt).replace(/[!！?？…ー〜]+$/,'').slice(0,24));u.lang='ja-JP';const jv=S.getVoices().find(x=>/ja/i.test(x.lang));if(jv)u.voice=jv;u.pitch=pitch??(Math.random()<.5?.1:1.9);u.pitch=Math.random()<.3?(u.pitch<1?2:.1):u.pitch;u.rate=.8+Math.random()*.9+lv*.12;u.volume=1;S.speak(u);}catch(e){}}
 
 let lastShot=0;function shotSnd(f){const n=performance.now();if(n-lastShot<45)return;lastShot=n;snd(f,.04,'square',.022);}
 let lastKillSnd=0;function killSnd(f){const n=performance.now();if(n-lastKillSnd<40)return;lastKillSnd=n;snd(f,.05,'triangle',.045,-200);}
@@ -768,7 +768,7 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
   if(game.t-game.lastCritToast>6){game.lastCritToast=game.t;goro(e.x,e.y,null,true,2);toast(pick(L.critToast),'grimace_face','',1100);}}
  if(srcT&&srcT.k==='sniper'&&srcT.mut===0&&!e.d.boss&&e.hp>0&&e.hp<e.maxHp*(srcT.over===0?.35:.2)){e.hp=0;float(e.x,e.y-e.d.r-6,'処刑（は？）','#7ab8ff',true);}
  if(e.hp<=0)kill(e,srcT);}
-function splat(c){if(splats.length>=(RM?6:18))return;const dirt=['#c9b08a','#8a6a40','#e8f4ff','#ffb8a0','#9fd8ff','#6b5232'];splats.push({x:Math.random(),y:Math.random(),r:22+Math.random()*48,c:c||dirt[Math.floor(Math.random()*dirt.length)],t:3.6,T:3.6,n:4+Math.floor(Math.random()*5),s:Math.random()*9});}
+function splat(c){if(splats.length>=(RM?8:32))splats.shift();const dirt=['#c9b08a','#8a6a40','#6b5232','#4a3a1c','#7a7a2a','#5a2a1a','#3b3020'];splats.push({x:Math.random(),y:Math.random(),r:22+Math.random()*48,c:c||dirt[Math.floor(Math.random()*dirt.length)],t:3.6,T:3.6,n:4+Math.floor(Math.random()*5),s:Math.random()*9});}
 function gib(e){if(gibs.length>=(RM?5:16))return;gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*260,vy:-180-Math.random()*160,a:0,va:(Math.random()-.5)*16,r:e.d.r,t:1.15});if(!RM&&Math.random()<.6)gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*180,vy:-100-Math.random()*100,a:0,va:(Math.random()-.5)*10,r:e.d.r*.55,t:.8});}
 function stunTowers(x,y,R,dur){let n=0;for(const t of towers){if(TOWERS[t.k].onPath)continue;if((t.x-x)**2+(t.y-y)**2<R*R){t.stunT=Math.max(t.stunT,dur);n++;}}
  siteBurst(x,y,'#a8ff3c',{n:18,R:R,shake:2,txt:n?'くっさ！タワー気絶':null,big:true,sweat:true,sp:140,lw:3,decal:false});}
@@ -1289,7 +1289,7 @@ function hlCapture(){if(!capReq)return;const r=capReq;capReq=null;capLast=perfor
  if(H.length>16){let lo=0;for(let i=1;i<H.length-1;i++)if(H[i].score<H[lo].score)lo=i;H.splice(lo,1);}}
 // ---- (1) pact cards ----
 const PACT=[
- {t:'後輩の差し入れ',lab:'協力',d:'即 ライフ+1・💰+60（アイスティー付き）',img:'navy_center_face#green',ap:()=>{game.lives++;game.gold+=60;}},
+ {t:'後輩の差し入れ',lab:'協力',d:'即 ライフ+1・💰+60（ポカリ付き）',img:'navy_center_face#green',ap:()=>{game.lives++;game.gold+=60;}},
  {t:'応援団乱入',lab:'協力',d:'次ウェーブ 全ダメ+30%／敵の数+15%',img:'navy_trio_card',tmp:{gDmg:.6,eCount:1.15}},
  {t:'合同練習',lab:'協力',d:'次ウェーブ 全ダメ+45%／撃破報酬-35%',img:'trio_sepia_card',tmp:{gDmg:.9,bounty:-.35}},
  {t:'タオル係',lab:'協力',d:'💰-60：次ウェーブ 敵速度-15%（汗を拭かれて失速）',img:'locker_left_face',cost:60,tmp:{eSpeed:.85}},
@@ -1312,7 +1312,7 @@ function pactApply(){const p=game.pact;if(!p||game.pactOn)return;const s=S(),rv=
  game.pactOn={rv};statsDirty=true;if(p.onStart)p.onStart();float(W/2,60,`仕込み発動：${p.t}`,p.lab==='妨害'?'#c46bff':'#8dff6a',true,1.6);}
 function pactRevert(){if(!game.pactOn)return;const s=S();for(const [k,v] of Object.entries(game.pactOn.rv))s[k]=v;game.pactOn=null;game.pact=null;statsDirty=true;}
 // ---- (2) enemy dialogue + reaction battle ----
-const SAY={def:['先輩どこっすか…','暑すぎィ！','下北沢まであと少し','汗が止まらないっす','部室どこ…ここ？','アイスティー飲みたい','ぬわああん疲れたもおおん','ここ通っていいっすか？'],
+const SAY={def:['先輩どこっすか…','暑すぎィ！','下北沢まであと少し','汗が止まらないっす','部室どこ…ここ？','ポカリ飲みたい','ぬわああん疲れたもおおん','ここ通っていいっすか？'],
  hurt:['痛いっすよ先輩！','ンアッー！','やめてくれよ…','あっ（察し）','暴れんなよ…'],
  elite:['オレ強くなったっす','見とけよ見とけよ〜','この汗は本物だぞ','エリートの汗ナメんな'],
  boss:['逃げるんだよォ！','おい、ゴールどこだよ','お前のタワー、汗臭くない？','まだ終わらんよ（迫真）']};
@@ -1321,7 +1321,11 @@ const TAUNT=[
  {q:'なぁ…今日、暑くない？',a:'暑いっすね（迫真）',w:['寒いだろ！いい加減にしろ！','は？（威圧）']},
  {q:'ここ、通っていいよな？',a:'ダメです（迫真）',w:['いいよ！こいよ！','おかのした']},
  {q:'お前、ちゃんと練習してんの？',a:'やりますねぇ！（してます）',w:['してないです','練習って何すか？']},
- {q:'アイスティーしかなかったけどいいかな？',a:'飲まないです（警戒）',w:['いただきます！','ゴクゴク…']},
+ {q:'お前の防衛ガバガバじゃねーか',a:'ガバくないです（迫真）',w:['ガバです…','すいません許してください！']},
+ {q:'汗くせぇなお前のタワー',a:'お前のほうが臭いだろ！',w:['ファブります','嗅がないで']},
+ {q:'お前、才能ないよ（無慈悲）',a:'うるせぇ！（根性）',w:['知ってます','泣いていい？']},
+ {q:'もう諦めろよ（嘲笑）',a:'諦めないです（汗だく）',w:['はい…','帰ります']},
+ {q:'お前のライフ、あと何個？（煽り）',a:'数えんな！',w:['少ないです','見ないで']},
  {q:'オレの汗、見てくれよ',a:'見ないです（拭く）',w:['いいゾ〜これ','もっと見せて']},
  {q:'まずウチさぁ、屋上あるんだけど',a:'焼いてかない（帰る）',w:['焼いてかない？（焼く）','屋上いいっすね']},
  {q:'先輩呼んでくるぞ？',a:'呼べよ（迫真）',w:['やめてくれよ…','逃げるんだよォ！']},
@@ -1369,7 +1373,7 @@ const ROOM={
  chest:{n:'宝箱ロッカー',i:'🎁',f(){if(Math.random()<.6){const g=80+game.wave*15;game.gold+=g;return `💰+${g}G（中身は汗臭いけど金だ）`;}const ps=PERKS.filter(p=>p.tag!=='呪'&&!(p.max&&game.perks.filter(x=>x===p.t).length>=p.max));const p=pick(ps);p.ap(S());game.perks.push(p.t);renderPerks();return `パーク「${p.t}」を拾った！`;}},
  locker:{n:'謎のロッカー',i:'🚪',f(){const r=Math.random();if(r<.34){game.free+=1;return '設置タダ券 x1（使えるのか？）';}if(r<.67){game.lives=Math.max(1,game.lives-1);game.gold+=160;return '汗まみれの後輩が出た！ライフ-1・💰+160';}const ts=towers.filter(t=>t.lvl<S().maxLvl);if(ts.length){const t=pick(ts);t.lvl++;statsDirty=true;return `${TOWERS[t.k].short||TOWERS[t.k].name} がLv${t.lvl}に（ロッカーで筋トレ）`;}game.gold+=90;return '空っぽ…小銭💰+90';}},
  shower:{n:'シャワー室',i:'🚿',f(){game.lives+=3;return 'ライフ+3（汗を流した。すっきり）';}},
- vend:{n:'闇の自販機',i:'🥤',f(){const c=100+game.wave*5;if(game.gold<c){game.gold+=30;return `💰が足りない…落ちてた小銭+30（${c}G要る）`;}game.gold-=c;S().gDmg+=.12;statsDirty=true;return `アイスティー購入 -${c}G：全ダメ永続+6%（ちょっと眠い）`;}},
+ vend:{n:'闇の自販機',i:'🥤',f(){const c=100+game.wave*5;if(game.gold<c){game.gold+=30;return `💰が足りない…落ちてた小銭+30（${c}G要る）`;}game.gold-=c;S().gDmg+=.12;statsDirty=true;return `謎ドリンク購入 -${c}G：全ダメ永続+6%（汗が止まらない）`;}},
  senpai:{n:'先輩の部屋',i:'🔥',f(){game.exElite=4;game.exDraft=1;return '先輩に見つかった！次ウェーブにエリート4体追加…代わりにパーク1枚！';}},
  boss:{n:'部室の主',i:'👑',f(){game.gold+=300;game.lives+=2;game.exBossHp=1;return '主を説得（物理）した！💰+300・ライフ+2・次ウェーブ敵HP+25%';}}};
 function exGen(){const types=['chest','locker','shower','vend','senpai','chest','locker'];const rows=[];for(let r=0;r<3;r++)rows.push([0,1,2].map(()=>pick(types)));rows.push(['boss']);return{rows,floor:0,col:null,path:[],loop:(game.ex?game.ex.loop+1:0)};}
@@ -1420,7 +1424,7 @@ window.__yajuu12={rbOpen,openExplore,openPact,hlNote,get RB(){return RB}};
 // ===================== v14: 音声語録・v13: 手動スキル・塔つぶし・壊せる地形/炎上 =====================
 const SK=[
  {id:'katsu',ic:'🔥',n:'迫真の喝',k:'z',cost:35,cd:8,aim:1,R:70,d:'タップ地点を焼き払う＋地面が燃える'},
- {id:'stop',ic:'✋',n:'暴れんなよ',k:'x',cost:60,cd:20,d:'全敵を2.5秒拘束'},
+ {id:'stop',ic:'✋',n:'暴れんなよ',k:'x',cost:60,cd:20,d:'全敵を2.5秒足止め'},
  {id:'sweat',ic:'💦',n:'汗だく放水',k:'c',cost:25,cd:6,aim:1,R:95,d:'範囲の火を消し塔を修理・敵を減速'},
  {id:'rush',ic:'💪',n:'先輩ラッシュ',k:'v',cost:50,cd:15,d:'6秒間 全タワー連射x2'}];
 let skAim=null;const TER={crate:new Map(),fire:new Map(),fuel:new Map(),scorch:new Set()};
@@ -1537,6 +1541,19 @@ const _draw13=draw;draw=function(){_draw13();try{drawV13();}catch(err){}};
 
 const _loopRB=()=>{};let rbLast=performance.now();(function rbLoop(n){const dt=Math.min(.05,(n-rbLast)/1000);rbLast=n;if(game&&!game.over&&(!paused||RB)&&!$('title').classList.contains('on'))rbTick(dt);requestAnimationFrame(rbLoop);})(rbLast);
 
+
+// ===================== v15: ひどい感じ（汚い・意地悪・圧） =====================
+const V15={grime:0,flies:[],taunt:0};
+const MEAN=['ざぁこ♡','ガバガバ防衛ｗ','汗くっさ','才能ないよ（無慈悲）','もう終わりだよこの部活','クゥーン（嘲笑）','やめたら？この防衛','ヌッ（侮蔑）'];
+const _kill15=kill;kill=function(e,t){const was=e&&e.dead;_kill15(e,t);if(was||!e)return;V15.grime=Math.min(1,V15.grime+.015);for(let i=0;i<(RM?1:3);i++)splat();if(Math.random()<.25)shake(4);if(Math.random()<.08)goro(e.x,e.y,pick(['汚ねぇ花火だ','ブッチッパ！','ンアーッ！','ゲロ吐きそう']),false,2);};
+const _spawn15=spawn;spawn=function(...a){const r=_spawn15(...a);try{const e=r||enemies[enemies.length-1];if(e&&!e._v15){e._v15=1;if(game.wave>3&&e.hp){e.hp*=1.08;if(e.maxHp)e.maxHp*=1.08;}if(Math.random()<.18)setTimeout(()=>say(e,pick(MEAN),1.8),400+Math.random()*1200);}}catch(_){}return r;};
+function drawV15(){if(!game)return;const c=ctx;c.save();c.setTransform(1,0,0,1,0,0);const w=c.canvas.width,h=c.canvas.height,t=performance.now()/1000;
+ const lowL=game.lives<=5?.25+.15*Math.sin(t*8):0;const g=c.createRadialGradient(w/2,h/2,Math.min(w,h)*.25,w/2,h/2,Math.max(w,h)*.75);g.addColorStop(0,'rgba(60,45,10,0)');g.addColorStop(1,`rgba(${lowL?'90,20,0':'55,40,10'},${.25+V15.grime*.35+lowL})`);c.fillStyle=g;c.fillRect(0,0,w,h);
+ c.globalAlpha=.06+V15.grime*.08;c.fillStyle='#8a7a20';for(let i=0;i<14;i++){const x=(Math.sin(i*91.7)*.5+.5)*w,y=(((Math.cos(i*13.3)*.5+.5)+t*.02*(1+i%3))%1)*h;c.fillRect(x,y,2,8+i%5*4);}
+ c.globalAlpha=1;if(!RM){if(V15.flies.length<6+V15.grime*20)V15.flies.push({x:Math.random()*w,y:Math.random()*h,a:Math.random()*6});c.fillStyle='#111';for(const f of V15.flies){f.a+=.3;f.x+=Math.cos(f.a*1.7)*3;f.y+=Math.sin(f.a)*3;if(f.x<0||f.x>w)f.x=Math.random()*w;if(f.y<0||f.y>h)f.y=Math.random()*h;c.beginPath();c.arc(f.x,f.y,2.2*view.dpr,0,7);c.fill();}}
+ c.restore();}
+const _draw15=draw;draw=function(){_draw15();try{drawV15();}catch(err){}};
+const _upd15=update;update=function(dt){_upd15(dt);try{V15.grime=Math.max(0,V15.grime-dt*.004);V15.taunt-=dt;if(V15.taunt<=0&&enemies.length){V15.taunt=7+Math.random()*6;const e=pick(enemies.filter(x=>!x.dead));if(e)say(e,pick(MEAN),2);}}catch(_){}};
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
