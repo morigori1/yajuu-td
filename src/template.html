@@ -435,7 +435,7 @@ const L={
  win:['下北沢防衛成功！（成功）','やりますねぇ！完全勝利','いいゾ〜これ（満足）','やったぜ。'],
  winSub:['114514点満点の防衛だった','先輩「お前のことが好きだったんだよ！」（部屋が）','王道を征く、勝利系ですか','そうだよ（便乗）（勝利）','はっきりわかんだね（何が）','屋上で日焼けしながら勝利の一服（屋上はない）','24歳、勝者です'],
 };
-const COMBO_MS={10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、多少はね？',25:'25コンボ！ファッ！？',35:'35コンボ！これもうわかんねぇな',50:'50コンボ！ンアッー！（了解）',75:'75コンボ！あ ほ く さ',100:'100コンボ！114514！！（断定）',150:'150コンボ！下北沢が意味不明',200:'200コンボ！？ ファッ！？ ウーン…',300:'300コンボ！？ そうだよ（もう出ないよ）'};
+const COMBO_MS={5:'5連撃！（いいよ！こいよ！）',10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、多少はね？',20:'20コンボ！やりますねぇ！',25:'25コンボ！ファッ！？',35:'35コンボ！これもうわかんねぇな',50:'50コンボ！ンアッー！（了解）',75:'75コンボ！あ ほ く さ',100:'100コンボ！114514！！（断定）',150:'150コンボ！下北沢が意味不明',200:'200コンボ！？ ファッ！？ ウーン…',300:'300コンボ！？ そうだよ（もう出ないよ）'};
 
 // ---------- defs ----------
 const TOWERS={
@@ -795,8 +795,8 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
  if(!pierce)dmg=Math.max(1,dmg-(e.d.armor||0)-((e.aff==='hard'||e.aff2==='hard')?6:0));
  if(e.shield>0){const sx=o.shieldX||1,a=dmg*sx;if(a<e.shield){e.shield-=a;dmg=0;}else{dmg=(a-e.shield)/sx;e.shield=0;float(e.x,e.y-e.d.r-14,'ガード崩壊！','#6ab8ff',true);snd(1200,.08,'square',.04,-800);}}
  e.hp-=dmg;e.hitT=.12;if(Math.random()<.55)sweat(e,RM?2:4+Math.floor(Math.random()*3));
- if(dmg>=30&&Math.random()<(crit?.7:.22)&&floats.length<40)float(e.x,e.y-e.d.r-4,Math.round(dmg),crit?'#ffe08a':'#e0e0e0',crit,.5);
- else if(Math.random()<.08&&!crit)float(e.x,e.y-e.d.r-4,pick(L.hitFx),Math.random()<.5?'#cfe6ff':'#c9b08a',false,.5);
+ if(dmg>=30&&Math.random()<(crit?.7:.22)&&floats.length<40&&showDmgNum)float(e.x,e.y-e.d.r-4,Math.round(dmg),crit?'#ffe08a':'#e0e0e0',crit,.5);
+ else if(Math.random()<.08*Math.max(.5,goroLevel)&&!crit)float(e.x,e.y-e.d.r-4,pick(L.hitFx),Math.random()<.5?'#cfe6ff':'#c9b08a',false,.5);
  if(!RM&&Math.random()<.06)decal(e.x,e.y,6,'#8a6a4088');
  if((e.aff==='haste'||e.aff2==='haste')&&!e.d.boss){e.haste=Math.min(.6,(e.haste||0)+.08);e.slow=0;e.slowT=0;}
  if((e.aff==='reflect'||e.aff2==='reflect')&&srcT&&!TOWERS[srcT.k].onPath&&Math.random()<.18){srcT.stunT=Math.max(srcT.stunT,.7);float(srcT.x,srcT.y-16,'跳ね返し！','#ff9a6a');}
@@ -815,7 +815,7 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
   if(s.critKB&&srcT.k==='senpai'&&!e.d.boss){e.dist=Math.max(0,e.dist-22);}
   if(game.t-game.lastCritToast>6){game.lastCritToast=game.t;goro(e.x,e.y,null,true,2);toast(pick(L.critToast),'grimace_face','',1100);}}
  if(srcT&&srcT.k==='senpai'&&srcT.over===0&&!e.d.boss&&e.hp>0&&e.hp<e.maxHp*.2){e.hp=0;float(e.x,e.y-e.d.r-6,'処刑（は？）','#7ab8ff',true);}
- if(e.hp<=0){kill(e,srcT);if(Math.random()<.15&&floats.length<45)float(e.x,e.y-e.d.r-8,pick(['あっ、そっかぁ','やりますねぇ','ファッ！？','ンアッー！','いいゾ〜これ']),'#ffd36b',false,.9);}}
+ if(e.hp<=0){kill(e,srcT);if(Math.random()<.15*Math.max(.5,goroLevel)&&floats.length<45)float(e.x,e.y-e.d.r-8,pick(['あっ、そっかぁ','やりますねぇ','ファッ！？','ンアッー！','いいゾ〜これ']),'#ffd36b',false,.9);}}
 function splat(c){if(splats.length>=(RM?8:LITE?14:32))splats.shift();const dirt=['#c9b08a','#8a6a40','#6b5232','#4a3a1c','#7a7a2a','#5a2a1a','#3b3020'];splats.push({x:Math.random(),y:Math.random(),r:22+Math.random()*48,c:c||dirt[Math.floor(Math.random()*dirt.length)],t:3.6,T:3.6,n:4+Math.floor(Math.random()*5),s:Math.random()*9});}
 function gib(e){if(gibs.length>=(RM?5:LITE?7:16))return;gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*260,vy:-180-Math.random()*160,a:0,va:(Math.random()-.5)*16,r:e.d.r,t:1.15});if(!RM&&!LITE&&Math.random()<.6)gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*180,vy:-100-Math.random()*100,a:0,va:(Math.random()-.5)*10,r:e.d.r*.55,t:.8});}
 function stunTowers(x,y,R,dur){let n=0;for(const t of towers){if(TOWERS[t.k].onPath)continue;if((t.x-x)**2+(t.y-y)**2<R*R){t.stunT=Math.max(t.stunT,dur);n++;}}
@@ -1069,7 +1069,7 @@ function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{
 function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k,c=cost(k),ce=el.querySelector('.cost');ce.textContent=c?c+'G':'タダ';ce.classList.toggle('free',!c);el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<c);});}
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave');bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':'ウェーブ開始';
- const nw=game.wave+1;$('nextinfo').textContent=game.inWave?`残り ${spawnQ.length+enemies.length}`:(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);updShop();if(picked)updInfoBtns();}
+ const nw=game.wave+1;$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);updShop();if(picked)updInfoBtns();}
 function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
  if(d.wall)return `HP ${Math.ceil(t.hp)}/${Math.round(st.maxHp)}${s.wallThorn||t.mut===0?'・トゲあり':''}`;
  if(d.bank)return `毎ウェーブ +${bankIncome(t)}G・範囲撃破 +${t.lvl}G`;
@@ -1208,6 +1208,8 @@ const LOSE_STORY=[
  [['boss','やりますねぇ（他人事）'],['senpai','顔が…うるさい…（顔がうるさい）',2],['narr','先輩はベランダで夜風に当たった。夜風は、ぬるかった。そうだよ。']],
 ];
 let storyOn=true;try{storyOn=localStorage.getItem('yajuuTD_story')!=='0';}catch(e){}
+let showDmgNum=true;try{showDmgNum=localStorage.getItem('yajuuTD_dmgNum')!=='0';}catch(e){}
+let goroLevel=1;try{goroLevel=+localStorage.getItem('yajuuTD_goro')||1;}catch(e){}
 let stQ=null;
 function epiKey(){const sc={poison:0,chain:0,econ:0,fort:0,crit:0,hype:0},m={poison:'poison',chain:'chain',bank:'econ',siphon:'econ',wall:'fort',mine:'fort',sniper:'crit',senpai:'crit',cannon:'crit',hype:'hype',gaze:'hype',trio:'hype'};
  for(const t of towers){const c=m[t.k];if(c)sc[c]+=TOWERS[t.k].cost*t.lvl;}const tm={'毒':'poison','電撃':'chain','経済':'econ','壁':'fort','地雷':'fort','クリ':'crit','狙撃':'crit','応援':'hype','視線':'hype'};
@@ -2258,6 +2260,7 @@ const d=document.createElement('div');d.id='v28';d.innerHTML=`<div class="bx"><h
 <div class="row">読み上げ声<button id="s28v"></button></div>
 <div class="row">見やすさモード<button id="s28c"></button></div>
 <div class="row">ダメージ数値<button id="s28d"></button></div>
+<div class="row">語録ポップ量<button id="s28g"></button></div>
 <div class="row">ストーリー<button id="s28s"></button></div>
 <div class="row">チュートリアル<button id="s28t">もう一度出す</button></div>
 <h3>💾 セーブ引継ぎ</h3><small>スキン・称号・日替わりランキング・章進行・チャレンジ記録・設定をまとめてJSONで持ち出し／読み込み。</small>
@@ -2265,12 +2268,13 @@ const d=document.createElement('div');d.id='v28';d.innerHTML=`<div class="bx"><h
 <div class="bt"><button id="s28e">書き出し（表示）</button><button id="s28cp">コピー</button><button id="s28f">ファイル保存</button><button id="s28o">ファイル読込</button><button id="s28i" class="go">テキスト読込</button><input type="file" id="s28fi" accept=".json,application/json,text/plain" style="display:none"></div>
 <div class="ms" id="s28ms"></div><div class="bt"><button id="s28z">閉じる</button></div></div>`;document.body.appendChild(d);
 const on=b=>b?'ON':'OFF',ms=t=>$('s28ms').textContent=t;
-const lab=()=>{$('s28m').textContent=muted?'🔇 OFF':'🔊 ON';$('s28v').textContent=on(vOn);$('s28c').textContent=on(V19.clear);$('s28d').textContent=on(V19.dmg);$('s28s').textContent=on(storyOn);};
+const lab=()=>{$('s28m').textContent=muted?'🔇 OFF':'🔊 ON';$('s28v').textContent=on(vOn);$('s28c').textContent=on(V19.clear);$('s28d').textContent=on(V19.dmg);$('s28g').textContent=goroLevel===0?'少なめ':goroLevel===1?'普通':'多め';$('s28s').textContent=on(storyOn);};
 muted=!!LS('yajuuTD_muted',false);vOn=LS('yajuuTD_voice',true)!==false;if($('bMute'))$('bMute').textContent=muted?'🔇':'🔊';
 $('bMute').addEventListener('click',()=>{LSset('yajuuTD_muted',muted);lab();});
 $('s28m').onclick=()=>$('bMute').click();
 $('s28v').onclick=()=>{vOn=!vOn;LSset('yajuuTD_voice',vOn);if(!vOn&&window.speechSynthesis)speechSynthesis.cancel();lab();};
 $('s28c').onclick=()=>{$('b19c').click();lab();};$('s28d').onclick=()=>{$('b19d').click();lab();};
+$('s28g').onclick=()=>{goroLevel=(goroLevel+1)%3;try{localStorage.setItem('yajuuTD_goro',goroLevel)}catch(e){}lab();};
 $('s28s').onclick=()=>{$('bStory').click();lab();};
 $('s28t').onclick=()=>{tutClearFlag();ms('次の「はじめる」でチュートリアルが出るゾ');};
 const keep=k=>/^yajuuTD_/.test(k);
