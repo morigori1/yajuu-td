@@ -1,3 +1,4 @@
 src/*.v*-*.html
 __pycache__/
 *.zip
+src/*.bak.html

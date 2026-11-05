@@ -278,6 +278,7 @@ body.portrait #exMap .nd{width:31%;font-size:12px}
   <div class="sub">～ 迫真TD部・下北沢防衛の裏技 ～</div>
   <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！17種は役割が違う：<b>壁チョーク</b>・<b>範囲レーン</b>・<b>オーラ／応援ハブ</b>・<b>地雷／泥床</b>・<b>視線デバフ</b>・<b>凍結</b>・<b>ハエ看破</b>。毒＝装甲、電撃＝盾、狙撃＝特殊優先、アイスティー＝俊足止め、泥だまり＝道の持続減速。マップ8種（十字・サウナ・駅前ほか）。ウェーブ中の<b>橋ラッシュ・一本道・工事・汗だまり</b>で配置のやり直し。銀行／集金／応援は攻撃枠トレード。覚醒後Lv5で<b>極覚醒</b>。15突破でクリア。<b>演出は汁と汗と泥とハエで汚い</b>（PG）。<br><span id="ctlHelp"></span></div>
   <button class="go" id="bStart">はじめる（いいよ！こいよ！）</button>
+  <button id="bCamp" style="margin-top:8px;min-height:48px;background:#7a2b12;color:#ffe9b0">📖 キャンペーン（章選択）</button>
   <button id="bStory" style="margin-top:8px;min-height:44px">ストーリー：ON</button>
   <div class="help" id="best" style="margin-top:8px"></div>
 </div>
@@ -307,11 +308,12 @@ body.portrait #exMap .nd{width:31%;font-size:12px}
   <div id="hlStats"></div>
   <div class="eb"><button id="hlPrev">◀</button><button id="hlPlay">⏸</button><button id="hlNext">▶</button><button class="go" id="hlClose">閉じる</button></div>
 </div>
+<div class="ov" id="camp"><h2>📖 迫真キャンペーン　章選択</h2><div style="color:#c9b894;text-align:center">勝てば次の章が開く（汗だくで）</div><div class="cards" id="campList"></div><button id="campBack" style="margin-top:12px">戻る</button></div>
 <div class="ov" id="end">
   <h2 id="eTitle"></h2>
   <img id="eImg" alt="">
   <div id="eText" style="font-size:16px;margin:6px 0 14px"></div>
-  <div class="eb"><button class="go" id="bRetry">もう一回（まだやるの？）</button><button id="bEndless" style="display:none">エンドレス続行</button></div>
+  <div class="eb"><button class="go" id="bRetry">もう一回（まだやるの？）</button><button id="bEndless" style="display:none">エンドレス続行</button><button class="go" id="bNextCh" style="display:none">次の章へ ▶</button><button id="bChSel" style="display:none">章選択へ</button></div>
 </div>
 <script>
 const ASSETS = /*ASSETS*/;
@@ -956,7 +958,7 @@ function waveClear(){const s=S();game.inWave=false;let inc=20+game.wave*5,lifeUp
 
 // ---------- dynamic stage (v9) ----------
 function stageBurst(x,y,c,n=10){pushFx({ring:true,x,y,r:4,R:60,t:.6,T:.6,c,lw:5});pushFx({ring:true,x,y,r:2,R:34,t:.45,T:.45,c:'#fff',lw:2});for(let i=0;i<n&&fx.length<FX_CAP;i++)pushFx({x,y,vx:(Math.random()-.5)*220,vy:-40-Math.random()*140,t:.6,c,drop:true});}
-function newRunMap(){mapOrder=MAPS.map((_,i)=>i).sort(()=>Math.random()-.5);setMap(mapOrder[0]);game.act=0;game.stageEv='';game.bridgeRush=false;setTimeout(()=>toast(`ステージ：${MAP.name}　向き：${MAP.fav||'自由'}　${MAP.tip||MAP.desc}`,'navy_trio_card','',3200),300);}
+function newRunMap(){mapOrder=MAPS.map((_,i)=>i).sort(()=>Math.random()-.5);if(game.chap!=null){const c=CHAPS[game.chap];mapOrder=[c.map].concat(mapOrder.filter(i=>i!==c.map));}setMap(mapOrder[0]);game.act=0;game.stageEv='';game.bridgeRush=false;setTimeout(()=>toast(`ステージ：${MAP.name}　向き：${MAP.fav||'自由'}　${MAP.tip||MAP.desc}`,'navy_trio_card','',3200),300);}
 function fixTowers(note){let n=0,g=0;for(const t of towers.slice()){const onP=pathTiles.has(t.tx+','+t.ty);const bad=TOWERS[t.k].onPath?!onP:onP;if(bad){g+=t.spent;towers=towers.filter(o=>o!==t);n++;stageBurst(t.x,t.y,'#ffd36b',6);}else if(TOWERS[t.k].onPath){t.pds=pdsOf(t.x,t.y);t.pd=t.pds[0]!=null?t.pds[0]:-999;}}
  if(n){game.gold+=g;toast(`${note}：${n}基を全額返金 +${g}G（ゆるして）`,'navy_left_face','',2200);}statsDirty=true;}
 function shiftAct(){game.act=(game.act||0)+1;const ni=mapOrder[game.act%mapOrder.length];setMap(ni);fixTowers('区画整理');shake(12);punch(W/2,H/2,.88,.9,.6,2,'#ff9a5a');big('ステージ変化','#ff9a5a',1.3);
@@ -1004,8 +1006,24 @@ function buildName(){const c={};for(const t of towers)c[t.k]=(c[t.k]||0)+t.lvl;c
 function gameOver(){if(game.over)return;game.over=true;game.inWave=false;saveBest();$('eTitle').textContent=pick(L.lose);$('eImg').src=ASSETS.grimace_face;
  $('eText').innerHTML=`ウェーブ ${game.wave} で力尽きた（${pick(L.loseSub)}）<br>${endStats()}<br><small>${pick(L.loseTip)}</small>`;for(let i=0;i<6;i++)splat(i%2?'#c9b08a':'#e8f4ff');$('bEndless').style.display='none';const ls=pick(LOSE_STORY);setTimeout(()=>playScene('BAD END「床上浸水」',ls,()=>$('end').classList.add('on')),900);snd(110,.8,'sawtooth',.08,-60);shake(14);}
 function win(){game.over=true;game.won=true;saveBest();$('eTitle').textContent=pick(L.win);$('eImg').src=ASSETS.senpai_face;
- $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}・${endStats()}<br><small>ビルド：${buildName()}</small>`;for(let i=0;i<8;i++)splat(i%2?'#ffffff':'#ffd36b');$('bEndless').style.display='';const ek=epiKey(),ep=EPI[ek];$('eText').innerHTML+=`<br><b style="color:#ffd36b">${ep.t}</b>`;playScene(ep.t,ep.L.concat(EPI_END),()=>$('end').classList.add('on'));}
-$('bRetry').onclick=()=>{$('end').classList.remove('on');reset();openSitu();};
+ $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}・${endStats()}<br><small>ビルド：${buildName()}</small>`;for(let i=0;i<8;i++)splat(i%2?'#ffffff':'#ffd36b');$('bEndless').style.display='';const ek=epiKey(),ep=EPI[ek];$('eText').innerHTML+=`<br><b style="color:#ffd36b">${ep.t}</b>`;if(game.chap!=null){const ci=game.chap,c=CHAPS[ci];campUnlock(ci+1);$('eTitle').textContent=`第${ci+1}章「${c.t}」制覇！`;$('bEndless').style.display='none';$('bNextCh').style.display=ci+1<CHAPS.length?'':'none';$('bChSel').style.display='';$('eText').innerHTML+=ci+1<CHAPS.length?`<br><b style="color:#ff9a5a">第${ci+2}章「${CHAPS[ci+1].t}」解禁（汗）</b>`:'<br><b style="color:#ff9a5a">全章制覇！下北沢は救われた（湿度は救われない）</b>';playScene(`第${ci+1}章 完`,c.out,()=>$('end').classList.add('on'));return;}playScene(ep.t,ep.L.concat(EPI_END),()=>$('end').classList.add('on'));}
+$('bRetry').onclick=()=>{$('end').classList.remove('on');const ch=game.chap;if(ch!=null){startChap(ch);return;}reset();openSitu();};
+const CHAPS=[
+ {t:'迫真部活編',map:0,w:8,g:340,lv:22,in:[['narr','真夏の放課後。部室のエアコンは今日も死んでいる（迫真）'],['senpai','おっ、後輩ども来てんじゃん。今日は坂の防衛練習だゾ',1],['kohai','先輩、もう汗でシャツが透けてます…'],['senpai','いいよ！こいよ！汗は部の誇りだルォ！',2]],out:[['senpai','ま、多少はね？（部活は勝った）'],['kohai','先輩の背中、湯気出てます…'],['narr','部室の窓が曇った。外から見えないのは好都合だ（何が）']]},
+ {t:'汗だく合宿編',map:6,w:10,g:320,lv:20,in:[['narr','合宿所はサウナと直結していた（設計ミス）'],['senpai','暑いなぁ…あ、そうだ（唐突）ここで迎え撃つゾ',1],['trio','ぬわああああん疲れたもおおおん'],['kohai','床がぬるぬるで塔が滑ります！'],['senpai','滑ったら気合で戻すんだよ！（物理）',2]],out:[['trio','汗で畳が一枚流れていった'],['senpai','やりますねぇ！合宿は大成功だゾ'],['narr','帰りのバスは異様な湿度だった']]},
+ {t:'夜の部室迷路編',map:3,w:12,g:300,lv:18,in:[['narr','深夜。部室の奥に、知らない通路が増えていた'],['kohai','先輩、ここ昼より汗臭くないですか…？'],['senpai','この匂い…（嗅ぐな）奴らが来るゾ',1],['collar','逃げんなよ（胸ぐら）']],out:[['senpai','暗いとこで汗だくになると落ち着くんだよね（意味深）'],['kohai','部室の鍵、明日返しておきます'],['narr','迷路の壁には、謎の汗染みが114514個残された']]},
+ {t:'下北沢決戦編',map:7,w:15,g:300,lv:16,in:[['narr','ついに奴らは駅前を埋め尽くした。湿度120%'],['boss','汁の王「下北沢は…汁で満たす…」'],['senpai','させるか！先輩の意地、見せてやるよ（見せるな）',2],['kohai','先輩…最後まで一緒です（汗だく）'],['senpai','おう、イキますよ〜イクイク（出撃）',1]],out:[['boss','汁の王「乾く…乾いていく…」'],['senpai','下北沢、守ったゾ…（ドヤ汗）',2],['kohai','先輩、来年の夏も…'],['narr','― 迫真キャンペーン 完 ―　エアコンは最後まで直らなかった']]}
+];
+function campProg(){try{return +localStorage.getItem('yajuuTD_chap')||0;}catch(e){return 0;}}
+function campUnlock(n){try{if(n>campProg())localStorage.setItem('yajuuTD_chap',n);}catch(e){}}
+function startChap(i){const c=CHAPS[i];$('camp').classList.remove('on');$('end').classList.remove('on');['bNextCh','bChSel'].forEach(k=>$(k).style.display='none');reset();game.chap=i;game.maxWave=c.w;game.gold=c.g;game.lives=c.lv;$('wmax').textContent=c.w;newRunMap();updHud();snd(392,.15,'sawtooth',.05);
+ const was=storyOn;storyOn=true;playScene(`第${i+1}章「${c.t}」`,c.in,()=>{storyOn=was;toast(`第${i+1}章：${c.t}　全${c.w}ウェーブ`,'senpai_face','',2600);openSitu();});}
+function openCamp(){const box=$('campList');box.innerHTML='';const pr=campProg();CHAPS.forEach((c,i)=>{const el=document.createElement('div');el.className='card';el.style.padding='12px';const lock=i>pr;el.style.opacity=lock?.45:1;
+ el.innerHTML=`<b>第${i+1}章</b><br><span style="font-size:18px">${lock?'🔒 ':''}${c.t}</span><br><small>${MAPS[c.map].name}・${c.w}ウェーブ${i<pr?'・✅制覇':''}</small>`;el.onclick=()=>{if(lock){toast('前の章を汗だくで制覇しろ（鍵）','grimace_face','',1500);return;}startChap(i);};box.appendChild(el);});$('camp').classList.add('on');}
+$('bCamp').onclick=()=>{$('title').classList.remove('on');openCamp();};
+$('campBack').onclick=()=>{$('camp').classList.remove('on');$('title').classList.add('on');};
+$('bNextCh').onclick=()=>startChap(game.chap+1);
+$('bChSel').onclick=()=>{$('end').classList.remove('on');openCamp();};
 $('bEndless').onclick=()=>{$('end').classList.remove('on');game.over=false;game.endless=true;game.maxWave=999;$('wmax').textContent='∞';openDraft();};
 
 // ---------- UI ----------
