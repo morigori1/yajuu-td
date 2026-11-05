@@ -346,7 +346,7 @@ body.tut-lock #draft,body.tut-lock #story,body.tut-lock #explore,body.tut-lock #
   <div class="eb"><button class="go" id="bRetry">もう一回（まだやるの？）</button><button id="bEndless" style="display:none">エンドレス続行</button><button class="go" id="bNextCh" style="display:none">次の章へ ▶</button><button id="bChSel" style="display:none">章選択へ</button></div>
 </div>
 <script>
-const ASSETS = {"senpai_face": "assets/senpai_face.jpg", "title_senpai": "assets/title_senpai.jpg", "grimace_face": "assets/grimace_face.jpg", "trio_sepia_card": "assets/trio_sepia_card.jpg", "trio_sepia_face": "assets/trio_sepia_face.jpg", "navy_trio_card": "assets/navy_trio_card.jpg", "navy_center_face": "assets/navy_center_face.jpg", "navy_left_face": "assets/navy_left_face.jpg", "navy_right_face": "assets/navy_right_face.jpg", "locker_left_face": "assets/locker_left_face.jpg", "locker_right_face": "assets/locker_right_face.jpg", "collar_card": "assets/collar_card.jpg", "collar_face": "assets/collar_face.jpg"};
+const ASSETS = {"senpai_face": "assets/senpai_face.jpg", "title_senpai": "assets/title_senpai.jpg", "grimace_face": "assets/grimace_face.jpg", "trio_sepia_card": "assets/trio_sepia_card.jpg", "trio_sepia_face": "assets/trio_sepia_face.jpg", "navy_trio_card": "assets/navy_trio_card.jpg", "navy_center_face": "assets/navy_center_face.jpg", "navy_left_face": "assets/navy_left_face.jpg", "navy_right_face": "assets/navy_right_face.jpg", "locker_left_face": "assets/locker_left_face.jpg", "locker_right_face": "assets/locker_right_face.jpg", "collar_card": "assets/collar_card.jpg", "collar_face": "assets/collar_face.jpg", "wiki/00_\u898b\u8fd4\u308a\u7f8e\u4eba": "assets/wiki/00_\u898b\u8fd4\u308a\u7f8e\u4eba.jpg", "wiki/01_\u30c8\u30e8\u30bf_\u30bb\u30f3\u30c1\u30e5\u30ea\u30fc": "assets/wiki/01_\u30c8\u30e8\u30bf_\u30bb\u30f3\u30c1\u30e5\u30ea\u30fc.jpg", "wiki/02_\u76ee\u7ddaDB": "assets/wiki/02_\u76ee\u7ddaDB.jpg", "wiki/03_\u30f3\u30ae\u30e2\u30c3\u30c2\u30a4\u30a4\uff01": "assets/wiki/03_\u30f3\u30ae\u30e2\u30c3\u30c2\u30a4\u30a4\uff01.jpg", "wiki/04_\u3053\u2191\u3053\u2193": "assets/wiki/04_\u3053\u2191\u3053\u2193.jpg", "wiki/05_\u307e\u305a\u3046\u3061\u3055\u3041": "assets/wiki/05_\u307e\u305a\u3046\u3061\u3055\u3041.jpg", "wiki/06_\u9060\u91ce": "assets/wiki/06_\u9060\u91ce.jpg", "wiki/07_\u56db\u7ae0\u91ce\u7363\u306e\u773c\u5149": "assets/wiki/07_\u56db\u7ae0\u91ce\u7363\u306e\u773c\u5149.jpg", "wiki/08_\u3054\u6e80\u60a6\u5148\u8f29": "assets/wiki/08_\u3054\u6e80\u60a6\u5148\u8f29.jpg", "wiki/09_\u30e4\u30b8\u30e5\u7acb\u3061": "assets/wiki/09_\u30e4\u30b8\u30e5\u7acb\u3061.jpg", "wiki/10_\u30b5\u30c3\u30fc": "assets/wiki/10_\u30b5\u30c3\u30fc.jpg", "wiki/11_\u3057\u305f\u308a\u9854\u5148\u8f29": "assets/wiki/11_\u3057\u305f\u308a\u9854\u5148\u8f29.jpg", "wiki/12_\u304a\u3063\u5927\u4e08\u592b\u304b\u5927\u4e08\u592b\u304b": "assets/wiki/12_\u304a\u3063\u5927\u4e08\u592b\u304b\u5927\u4e08\u592b\u304b.jpg", "wiki/13_\u5c0f\u9ce5\u306e\u56c0\u308a": "assets/wiki/13_\u5c0f\u9ce5\u306e\u56c0\u308a.jpg", "wiki/14_\u3084\u308f\u3089\u304b\u30b9\u30de\u30db": "assets/wiki/14_\u3084\u308f\u3089\u304b\u30b9\u30de\u30db.jpg", "wiki/15_\u91ce\u7363\u30b9\u30c6\u30c3\u30d7": "assets/wiki/15_\u91ce\u7363\u30b9\u30c6\u30c3\u30d7.jpg", "wiki/16_\u6797\u6a8e": "assets/wiki/16_\u6797\u6a8e.jpg", "wiki/17_\u4e16\u754c\u306e\u30c8\u30aa\u30ce": "assets/wiki/17_\u4e16\u754c\u306e\u30c8\u30aa\u30ce.jpg"};
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id);
@@ -392,7 +392,11 @@ const MAPS=[
  {id:'deadline',name:'直線デッドライン',desc:'上下2本が中央で合流。短いので敵は遅め',tip:'短い道。狙撃と視線で特殊／ボス優先',fav:'狙撃・視線・減速',buff:{gRange:.1,markAdd:.08,slowAdd:.05},routes:[[[-1,2],[10,2],[10,6],[20.5,6]],[[-1,10],[10,10],[10,6],[20.5,6]]],bridges:[[[-1,2],[5,2],[5,10],[10,10],[10,6],[20.5,6]]],hot:[[9,4],[11,8],[14,5],[14,7]],eSp:.78},
  {id:'cross',name:'十字交差口',desc:'上下から中央交差へ合流。交差点が激戦',tip:'交差点に視線／オーラ／範囲。両レーンを同時に見ろ',fav:'視線・オーラ・範囲',buff:{markAdd:.07,auraRange:.12,splashMul:.1},routes:[[[-1,2],[7,2],[7,6],[20.5,6]],[[-1,10],[7,10],[7,6],[20.5,6]]],bridges:[[[-1,6],[7,6],[20.5,6]]],hot:[[7,4],[7,8],[12,6],[15,5]],eSp:1},
  {id:'sauna',name:'汗だくサウナ',desc:'長いクネクネ。床がぬるぬるで足止め向き',tip:'減速・凍結・泥床で時間を稼げ。毒も刺さる',fav:'減速・凍結・泥床',buff:{slowAdd:.1},routes:[[[-1,1],[15,1],[15,5],[4,5],[4,9],[17,9],[17,6],[20.5,6]]],bridges:[[[-1,1],[15,1],[15,9],[17,9],[17,6],[20.5,6]]],hot:[[9,3],[9,7],[13,7],[16,4]],eSp:1.05},
- {id:'station',name:'下北沢駅前',desc:'三方向から広場へ。短いが入口が多い',tip:'入口ごとに役割分担。狙撃で奥を刈り、前線は範囲／泥',fav:'狙撃・範囲・泥床',buff:{gRange:.08,splashMul:.08,mineDmg:.08},routes:[[[-1,2],[5,2],[5,7],[12,7],[12,5],[20.5,5]],[[-1,10],[5,10],[5,7],[12,7],[12,5],[20.5,5]],[[-1,5],[12,5],[20.5,5]]],bridges:[[[-1,7],[12,7],[12,5],[20.5,5]]],hot:[[6,5],[10,4],[10,8],[15,5]],eSp:.92}];
+ {id:'station',name:'下北沢駅前',desc:'三方向から広場へ。短いが入口が多い',tip:'入口ごとに役割分担。狙撃で奥を刈り、前線は範囲／泥',fav:'狙撃・範囲・泥床',buff:{gRange:.08,splashMul:.08,mineDmg:.08},routes:[[[-1,2],[5,2],[5,7],[12,7],[12,5],[20.5,5]],[[-1,10],[5,10],[5,7],[12,7],[12,5],[20.5,5]],[[-1,5],[12,5],[20.5,5]]],bridges:[[[-1,7],[12,7],[12,5],[20.5,5]]],hot:[[6,5],[10,4],[10,8],[15,5]],eSp:.92},
+ {id:'kitazawa',name:'北沢公園',desc:'中央広場から放射状。短いが同時攻撃が必要',tip:'中央にオーラ／範囲。外周に狙撃で奥を狩れ',fav:'オーラ・範囲・狙撃',buff:{auraRange:.15,splashMul:.12,gRange:.08},routes:[[[-1,6],[8,6],[8,1],[14,1],[14,6],[20.5,6]],[[-1,6],[8,6],[8,11],[14,11],[14,6],[20.5,6]],[[-1,1],[8,1],[8,6],[20.5,6]],[[-1,11],[8,11],[8,6],[20.5,6]]],bridges:[[[-1,6],[14,6],[20.5,6]]],hot:[[8,4],[8,8],[11,6],[16,3],[16,9]],eSp:.88},
+ {id:'azuma',name:'あずま寿し',desc:'カウンター型。敵が並んで来る狭い道',tip:'連射と毒で処理。泥床で時間稼ぎ',fav:'連射・毒・泥床',buff:{tRate:{navy:.15},poisonMul:.15,slowAdd:.08},routes:[[[-1,6],[18,6],[18,3],[20.5,3]],[[-1,6],[18,6],[18,9],[20.5,9]]],bridges:[[[-1,6],[10,6],[10,3],[20.5,3]]],hot:[[8,6],[12,5],[12,7],[16,4],[16,8]],eSp:.95},
+ {id:'laundry',name:'コインランドリー森',desc:'ぐるぐる回る洗濯機ルート。目が回る',tip:'中央ハブに集中砲火。回転を止めろ（無理）',fav:'オーラ・視線・電撃',buff:{auraRange:.18,markAdd:.08,chainAdd:1},routes:[[[-1,6],[3,6],[3,2],[9,2],[9,10],[15,10],[15,4],[20.5,4]]],bridges:[[[-1,6],[9,6],[15,6],[15,4],[20.5,4]]],hot:[[6,6],[12,6],[17,7]],eSp:1.08},
+ {id:'setagaya',name:'世田谷公園',desc:'広々とした芝生。敵が散らばる',tip:'射程と範囲で広域をカバー。狙撃で奥を狩れ',fav:'範囲・狙撃・視線',buff:{gRange:.12,splashMul:.15,markAdd:.06},routes:[[[-1,2],[6,2],[6,6],[14,6],[14,2],[20.5,2]],[[-1,10],[6,10],[6,6],[14,6],[14,10],[20.5,10]],[[-1,6],[14,6],[20.5,6]]],bridges:[[[-1,6],[6,6],[14,6],[20.5,6]]],hot:[[10,4],[10,8],[17,4],[17,8]],eSp:.9}];
 function mkRoute(pts,br){const wp=pts.map(([x,y])=>({x:x*T+T/2,y:y*T+T/2}));const seg=[];let total=0;for(let i=0;i<wp.length-1;i++){const l=Math.hypot(wp[i+1].x-wp[i].x,wp[i+1].y-wp[i].y);seg.push(l);total+=l;}return{wp,seg,total,open:!br,br:!!br};}
 function routeTiles(r,set){const WP=r.wp;for(let i=0;i<WP.length-1;i++){const a=WP[i],b=WP[i+1];const ax=Math.floor(a.x/T),ay=Math.floor(a.y/T),bx=Math.floor(b.x/T),by=Math.floor(b.y/T);for(let x=Math.min(ax,bx);x<=Math.max(ax,bx);x++)for(let y=Math.min(ay,by);y<=Math.max(ay,by);y++)set.add(x+','+y);}return set;}
 let MAP=MAPS[0],ROUTES=[],pathTiles=new Set(),deco=[],BLOCK=new Set(),HOT=new Set(),PUDDLE=[],mapIdx=0,mapOrder=[0];
@@ -412,11 +416,11 @@ function pickRoute(){const op=ROUTES.map((r,i)=>i).filter(i=>ROUTES[i].open);if(
 // ---------- meme lines ----------
 const L={
  kill:['ヌッ！','ンアッー！（了解）','あっ、そっかぁ…（昇天）','痛いですね…（他人事）','オォン！アォン！','ひでぇ…（褒め言葉）','あ ほ く さ','ぬわああん（完）','顔面ペチャ（物理）','そうだよ（死亡）','いかんでしょ（いく）','えぇ…（困惑して死ぬ）','は？（倒れる）','おかのした（成仏）','24歳、撃破です','ファッ！？ ウーン…','やめちくり〜（手遅れ）','114514（断末魔）','これもうわかんねぇな','汗だく（最期）','帰って、どうぞ（帰らぬ人）','やったぜ。','はっきりわかんだね（死）','なんだお前（素）','大丈夫か大丈夫か（大丈夫じゃない）'],
- crit:['ファッ！？','迫真の、迫真','ホラ、ホラ（ホラではない）','オラァ！（丁寧語）','FA！？','見とけよ（見えない速さ）','王道を往く一撃','は？（威圧）','お ま た せ','114514倍','ン゛ッ（会心）','ここすき'],
+ crit:['ファッ！？','迫真の、迫真','ホラ、ホラ（ホラではない）','オラァ！（丁寧語）','FA！？','見とけよ（見えない速さ）','王道を征く一撃','は？（威圧）','お ま た せ','114514倍','ン゛ッ（会心）','ここすき'],
  critToast:['ファッ！？（会心の会心）','迫真！（何が？）','今の見た？ 嘘つけ絶対見てたゾ','痛いですね…これは痛い（確信）','ホラ、ホラ、ホラ（何もない）'],
  leak:['まずいですよ！（まずくない）','入って、どうぞ（入るな）','あっ…（察し）（察せない）','やめてくれよ…（絶望）（希望）','何やってんだお前ぇ！（俺）','いいよ！こいよ！（来ないで）','おかしいですよ！カテジナさん！（誰）','ちょっと待ってくださいよォ！（もう遅い）','そうだよ（入られた）','玄関、汗だく（意味不明）','は？ 抜けた？ 抜けたって何？'],
- waveStart:['おまたせ！（待ってない）','いいよ！こいよ！（来る）','見とけよ見とけよ〜（目をそらす）','じゃけん防衛しましょうね〜','まあ、多少はね？（多少ではない）','おっ、来たな（来た）','まずうちさぁ…ウェーブあんだけど…来てかない？','そうですねぇ…やっぱり僕は、王道を往く、防衛系ですか','後輩「先輩、ウェーブですよ」先輩「ウェーブだよ」','ほら、行くどー（行かない）','あっ、そっかぁ（開戦）','24歳、ウェーブです'],
- waveClear:['いいゾ〜これ','やりますねぇ！（他人事）','あーいいっすねー（棒）','疲れたもおおん（元気）','やったぜ。','すっげぇ綺麗（主観）','はっきりわかんだね','そうだよ（クリア）','あ ほ く さ（勝利）','これもうわかんねぇな（勝った）','王道を往く、クリア系ですか','ま、多少はね？（全滅）'],
+ waveStart:['おまたせ！（待ってない）','いいよ！こいよ！（来る）','見とけよ見とけよ〜（目をそらす）','じゃけん防衛しましょうね〜','まあ、多少はね？（多少ではない）','おっ、来たな（来た）','まずうちさぁ…ウェーブあんだけど…来てかない？','そうですねぇ…やっぱり僕は、王道を征く、防衛系ですか','後輩「先輩、ウェーブですよ」先輩「ウェーブだよ」','ほら、行くどー（行かない）','あっ、そっかぁ（開戦）','24歳、ウェーブです'],
+ waveClear:['いいゾ〜これ','やりますねぇ！（他人事）','あーいいっすねー（棒）','疲れたもおおん（元気）','やったぜ。','すっげぇ綺麗（主観）','はっきりわかんだね','そうだよ（クリア）','あ ほ く さ（勝利）','これもうわかんねぇな（勝った）','王道を征く、クリア系ですか','ま、多少はね？（全滅）'],
  place:['ここ、置いてかない？','そうだよ（設置）','あっ、いいっすねー','おかのした','置いたぜ（置いた）','入って、どうぞ（タワーが）','24歳、タワーです','いいよ！こいよ！（来ないで）'],
  site:['そこ！','立地ォ！','ファッ！？','おかのした！','ここだよォ','置いたぜ（迫真）','いい立地（そうだよ）','ドンッ（設置）','暑苦しい立地（褒めてる）','ここすき（地形）','床がぬるい','汗のシミ','汚ねぇ立地（褒めてる）'],
  hitFx:['ヌッ','ッ','痛','汗','ォン','は？','ンッ','チッ','汁','ベチャ','くっさ','湿'],
@@ -429,7 +433,7 @@ const L={
  lose:['下北沢陥落…（陥落）','ぬわああん負けたもおおん','あっ…（察し）','これもうわかんねぇな'],
  loseSub:['痛いですね…これは痛い（確信）','また来てくれよな〜頼むよ〜（来るな）','下北沢の地価が810円に暴落した','そうだよ（敗北）','部屋が汗だく（概念）','玄関に後輩の靴が114514足','あっ、そっかぁ（納得できない）'],
  win:['下北沢防衛成功！（成功）','やりますねぇ！完全勝利','いいゾ〜これ（満足）','やったぜ。'],
- winSub:['114514点満点の防衛だった','先輩「お前のことが好きだったんだよ！」（部屋が）','王道を往く、勝利系ですか','そうだよ（便乗）（勝利）','はっきりわかんだね（何が）','屋上で日焼けしながら勝利の一服（屋上はない）','24歳、勝者です'],
+ winSub:['114514点満点の防衛だった','先輩「お前のことが好きだったんだよ！」（部屋が）','王道を征く、勝利系ですか','そうだよ（便乗）（勝利）','はっきりわかんだね（何が）','屋上で日焼けしながら勝利の一服（屋上はない）','24歳、勝者です'],
 };
 const COMBO_MS={10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、多少はね？',25:'25コンボ！ファッ！？',35:'35コンボ！これもうわかんねぇな',50:'50コンボ！ンアッー！（了解）',75:'75コンボ！あ ほ く さ',100:'100コンボ！114514！！（断定）',150:'150コンボ！下北沢が意味不明',200:'200コンボ！？ ファッ！？ ウーン…',300:'300コンボ！？ そうだよ（もう出ないよ）'};
 
@@ -486,6 +490,18 @@ const TOWERS={
  flies:{name:'ハエ発生器',short:'ハエ発生',img:'grimace_face#green',cost:165,range:135,dmg:6,rate:.75,ring:'#9ac84a',role:'ハエ',vs:'【対ステルス】視界確保＋DoT。覗き見学者・夜戦向き',desc:'【ハエ】汚い群れでステルスを暴き継続ダメ。汚い演出特化',crit:.05,proj:'#c8e070',flies:true,
   muts:[{n:'大群',d:'射程+35%・ダメ+40%'},{n:'くっさフェロモン',d:'命中で毒'}],
   overs:[{n:'永久蚊取り',d:'常時ステルス看破オーラ'},{n:'顔面群がる',d:'ヒットで小スタン'}]},
+ plant:{name:'観葉植物くん',short:'観葉植物',img:'trio_sepia_face#green',cost:195,range:125,dmg:0,rate:0,ring:'#8dff6a',role:'植物',vs:'緑のオーラハブ。攻撃枠を食うが地味に強い',desc:'【植物】範囲内の塔にHP回復＋攻撃速度+12%。癒やし枠',aura:true,
+  muts:[{n:'光合成',d:'日中（ウェーブ奇数）は効果+50%'},{n:'根っこ',d:'範囲内の地雷・泥の効果+30%'}],
+  overs:[{n:'巨木化',d:'オーラ範囲x1.6・塔HP回復x2'},{n:'花粉症',d:'範囲の敵を毒＋くしゃみスタン'}]},
+ compass:{name:'円定規コンパス',short:'円定規',img:'senpai_face#purple',cost:255,range:140,dmg:26,rate:1.5,ring:'#c98aff',role:'円範囲',vs:'全方位同心円攻撃。合流点・中央向き',desc:'【円範囲】周囲に同心円攻撃。数学的な美しさ（汚い）',splash:75,crit:.12,proj:'#d4a0ff',
+  muts:[{n:'三角定規セット',d:'攻撃速度x1.5・ダメx0.7'},{n:'分度器',d:'射程+25%・円がでかい'}],
+  overs:[{n:'黄金比',d:'クリ率+20%・クリで同心円x2'},{n:'図形ドリル',d:'命中で被ダメ+15%マーク'}]},
+ beer:{name:'生ビール砲',short:'ビール砲',img:'title_senpai#gold',cost:220,range:115,dmg:18,rate:1.3,ring:'#ffcc66',role:'酔わせ',vs:'命中で減速＋混乱。ボスに効く（少し）',desc:'【酔わせ】泡で減速＋混乱（ふらふら歩く）。ボス耐性あり',crit:.08,proj:'#ffe090',drunk:true,
+  muts:[{n:'一番搾り',d:'射程+40%・泡がよく飛ぶ'},{n:'生中×5',d:'攻撃速度x2・ダメx0.65'}],
+  overs:[{n:'酔い潰し',d:'混乱中の敵を倒すと周囲も酔う'},{n:'二日酔い',d:'命中で毒（アルコール分解）'}]},
+ aqua:{name:'アクエリアス砲',short:'アクエリアス',img:'navy_center_face#cyan',cost:180,range:120,dmg:12,rate:.9,ring:'#5ce0ff',role:'水分補給',vs:'命中でバフ解除＋減速。応援・看病対策',desc:'【水分補給】敵のバフを洗い流す。応援後輩・看病先輩に刺さる',crit:.05,proj:'#a0f0ff',
+  muts:[{n:'イオンの力',d:'射程+30%・バフ解除100%'},{n:'ゴクゴク',d:'命中で塔HP回復（跳ね返り）'}],
+  overs:[{n:'凍らせアクエリ',d:'命中で凍結も付く'},{n:'経口補水液',d:'範囲内の塔の攻撃速度+8%'}]},
 };
 const TKEYS=Object.keys(TOWERS);
 const HOTKEYS=['1','2','3','4','5','6','7','8','9','0','q','w','e','r','t','a','s'];
@@ -502,18 +518,22 @@ const ENEMIES={
  ghost:{name:'覗き見学者',img:'locker_right_face#gray',hp:60,speed:58,bounty:14,r:15,col:'#bbbbbb',stealth:true,wd:8},
  boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:30,bounty:150,r:34,col:'#c46bff',armor:3,boss:true,phaseEnr:1,wd:60,
   intro:['迫真ボス「ファッ！？ お前ら何してんの」','迫真ボス襲来！（顔がうるさい）'],
-  ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」']},
+  ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」','迫真ボス「イキスギィ！（お前が）」','迫真ボス「ま、多少はね？（効いてる）」','迫真ボス「王道を征く、ボス系ですか」']},
  boss2:{name:'部室の主・真',img:'locker_left_face#red',hp:1650,speed:26,bounty:250,r:36,col:'#ff5c3c',armor:5,boss:true,summon:3,phaseSum:1,wd:90,
   intro:['部室の主・真「ぬわああん、後輩呼ぶぞ」','部室の主・真 降臨（部屋が汗臭い）'],
-  ban:['部室の主・真「ロッカー、あるんだけど…（ない）」','部室の主・真「まずうちさぁ…部室あんだけど…」','部室の主・真「疲れたもおおん（3秒）」','部室の主・真「24歳、部室です」']},
+  ban:['部室の主・真「ロッカー、あるんだけど…（ない）」','部室の主・真「まずうちさぁ…部室あんだけど…」','部室の主・真「疲れたもおおん（3秒）」','部室の主・真「24歳、部室です」','部室の主・真「見とけよ見とけよ～（見ない）」','部室の主・真「あーいいっすね～（棒）」','部室の主・真「じゃけん後輩召喚しましょうね～」']},
  boss3:{name:'野獣の眼光',img:'grimace_face#purple',hp:2600,speed:32,bounty:400,r:38,col:'#ff3c8a',armor:4,boss:true,shield:.35,shieldRegen:.03,enrage:true,phaseGaze:1,wd:120,
   intro:['野獣の眼光「お前のことが好きだったんだよ！」','最終形態：野獣の眼光（眼光が鋭い）'],
-  ban:['野獣の眼光「見とけよ（見ないで）」','野獣の眼光「ちょっと汗かいてきたな…（乾燥）」','野獣の眼光「やりますねぇ！（自分に）」','野獣の眼光「は？（眼光）」']},
+  ban:['野獣の眼光「見とけよ（見ないで）」','野獣の眼光「ちょっと汗かいてきたな…（乾燥）」','野獣の眼光「やりますねぇ！（自分に）」','野獣の眼光「は？（眼光）」','野獣の眼光「ンギモッヂイイ！（盾が）」','野獣の眼光「サッー！（迫真）」','野獣の眼光「ヤジュ立ちで威圧するぞ」','野獣の眼光「こ↑こ↓で止まれ（無理）」']},
  jumper:{name:'跳び後輩',img:'navy_center_face#red',hp:55,speed:50,bounty:11,r:15,col:'#ff7a50',jump:70,wd:6},
  jammer:{name:'嫌がらせ先輩',img:'title_senpai#gray',hp:120,speed:40,bounty:18,r:18,col:'#9a9a9a',jam:90,wd:14},
  cheer:{name:'応援後輩',img:'trio_sepia_face#red',hp:70,speed:48,bounty:14,r:16,col:'#ff7a50',cheer:85,wd:8},
  bomber:{name:'自爆後輩',img:'navy_left_face#red',hp:50,speed:70,bounty:12,r:14,col:'#ff5c3c',bomb:70,wd:6},
  burrow:{name:'もぐり後輩',img:'locker_left_face#gray',hp:80,speed:52,bounty:15,r:15,col:'#a09080',burrow:1,wd:10},
+ toono:{name:'屈託のない笑顔',img:'navy_center_face#cyan',hp:110,speed:44,bounty:17,r:18,col:'#7fd4ff',heal:.04,healR:85,shield:.25,wd:12},
+ ngm:{name:'ンギモッヂイイ！',img:'grimace_face#red',hp:95,speed:82,bounty:14,r:16,col:'#ff7a50',sprint:1,wd:8},
+ kokoko:{name:'こ↑こ↓',img:'locker_right_face#purple',hp:75,speed:60,bounty:13,r:15,col:'#c98aff',teleport:.15,wd:8},
+ mur:{name:'MURさん',img:'trio_sepia_face#gold',hp:140,speed:36,bounty:20,r:20,col:'#ffd36b',cheer:100,armor:4,wd:16},
  boss4:{name:'迫真の淫獣',img:'grimace_face#gold',hp:3400,speed:30,bounty:600,r:40,col:'#ffd36b',armor:5,boss:true,phases:true,wd:150,
   intro:['迫真の淫獣「ンアッー！ 待たせたな」','迫真の淫獣 降臨（下北沢が汗臭い）'],
   ban:['迫真の淫獣「ンアッー！（挨拶）」','迫真の淫獣「お前らのタワー、くっさ！（いい匂い）」','迫真の淫獣「まだ終わらんよ（終わる）」','迫真の淫獣「114514（説明）」']},
@@ -580,7 +600,7 @@ const PERKS=[
  {t:'毒視電の輪',d:'毒・電撃・視線タワーが全部あると各+20%',img:'navy_center_face',tag:'シナジー',max:1,ap:s=>s.triRing=1},
  {t:'二重の汗',d:'二重エリートへのダメ+40%・報酬+1.5倍',img:'navy_right_face',tag:'エリート',max:1,ap:s=>s.dualHunt=1},
  {t:'後輩の結束',d:'集金と銀行が互いの範囲で収入+1G',img:'locker_left_face',tag:'経済',max:1,ap:s=>s.ecoBond=1},
- {t:'王道を往く、強化系',d:'強化コスト-20%・Lv上限5のまま',img:'senpai_face',tag:'強化',max:1,ap:s=>s.upCostMul*=.8},
+ {t:'王道を征く、強化系',d:'強化コスト-20%・Lv上限5のまま',img:'senpai_face',tag:'強化',max:1,ap:s=>s.upCostMul*=.8},
  {t:'飛びもぐり対策',d:'跳躍・もぐり後輩へのダメ+45%',img:'navy_center_face',tag:'対特殊',max:1,ap:s=>s.antiJump=1},
  {t:'妨害遮断',d:'嫌がらせ先輩の減速無効・自爆の気絶半減',img:'title_senpai',tag:'対特殊',max:1,ap:s=>s.antiJam=1},
  {t:'セット：経済の輪',d:'【経済タグ2枚以上で発動】利息+3%常時',img:'trio_sepia_card',tag:'経済',ap:s=>s.setEco+=1},
@@ -640,8 +660,8 @@ function camTick(dt){if(CAM.t>0){CAM.t-=dt;}else CAM.tz=1;CAM.z+=(CAM.tz-CAM.z)*
  if(game&&game.card)game.card.t-=dt;if(game&&game.tele>0)game.tele-=dt;if(game&&game.streak)game.streak.t-=dt;}
 const STREAK=[[10,'いいゾ～これ','#ffd36b'],[25,'ホラホラホラホラ','#ff8a5c'],[50,'暴れんなよ…暴れんなよ…','#ff3c8a'],[100,'イキスギィ！イクイクイク','#c98aff'],[200,'迫真空手部、極','#fff']];
 function streakCheck(c,x,y){for(const [n,txt,col] of STREAK)if(c===n){game.streak={n,txt,col,t:2,T:2};big(`${n} STREAK`,col,1.2);punch(x,y,1.12+n/1000,.6,n>=50?.5:0,n>=50?1.2:0,col);shake(6+n/20);flash();snd(440+n*2,.25,'square',.05,300);goro(x,y,null,true,n>=50?3:2);}}
-function waveCard(){const bossW=game.wave%5===0;game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:game.stageEv?'⚠ '+game.stageEv:'',c:bossW?'#ff3c8a':'#ffd36b'};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
-const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を往く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ'];
+function waveCard(){const bossW=game.wave%5===0;game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:game.stageEv?'⚠ '+game.stageEv:'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
+const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を征く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ','ｱｰｲｷｿ','ありますあります','いいねぇー','行きませんか？行きましょうよ','痛いですね…これは痛い','おかのした','こ↑こ↓','これもうわかんねぇな','じゃけん夜行きましょうね～','だいぶ溜まってんじゃんアゼルバイジャン','ダメみたいですね','で、出ますよ…','ないです','ヌッ！','喉渇いた…喉渇かない？','白菜かけますね','はっきりわかんだね','バッチェ冷えてますよ','ビール！ビール！','Foo↑気持ちいい～','ブッチッパ！','ほらいくどー','やんほぬ','わかるわかる（タメ口）','ありがとナス！','ウッソだろお前ｗｗｗ','かしこまり！','悲しいなぁ','最後の一発くれてやるよオラ！','もう許せるぞオイ！','知らねーよ、そんなの','いつもの','汚汚汚～～～～～～～～～','オッスオッス！','勝手にたまげてろ','がんばれ！','くさい（確信）','ここすき','すき','誰？','もっとやれ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
 function goro(x,y,txt,force,lv=1){const n=performance.now();if(!force&&n-goroT<(TOUCH?1500:900))return;goroT=n;txt=txt||GORO[Math.floor(Math.random()*GORO.length)];const c=GOROC[Math.floor(Math.random()*GOROC.length)];voice(txt,lv);
  if(x!=null){float(x,y-30,txt,c,true,1.3);pushFx({ring:true,x,y,r:6,R:70*lv,t:.55,T:.55,c,lw:5});pushFx({ring:true,x,y,r:3,R:40*lv,t:.4,T:.4,c:'#fff',lw:2});for(let i=0;i<10*lv&&fx.length<FX_CAP;i++)pushFx({x,y,vx:(Math.random()-.5)*260,vy:-50-Math.random()*170,t:.65,c:i%3?'#cfe8ff':'#c9b08a',drop:true,sticky:i%4===0,sz:2.5+Math.random()*2});}
@@ -1149,7 +1169,7 @@ const STORY={
   ['boss2','…ま、多少はね？（冷静）']]},
  w10:{ch:'第7章「汗は嘘をつく」',L:[
   ['senpai','…なあ後輩。なんで俺たち、こんなに…なんで？'],
-  ['kohai','そうですねぇ…やっぱり僕は、王道を往く、汗系ですか'],
+  ['kohai','そうですねぇ…やっぱり僕は、王道を征く、汗系ですか'],
   ['senpai','あっ、そっかぁ…（汗か涙か麦茶）',2],
   ['narr','二人は拳を合わせた。拳はヌルヌルだった。意味は、ない。']]},
  w12:{ch:'第8章「眼光の、噂の、眼光」',L:[
@@ -1357,9 +1377,9 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
  {const low=game.lives<=5&&!game.over?(.4+.22*Math.sin(game.t*7)):0,hot=Math.min(.4,game.combo/130);if(low||hot>.05||CAM.slow>0){const g=ctx.createRadialGradient(VW()/2,VH()/2,Math.min(VW(),VH())*.28,VW()/2,VH()/2,Math.max(VW(),VH())*.82);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.7,low?'rgba(80,20,10,.12)':'rgba(40,20,10,.08)');g.addColorStop(1,low?`rgba(160,20,20,${low})`:CAM.slow>0?'rgba(0,0,0,.6)':`rgba(180,70,30,${hot})`);ctx.fillStyle=g;ctx.fillRect(0,0,VW(),VH());}
   if((low||hot>.15)&&!RM&&Math.random()<.45&&fx.length<FX_CAP-20){const edge=Math.random();const px=edge<.25?Math.random()*W:edge<.5?Math.random()*W:edge<.75?-8:W+8,py=edge<.25?-8:edge<.5?H+8:Math.random()*H;pushFx({x:px,y:py,vx:(Math.random()-.5)*40,vy:edge<.5?80+Math.random()*120:(Math.random()-.5)*60,t:2.4,c:Math.random()<.5?'#9fd8ff':'#c9b08a',drop:true,sticky:true,sz:2.5});}}
  if(CAM.bars>.01){const bh=VH()*.09*CAM.bars;ctx.fillStyle='#000';ctx.fillRect(0,0,VW(),bh);ctx.fillRect(0,VH()-bh,VW(),bh);}
- if(game.card&&game.card.t>0){const c=game.card,k=1-c.t/c.T,a=Math.min(1,c.t*2,k*6),sl=k<.15?(1-k/.15)*VW():0;ctx.save();ctx.globalAlpha=a;ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,VH()*.36,VW(),VH()*.26);ctx.fillStyle=c.c;ctx.fillRect(0,VH()*.36,VW(),4);ctx.fillRect(0,VH()*.62-4,VW(),4);
-  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${fs(44)} sans-serif`;ctx.lineWidth=7;ctx.strokeStyle='#000';ctx.strokeText(c.title,VW()/2+sl,VH()*.44);ctx.fillStyle=c.c;ctx.fillText(c.title,VW()/2+sl,VH()*.44);
-  ctx.font=`bold ${fs(18)} sans-serif`;ctx.fillStyle='#fff';ctx.fillText(c.sub,VW()/2-sl,VH()*.515);if(c.ev){ctx.fillStyle=Math.sin(game.t*14)>0?'#ffb03a':'#ff3c3c';ctx.fillText(c.ev,VW()/2+sl*.5,VH()*.575);}ctx.restore();ctx.textBaseline='alphabetic';}
+ if(game.card&&game.card.t>0){const c=game.card,k=1-c.t/c.T,a=Math.min(1,c.t*2,k*6),sl=k<.15?(1-k/.15)*VW():0;ctx.save();ctx.globalAlpha=a;ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(0,VH()*.3,VW(),VH()*.4);if(c.img&&ASSETS[c.img]){try{const img=document.createElement('img');img.src=ASSETS[c.img];const imgS=Math.min(VW()*.28,VH()*.32),imgX=(VW()-imgS)/2-VW()*.15,imgY=VH()*.38;ctx.save();ctx.globalAlpha=a*.6;ctx.shadowColor=c.c;ctx.shadowBlur=20;ctx.drawImage(img,imgX,imgY,imgS,imgS);ctx.restore();}catch(_){}}ctx.globalAlpha=a;ctx.fillStyle=c.c;ctx.shadowColor=c.c;ctx.shadowBlur=15;ctx.fillRect(0,VH()*.36,VW(),3);ctx.fillRect(0,VH()*.64-3,VW(),3);ctx.shadowBlur=0;
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${fs(48)} sans-serif`;ctx.lineWidth=8;ctx.strokeStyle='#000';ctx.strokeText(c.title,VW()/2+sl,VH()*.46);ctx.fillStyle=c.c;ctx.shadowColor=c.c;ctx.shadowBlur=12;ctx.fillText(c.title,VW()/2+sl,VH()*.46);ctx.shadowBlur=0;
+  ctx.font=`bold ${fs(19)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText(c.sub,VW()/2-sl,VH()*.545);if(c.ev){ctx.fillStyle=Math.sin(game.t*14)>0?'#ffb03a':'#ff3c3c';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;ctx.fillText(c.ev,VW()/2+sl*.5,VH()*.6);}ctx.restore();ctx.textBaseline='alphabetic';}
  if(game.streak&&game.streak.t>0){const st=game.streak,k=st.t/st.T;ctx.save();ctx.globalAlpha=Math.min(1,st.t*2);ctx.translate(VW()-12,VH()*.2);ctx.rotate(-.08);ctx.scale(1+(k>.85?(k-.85)*3:0),1+(k>.85?(k-.85)*3:0));ctx.textAlign='right';ctx.font=`900 ${fs(24)} sans-serif`;ctx.lineWidth=6;ctx.strokeStyle='#000';ctx.strokeText(st.txt,0,0);ctx.fillStyle=st.col;ctx.fillText(st.txt,0,0);ctx.restore();}
  for(const p of splats){const k=p.t/p.T,x=p.x*VW(),y=p.y*VH();ctx.globalAlpha=Math.min(.7,k*.95);ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(x,y,p.r,p.r*.8,p.s,0,7);ctx.fill();
   for(let i=0;i<p.n;i++){const a=p.s+i*2.1,dx=Math.cos(a)*p.r*1.2,dy=Math.sin(a)*p.r*1.0;ctx.beginPath();ctx.ellipse(x+dx,y+dy,p.r*.28,p.r*.35,a,0,7);ctx.fill();ctx.fillRect(x+dx*.55-2,y+dy*.55,5,(1-k)*p.r*1.7);}}
@@ -1782,7 +1802,7 @@ const _draw17=draw;draw=function(){_draw17();try{drawV17();}catch(_){}};
   for(const t of TITLES){const ok=t.ok(m);const k=document.createElement('button');k.className='card';k.disabled=!ok;k.style.opacity=ok?1:.45;k.innerHTML='<b></b><br><small></small>';k.querySelector('b').textContent=(curTitle===t.n?'✔ ':'')+(ok?t.n:'🔒 ???');k.querySelector('small').textContent=t.d;k.onclick=()=>{curTitle=t.n;LSset('yajuuTD_title',t.n);showSkin();updT();};TL.appendChild(k);}};
  bk.onclick=()=>{showSkin();so.classList.add('on');};$('skinBack').onclick=()=>so.classList.remove('on');
  const updT=()=>{const e=$('best');if(e){let s=e.dataset.b??(e.dataset.b=e.textContent);e.textContent=`${s?s+'　':''}称号：${curTitle}`;}};updT();})();
-/* ===== v18: 下北沢公式資料館 ===== */
+/* ===== v18+v29: 下北沢公式資料館（Wiki拡張版） ===== */
 const V18={
  lore:[
   {h:'第一章　下北沢の伝説',img:'title_senpai',t:'某年某月、下北沢の一角に一人の「先輩」が現れた。年齢は24歳（自称・学生）。以後その名は語録と共にネットの地層に刻まれ、誰も正体を知らないまま伝説だけが増殖した。'},
@@ -1816,8 +1836,57 @@ const V18={
   ['冷えてるゾ','アイスティー砲の命中音。結露で床がぬるい','No.016'],
   ['ぬるッ！','泥だまり設置時。靴が取れます','No.017'],
   ['ブーン…','ハエ発生器の稼働音。ステルスがバレる','No.018'],
+  ['ｱｰｲｷｿ','Wiki収録語録','No.019'],['ありますあります','Wiki収録語録','No.020'],['いいねぇー','伸ばす語録（余韻）','No.021'],['いいよ、来いよ！胸にかけて！胸に！','強調語録（威圧）','No.022'],['いきますよーいくいく','伸ばす語録（余韻）','No.023'],['行きませんか？行きましょうよ','疑問形語録','No.024'],['痛いですね…これは痛い','沈黙語録（意味深）','No.025'],['王道を征く','確信の語録','No.026'],['オッスお願いしまーす！','強調語録（威圧）','No.027'],['おっ大丈夫か大丈夫か？','疑問形語録','No.028'],['お前どう？','疑問形語録','No.029'],['お前のことが好きだったんだよ！','強調語録（威圧）','No.030'],['俺もやったんだからさ','Wiki収録語録','No.031'],['菅野美穂','固有名詞語録','No.032'],['今日タァイムはどう？伸びた？伸びない？','疑問形語録','No.033'],['†悔い改めて†','厨二語録','No.034'],['ｸｩｰﾝ...','沈黙語録（意味深）','No.035'],['クチアケーナ・ホラ','伸ばす語録（余韻）','No.036'],['こ、去年ですね','時系列語録','No.037'],['こ↑こ↓','イントネ語録','No.038'],['この辺にぃ、うまいラーメン屋の屋台、来てるらしいっすよ','勧誘語録','No.039'],['これもうわかんねぇな','混乱語録','No.040'],['しかし、修行やってます。いつの日か世界を救うと信じて。','覚悟語録（迫真）','No.041'],['じゃけん夜行きましょうね～','誘導語録','No.042'],['しょうがねぇなぁ（悟空）','諦観語録','No.043'],['そして天は鳴き、大地は震えるだろうね','壮大語録','No.044'],['大会近いからね、しょうがないね','言い訳語録','No.045'],['だいぶ溜まってんじゃんアゼルバイジャン','謎語録','No.046'],['多少はね？','疑問形語録','No.047'],['出そうと思えば','可能性語録','No.048'],['ダメみたいですね','諦観語録','No.049'],['ちょっと歯ぁ当たんよ～（指摘）','指摘語録','No.050'],['であることを意味していますよねぇ','論理語録','No.051'],['で、出ますよ…','沈黙語録（意味深）','No.052'],['ないです','否定語録','No.053'],['ヌッ！','強調語録（威圧）','No.054'],['喉渇いた…喉渇かない？','疑問形語録','No.055'],['伸びた？伸びない？','疑問形語録','No.056'],['入って、どうぞ！','歓迎語録','No.057'],['白菜かけますね','料理語録','No.058'],['はっきりわかんだね','確信語録','No.059'],['バッチェ冷えてますよ','冷却語録','No.060'],['He didn't…he begin…','英語語録','No.061'],['ビール！ビール！','強調語録（威圧）','No.062'],['ピトン…ポチョン…（明鏡止水）','沈黙語録（意味深）','No.063'],['Foo↑気持ちいい～','快感語録','No.064'],['ふたいたい','謎語録','No.065'],['ブッチッパ！','強調語録（威圧）','No.066'],['ほらいくどー','開始語録','No.067'],['MURさん夜中腹減んないすか？','疑問形語録','No.068'],['見とけよ見とけよ～','注目語録','No.069'],['焼く時は！','強調語録（威圧）','No.070'],['やめたくなりますよなんか部っ活ぅ～','弱音語録','No.071'],['やんほぬ','謎語録','No.072'],['You have a 夜中腹減んないすか？','英語語録','No.073'],['わかるわかる（タメ口）','同意語録','No.074'],['あーっ！おぅううっす！おーっ！うーっす！','挨拶語録','No.075'],['ありがとナス！','感謝語録','No.076'],['ウッソだろお前ｗｗｗ','驚愕語録','No.077'],['お金タダでいいから','提案語録','No.078'],['かしこまり！','承諾語録','No.079'],['悲しいなぁ','感傷語録','No.080'],['キメてるんだろ？くれよ…','疑問形語録','No.081'],['殺されてぇかお前','脅迫語録','No.082'],['髪なんか必要ねぇんだよ！','強調語録（威圧）','No.083'],['最後の一発くれてやるよオラ！','強調語録（威圧）','No.084'],['縛らなきゃ（使命感）','使命語録','No.085'],['総理大臣の誕生か？','疑問形語録','No.086'],['つべこべ言わずに来いホイ','命令語録','No.087'],['とか何とかわけわかんねーこと叫びながらコイツ目がイっちゃてる','長文語録','No.088'],['ドジョウと俺のさ、子供ができたらどうする？','疑問形語録','No.089'],['20人以上、30人以下？','疑問形語録','No.090'],['卍解～','厨二語録','No.091'],['ムラムラジェラシーを感じる','感情語録','No.092'],['もう許せるぞオイ！','強調語録（威圧）','No.093'],['知らねーよ、そんなの','否定語録','No.094'],['いつしか雨はやみ、そこには虹がかかるんだよなぁ・・・','詩的語録','No.095'],['いつもの','定番語録','No.096'],['淫夢要素はありません','否定語録','No.097'],['汚汚汚～～～～～～～～～','擬音語録','No.098'],['オッスオッス！','挨拶語録','No.099'],['親の顔より見た光景','慣用語録','No.100'],['俺達の雑音に負けるな','応援語録','No.101'],['勝手にたまげてろ','命令語録','No.102'],['関係ないだろ！いい加減にしろ！','怒り語録','No.103'],['がんばれ！','応援語録','No.104'],['きたない','評価語録','No.105'],['くさい（確信）','評価語録','No.106'],['くさそう','評価語録','No.107'],['ケツかな？','疑問形語録','No.108'],['こいついつも疲れてんな','観察語録','No.109'],['ここすき','評価語録','No.110'],['実家のような安心感','比喩語録','No.111'],['すき','評価語録','No.112'],['世界一やお前！','称賛語録','No.113'],['誰？','疑問形語録','No.114'],['ひでたるとまひろじゅんぺい','固有名詞語録','No.115'],['二人は幸せなキスをして終了','締め語録','No.116'],['もっとやれ','命令語録','No.117'],['桃かな？','疑問形語録','No.118'],
  ],
- bans:['当館の資料はすべてパロディです','実在の人物・団体とは一切関係ありません（迫真）','資料の持ち出しは汗で濡れるため禁止'],
+ seichi:[
+  {n:'下北沢駅',d:'伝説の起点。当館の名を冠する聖地（非公認）'},
+  {n:'赤坂プリンスホテル',d:'往時の舞台。現在は解体済み（惜しい）'},
+  {n:'世田谷公園',d:'緑豊かな聖地。噴水で汗を流す後輩の目撃情報あり'},
+  {n:'所沢航空記念公園',d:'広大な聖地。飛行機より先輩が有名（当館調べ）'},
+  {n:'新宿駅',d:'巨大ターミナル。迷子の後輩を収容する施設（嘘）'},
+  {n:'東京大学駒場地区キャンパス',d:'学府の聖地。24歳学生説の根拠とされる（真偽不明）'},
+  {n:'代々木公園',d:'都心のオアシス。休日は後輩で溢れる（体感）'},
+  {n:'多摩川河川敷',d:'開放的な聖地。夏は汗だく必至'},
+  {n:'小田急ホテルセンチュリーサザンタワー',d:'高層ホテル。屋上でアイスティーが出るとの噂（未確認）'},
+  {n:'北沢川緑道',d:'静かな聖地。散策中の先輩が目撃されたとされる'},
+  {n:'七里ヶ浜海岸',d:'海辺の聖地。潮風と汗が混ざる（塩辛い）'},
+  {n:'砧公園',d:'桜の名所。春は花見客と後輩で大混雑'},
+ ],
+ jinki:[
+  {n:'アイスティー',d:'最重要神器。冷えてないと意味がない'},
+  {n:'ゴローズ',d:'伝説のアクセサリー。入手難易度：極'},
+  {n:'TM collection',d:'謎のコレクション。中身は機密'},
+  {n:'爽健美茶',d:'定番飲料。アイスティーの代替品とされる（異論あり）'},
+  {n:'Weeklyぴあ',d:'情報誌。当時の先輩界を記録した貴重資料'},
+  {n:'サッカー日本代表ユニフォーム',d:'青い神器。着用で士気+810%（体感）'},
+  {n:'観葉植物くん',d:'緑の神器。部室の守護者（水やり必須）'},
+  {n:'S&W M36',d:'重火器神器。取り扱い注意（当然）'},
+  {n:'ペンドルトン',d:'高級シャツ。先輩の正装とされる'},
+  {n:'ボルコム',d:'サーフブランド。夏の定番神器'},
+  {n:'さわやかドライの白くまくん',d:'冷房神器。真夏の部室を守る'},
+  {n:'MERCEDESのネクタイ',d:'高級神器。首に巻くと威圧感+114%'},
+ ],
+ meibamen:[
+  {k:'wiki/00_見返り美人',a:'見返り美人'},
+  {k:'wiki/01_トヨタ_センチュリー',a:'あずま寿し'},
+  {k:'wiki/02_目線DB',a:'目線DB'},
+  {k:'wiki/03_ンギモッヂイイ！',a:'ンギモッヂイイ！'},
+  {k:'wiki/04_こ↑こ↓',a:'こ↑こ↓'},
+  {k:'wiki/05_まずうちさぁ',a:'コカコーラ北島'},
+  {k:'wiki/06_遠野',a:'屈託のない笑顔'},
+  {k:'wiki/07_四章野獣の眼光',a:'野獣の眼光'},
+  {k:'wiki/08_ご満悦先輩',a:'ご満悦先輩'},
+  {k:'wiki/09_ヤジュ立ち',a:'ヤジュ立ち'},
+  {k:'wiki/10_サッー',a:'サッー！（迫真）'},
+  {k:'wiki/11_したり顔先輩',a:'したり顔先輩'},
+  {k:'wiki/12_おっ大丈夫か大丈夫か',a:'おっ大丈夫か大丈夫か？'},
+  {k:'wiki/13_小鳥の囀り',a:'小鳥の囀り'},
+  {k:'wiki/14_やわらかスマホ',a:'やわらかスマホ'},
+  {k:'wiki/15_野獣ステップ',a:'野獣ステップ'},
+  {k:'wiki/16_林檎',a:'林檎'},
+  {k:'wiki/17_世界のトオノ',a:'世界のトオノ'},
+ ],
+ bans:['当館の資料はすべてパロディです','実在の人物・団体とは一切関係ありません（迫真）','資料の持ち出しは汗で濡れるため禁止','v29：Wiki資料を内部利用許諾の下で収録'],
 };
 (function(){
  const css=document.createElement('style');css.textContent=`#codex .tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 0}#codex .tabs button.on{background:#ffd36b;color:#2a1a08}
@@ -1830,7 +1899,7 @@ const V18={
 @keyframes cdxz{from{transform:scale(.3) rotate(-20deg);opacity:0}}`;document.head.appendChild(css);
  const after=$('bSkin')||$('bStory');const b=document.createElement('button');b.id='bCodex';b.style.cssText='margin-top:8px;min-height:44px';b.textContent='📚 下北沢公式資料館';after.after(b);
  const o=document.createElement('div');o.className='ov';o.id='codex';
- const tabs=[['lore','📜 人物録'],['gor','🗣 語録保管庫'],['tw','🗼 塔図鑑'],['en','👊 敵図鑑'],['map','🗺 地図'],['sk','🔥 スキル'],['gal','🖼 ギャラリー'],['faq','❓ 公式FAQ']];
+ const tabs=[['lore','📜 人物録'],['gor','🗣 語録保管庫'],['sei','⛩ 聖地'],['jin','📿 神器'],['mei','🎬 名場面'],['tw','🗼 塔図鑑'],['en','👊 敵図鑑'],['map','🗺 地図'],['sk','🔥 スキル'],['gal','🖼 ギャラリー'],['faq','❓ 公式FAQ']];
  o.innerHTML='<h2>📚 下北沢公式資料館（非公認）</h2><div class="tabs">'+tabs.map(([k,n])=>`<button data-k="${k}">${n}</button>`).join('')+'</div><div id="cdx"></div><button id="cdxBack" style="margin-top:10px">戻る（おかのした）</button>';
  document.body.appendChild(o);const big=document.createElement('div');big.id='cdxBig';big.innerHTML='<img><div style="margin-top:8px;font-weight:bold"></div><small style="color:#c9b894">タップで閉じる</small>';big.onclick=()=>big.classList.remove('on');document.body.appendChild(big);
  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1839,12 +1908,15 @@ const V18={
  const R={
   lore:()=>V18.lore.map(l=>ent(l.img,esc(l.h),esc(l.t))).join('')+'<div class="stamp">極秘</div>',
   gor:()=>V18.goroku.map(([g,d,n])=>`<div class="ent" data-say="${esc(g)}" style="cursor:pointer"><div><h4><span class="no">${n}</span>「${esc(g)}」</h4><small>${esc(d)}　🔊タップで再生</small></div></div>`).join(''),
+  sei:()=>V18.seichi.map((p,i)=>`<div class="ent"><div style="font-size:32px">⛩</div><div><h4><span class="no">${String(i+1).padStart(2,'0')}</span> ${esc(p.n)}</h4><small>${esc(p.d)}</small></div></div>`).join('')+'<div class="stamp">聖地巡礼は自己責任で（汗）</div>',
+  jin:()=>V18.jinki.map((j,i)=>`<div class="ent"><div style="font-size:32px">📿</div><div><h4><span class="no">${String(i+1).padStart(2,'0')}</span> ${esc(j.n)}</h4><small>${esc(j.d)}</small></div></div>`).join('')+'<div class="stamp">複製品も多数出回っています</div>',
+  mei:()=>'<div class="gal">'+V18.meibamen.map((m,i)=>`<figure data-n="${m.k}">${im(m.k)}<figcaption><small>名場面${String(i+1).padStart(2,'0')}　${esc(m.a)}</small></figcaption></figure>`).join('')+'</div><div class="stamp">Wiki提供・内部利用許諾済み</div>',
   tw:()=>Object.entries(TOWERS).map(([k,t])=>ent(t.img,esc(t.name)+(t.role?` <small>［${esc(t.role)}］</small>`:''),esc(t.desc||''),`💰${t.cost??'-'}　射程${t.range??'-'}　火力${t.dmg??'-'}<br>${esc(t.vs||'')}<br>${(t.muts||[]).map(m=>'◆'+esc(m.n)+'：'+esc(m.d)).join('<br>')}${(t.overs||[]).map(m=>'<br>★'+esc(m.n)+'：'+esc(m.d)).join('')}`)).join(''),
   en:()=>Object.entries(ENEMIES).map(([k,e])=>ent(e.img,esc(e.name),`HP ${e.hp}　速度 ${e.speed}　賞金 ${e.bounty}`,`${e.desc?esc(e.desc)+'　':''}危険度：${'💀'.repeat(Math.min(5,Math.ceil((e.hp||1)/120)))}　識別子 ${esc(k)}`)).join(''),
   map:()=>MAPS.map((m,i)=>ent(['title_senpai','navy_trio_card','trio_sepia_card','locker_right_face','collar_card'][i%5],esc(m.name),esc(m.desc),'攻略：'+esc(m.tip)+'　相性：'+esc(m.fav))).join(''),
   sk:()=>SK.map(s=>`<div class="ent"><div style="font-size:40px">${s.ic}</div><div><h4>${esc(s.n)} <small>(${s.k.toUpperCase()}) 気合${s.cost}／CD${s.cd}s</small></h4><div>${esc(s.d)}</div></div></div>`).join('')+(typeof SKINS!=='undefined'?'<h4 style="color:#ffd36b">塔スキン</h4>'+SKINS.map(s=>'・'+esc(s.n)+'：'+esc(s.d)).join('<br>'):''),
-  gal:()=>'<div class="gal">'+Object.keys(ASSETS).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
-  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','アイスティー砲（凍結）・泥だまり罠（道の減速床）・ハエ発生器（看破）'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','地雷は一発爆発、泥は何度でも踏める持続減速（汚い）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
+  gal:()=>'<div class="gal">'+Object.keys(ASSETS).filter(n=>!n.startsWith('wiki/')).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
+  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','アイスティー砲（凍結）・泥だまり罠（道の減速床）・ハエ発生器（看破）'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','地雷は一発爆発、泥は何度でも踏める持続減速（汚い）'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
  };
  const show=k=>{o.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.k===k));const c=$('cdx');c.innerHTML=R[k]();c.scrollTop=0;
   c.querySelectorAll('[data-say]').forEach(e=>e.onclick=()=>{try{if(typeof voice==='function')voice(e.dataset.say,2,1);else if(window.speechSynthesis&&!muted){const u=new SpeechSynthesisUtterance(e.dataset.say);u.lang='ja-JP';u.pitch=.6;speechSynthesis.cancel();speechSynthesis.speak(u);}}catch(_){}try{snd(440,.08,'square',.05);}catch(_){}});
