@@ -1,9 +1,17 @@
-# 野獣先輩タワーディフェンス ～迫真TD部～ (v27)
+# 野獣先輩タワーディフェンス ～迫真TD部～ (v30)
 
 - index.html + assets/ : multi-file build (relative paths, works offline)
 - yajuu-td-single.html : one-file build, all images embedded as data URLs
 - src/template.html + build.py : source; `python3 build.py` regenerates both
 - crop.py : makes the crops in assets/ from assets/src/ (the original attachments)
+
+## v30: タワー統合 - 覚醒で分岐する進化
+- 17種→14種へ統合。ショップがスッキリ、覚醒で進化
+- 経済系統合: 810銀行の覚醒B「集金モード」（旧・集金後輩）
+- サポート系統合: 部室トリオの覚醒B「応援モード」（旧・迫真応援団）
+- CC系統合: 胸ぐらスネアの覚醒B「アイスティーモード」（旧・アイスティー砲）
+- 同じタワーでも覚醒ルートで味が分かれる設計
+- ホットキーも整理（1-9,0,Q-E）
 
 ## v27: 初回インタラクティブ・チュートリアル
 - 初回起動（localStorage `yajuuTD_tut` 未設定）で練習モード：①塔を置く → ②ウェーブ開始 → ③スキル発動 → ④売却
