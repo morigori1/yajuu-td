@@ -20,14 +20,16 @@ button.go{background:#8a2a1a;border-color:#ff8a5c}
 @media (hover:hover){button.go:hover:not(:disabled){background:#b2381f}}
 #bWave.go:not(:disabled){min-width:148px;box-shadow:0 0 10px #ff8a5c88;animation:wavePulse 1.5s ease-in-out infinite}
 @keyframes wavePulse{50%{box-shadow:0 0 18px #ffd36b;border-color:#ffd36b}}
+body.compact #bWave.go:not(:disabled),body.portrait #bWave.go:not(:disabled){min-width:0;animation:none;box-shadow:0 0 6px #ff8a5c66}
 /* HUD */
 #hud{flex:none;display:flex;align-items:center;gap:10px;padding:4px 10px;background:linear-gradient(#2b2219,#1d1712);border-bottom:2px solid #6b4b25;flex-wrap:wrap}
-#hud .stats{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+#hud .stats{display:flex;align-items:center;flex-wrap:wrap;gap:12px;flex:1;min-width:0}
 #hud .stat{font-weight:800;font-size:18px;display:flex;align-items:center;gap:4px;white-space:nowrap}
 #hud .stat b{color:#ffd36b}
 #hud .avatar{width:40px;height:40px;border-radius:50%;border:2px solid #ffd36b;object-fit:cover;flex:none}
-#nextinfo{font-size:13px;color:#c9b894;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#hud .ctl{display:flex;gap:6px;align-items:center}
+#nextinfo{font-size:13px;color:#c9b894;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+#dailyInfo{display:none;flex-basis:100%;font-size:11px;color:#ffd36b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;line-height:1.3}
+#hud .ctl{display:flex;gap:6px;align-items:center;min-width:0;flex-wrap:wrap}
 #bWave{min-width:120px}
 /* main */
 #main{flex:1;min-height:0;display:flex}
@@ -170,7 +172,11 @@ body.compact .shop .cost{font-size:10.5px}
 body.compact #info .btns button.mut{font-size:10px}
 body.portrait #shop{display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;touch-action:pan-x;scrollbar-width:none;padding-bottom:1px}
 body.portrait #shop::-webkit-scrollbar{display:none}
-body.portrait .shop{flex:0 0 64px;scroll-snap-align:start}
+body.portrait .shop{flex:0 0 70px;scroll-snap-align:start}
+body.portrait .shop img{width:36px;height:36px}
+body.portrait .shop .nm{font-size:9px}
+body.portrait .shop .cost{font-size:10px;padding:1px 3px}
+body.portrait .shop.sel,body.compact .shop.sel{transform:none;box-shadow:0 0 8px #ffd36b}
 body.portrait #info>.wrapI{flex-wrap:wrap}
 body.portrait #info .btns button.mut{min-width:96px;max-width:130px}
 body:not(.portrait):not(.compact) #side>*{flex-shrink:0}
@@ -180,7 +186,7 @@ body.compact #shop{flex:1 1 auto;min-height:100px;overflow-y:auto;grid-auto-rows
 body.compact #info{flex-shrink:0}
 body.portrait #info .btns{width:100%;flex-wrap:nowrap}
 body.portrait #info .btns button.mut{flex:1 1 0;min-width:0;max-width:none}
-body.portrait #info .btns #bSell{flex:0 0 74px}
+body.portrait #info .btns #bSell{flex:0 0 82px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #story{background:radial-gradient(ellipse at center,rgba(60,20,10,.88),rgba(8,4,2,.96));z-index:22}
 .stChap{font-weight:900;font-size:clamp(20px,5.5vw,34px);color:#ffd36b;text-shadow:0 0 12px #ff5c3c,0 3px 0 #000;margin-bottom:14px;letter-spacing:.04em}
 .stChap.in{animation:chapIn .7s cubic-bezier(.2,1.6,.4,1)}
@@ -268,7 +274,7 @@ body.tut-lock #draft,body.tut-lock #story,body.tut-lock #explore,body.tut-lock #
       <div class="stat">❤️<b id="lives">0</b></div>
       <div class="stat">🌊<b id="wave">0</b>/<span id="wmax">15</span></div>
       <div id="nextinfo"></div>
-      <div id="dailyInfo" style="display:none;font-size:11px;color:#ffd36b;margin-top:2px"></div>
+      <div id="dailyInfo"></div>
     </div>
     <div class="ctl">
       <button id="bSpeed" title="速度 (F)">▶x1</button>
@@ -633,7 +639,7 @@ function waveCard(){const bossW=game.wave%5===0;const nextBoss=(game.wave+1)%5==
  else if(waveHint&&game.wave===2&&towers.length>0&&!towers.some(t=>t.mut!=null))hint='💡 Lv3で覚醒';
  else if(nextBoss)hint='⚠️ 次はボス';
  game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:hint||game.stageEv?'⚠ '+(hint||game.stageEv):'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
-const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を征く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ','ｱｰｲｷｿ','ありますあります','いいねぇー','行きませんか？行きましょうよ','痛いですね…これは痛い','おかのした','こ↑こ↓','これもうわかんねぇな','じゃけん夜行きましょうね～','だいぶ溜まってんじゃんアゼルバイジャン','ダメみたいですね','で、出ますよ…','ないです','ヌッ！','喉渇いた…喉渇かない？','白菜かけますね','はっきりわかんだね','バッチェ冷えてますよ','ビール！ビール！','Foo↑気持ちいい～','ブッチッパ！','ほらいくどー','やんほぬ','わかるわかる（タメ口）','ありがとナス！','ウッソだろお前ｗｗｗ','かしこまり！','悲しいなぁ','最後の一発くれてやるよオラ！','もう許せるぞオイ！','知らねーよ、そんなの','いつもの','汚汚汚～～～～～～～～～','オッスオッス！','勝手にたまげてろ','がんばれ！','くさい（確信）','ここすき','すき','誰？','もっとやれ'];
+const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ〜これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を征く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ','ｱｰｲｷｿ','ありますあります','いいねぇー','行きませんか？行きましょうよ','痛いですね…これは痛い','おかのした','こ↑こ↓','これもうわかんねぇな','じゃけん夜行きましょうね～','だいぶ溜まってんじゃんアゼルバイジャン','ダメみたいですね','で、出ますよ…','ないです','ヌッ！','喉渇いた…喉渇かない？','白菜かけますね','はっきりわかんだね','バッチェ冷えてますよ','ビール！ビール！','Foo↑気持ちいい～','ブッチッパ！','ほらいくどー','やんほぬ','わかるわかる（タメ口）','ありがとナス！','ウッソだろお前ｗｗｗ','かしこまり！','悲しいなぁ','最後の一発くれてやるよオラ！','もう許せるぞオイ！','知らねーよ、そんなの','いつもの','汚汚汚～～～～～～～～～','オッスオッス！','勝手にたまげてろ','がんばれ！','くさい（確信）','ここすき','すき','誰？','もっとやれ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
 function goro(x,y,txt,force,lv=1){const n=performance.now();if(!force&&n-goroT<(TOUCH?1500:900))return;goroT=n;txt=txt||GORO[Math.floor(Math.random()*GORO.length)];const c=GOROC[Math.floor(Math.random()*GOROC.length)];voice(txt,lv);
  if(x!=null){float(x,y-30,txt,c,true,1.3);pushFx({ring:true,x,y,r:6,R:70*lv,t:.55,T:.55,c,lw:5});pushFx({ring:true,x,y,r:3,R:40*lv,t:.4,T:.4,c:'#fff',lw:2});for(let i=0;i<10*lv&&fx.length<FX_CAP;i++)pushFx({x,y,vx:(Math.random()-.5)*260,vy:-50-Math.random()*170,t:.65,c:i%3?'#cfe8ff':'#c9b08a',drop:true,sticky:i%4===0,sz:2.5+Math.random()*2});}
@@ -1080,7 +1086,7 @@ function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{
 function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k,c=cost(k),ce=el.querySelector('.cost');ce.textContent=c?c+'G':'タダ';ce.classList.toggle('free',!c);el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<c);});}
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave'); bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':(TOUCH?'ウェーブ開始':'ウェーブ開始 (Space)');
- const nw=game.wave+1;$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?`次: ボス戦！ Spaceで開始`:`次: ウェーブ ${nw}　Spaceで開始`);
+ const nw=game.wave+1;$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?'次: ボス戦！':'次: ウェーブ '+nw)+(game.inWave||TOUCH?'':'　Spaceで開始');
  const di=$('dailyInfo');if(di){if(game&&game.dailyMod){di.style.display='block';di.textContent=`📅 ${game.dailyMod.n}：${game.dailyMod.d}`;}else di.style.display='none';}
  updShop();if(picked)updInfoBtns();}
 function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
@@ -1362,9 +1368,9 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
   const [x,y]=P(e.x,e.y+bob);
   if(e.shield>0){ctx.strokeStyle='#6ab8ff';ctx.lineWidth=3;ctx.beginPath();ctx.arc(x,y,r+4,-Math.PI/2,-Math.PI/2+6.283*e.shield/e.maxSh);ctx.stroke();}
   if(e.vis){const w=r*2,hp=Math.max(0,e.hp/e.maxHp),bh=Math.max(4,Math.min(7,3/view.k));ctx.fillStyle='#000a';ctx.fillRect(x-w/2,y-r-bh-5,w,bh);ctx.fillStyle=hp>.5?'#6bdc5c':hp>.25?'#ffd36b':'#ff5c3c';ctx.fillRect(x-w/2,y-r-bh-5,w*hp,bh);
-   let ix=x-w/2,iy=y-r-bh-12;if(e.slowT>0){ctx.fillStyle='#5cd6a8';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.poisT>0){ctx.fillStyle='#8dff6a';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.mark>0){ctx.fillStyle='#6ab8ff';ctx.fillRect(ix,iy,5,5);}}
+   let ix=x+w/2+3,iy=y-r-bh-5;if(e.slowT>0){ctx.fillStyle='#5cd6a8';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.poisT>0){ctx.fillStyle='#8dff6a';ctx.fillRect(ix,iy,5,5);ix+=7;}if(e.mark>0){ctx.fillStyle='#6ab8ff';ctx.fillRect(ix,iy,5,5);}}
   ctx.textAlign='center';
-  if(e.stunT>0){ctx.font=`${fs(12)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText('☆彡',x,y-r-10);}
+  if(e.stunT>0){ctx.font=`${fs(11)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText('☆彡',x-r-8,y-r-2);}
   if(e.d.heal){ctx.font=`bold ${fs(12)} sans-serif`;ctx.fillStyle='#8dff6a';ctx.fillText('+',x+r,y-r);}
   if(e.d.steal){ctx.font=`${fs(11)} sans-serif`;ctx.fillText('💸',x+r,y-r);}
   if(e.d.jam&&e.vis){ring(e.x,e.y,e.d.jam,'rgba(150,150,150,.06)');}
