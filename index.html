@@ -320,6 +320,7 @@ const ASSETS = {"senpai_face": "assets/senpai_face.jpg", "title_senpai": "assets
 const $=id=>document.getElementById(id);
 const TOUCH=matchMedia('(pointer:coarse)').matches||('ontouchstart' in window);
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const LITE=TOUCH||innerWidth<820||(navigator.hardwareConcurrency||8)<=4; // v25 mobile FX lite
 $('ctlHelp').textContent=TOUCH?'操作：タワーを選んでマップを2回タップで設置（バリケード／泥だまりは道に）／タワーをタップで強化・覚醒・売却／タワー列は横スクロール':'操作：クリックで設置（バリケード／泥だまりは道に）／1-9,0,Q-R,T,A,S 選択 / U 強化 / Space 開始 / Esc 解除';
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 
@@ -789,8 +790,8 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
   if(game.t-game.lastCritToast>6){game.lastCritToast=game.t;goro(e.x,e.y,null,true,2);toast(pick(L.critToast),'grimace_face','',1100);}}
  if(srcT&&srcT.k==='sniper'&&srcT.mut===0&&!e.d.boss&&e.hp>0&&e.hp<e.maxHp*(srcT.over===0?.35:.2)){e.hp=0;float(e.x,e.y-e.d.r-6,'処刑（は？）','#7ab8ff',true);}
  if(e.hp<=0)kill(e,srcT);}
-function splat(c){if(splats.length>=(RM?8:32))splats.shift();const dirt=['#c9b08a','#8a6a40','#6b5232','#4a3a1c','#7a7a2a','#5a2a1a','#3b3020'];splats.push({x:Math.random(),y:Math.random(),r:22+Math.random()*48,c:c||dirt[Math.floor(Math.random()*dirt.length)],t:3.6,T:3.6,n:4+Math.floor(Math.random()*5),s:Math.random()*9});}
-function gib(e){if(gibs.length>=(RM?5:16))return;gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*260,vy:-180-Math.random()*160,a:0,va:(Math.random()-.5)*16,r:e.d.r,t:1.15});if(!RM&&Math.random()<.6)gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*180,vy:-100-Math.random()*100,a:0,va:(Math.random()-.5)*10,r:e.d.r*.55,t:.8});}
+function splat(c){if(splats.length>=(RM?8:LITE?14:32))splats.shift();const dirt=['#c9b08a','#8a6a40','#6b5232','#4a3a1c','#7a7a2a','#5a2a1a','#3b3020'];splats.push({x:Math.random(),y:Math.random(),r:22+Math.random()*48,c:c||dirt[Math.floor(Math.random()*dirt.length)],t:3.6,T:3.6,n:4+Math.floor(Math.random()*5),s:Math.random()*9});}
+function gib(e){if(gibs.length>=(RM?5:LITE?7:16))return;gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*260,vy:-180-Math.random()*160,a:0,va:(Math.random()-.5)*16,r:e.d.r,t:1.15});if(!RM&&!LITE&&Math.random()<.6)gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*180,vy:-100-Math.random()*100,a:0,va:(Math.random()-.5)*10,r:e.d.r*.55,t:.8});}
 function stunTowers(x,y,R,dur){let n=0;for(const t of towers){if(TOWERS[t.k].onPath)continue;if((t.x-x)**2+(t.y-y)**2<R*R){t.stunT=Math.max(t.stunT,dur);n++;}}
  siteBurst(x,y,'#a8ff3c',{n:18,R:R,shake:2,txt:n?'くっさ！タワー気絶':null,big:true,sweat:true,sp:140,lw:3,decal:false});}
 function dot(e,dmg,srcT){if(e.dead)return;e.hp-=dmg;if(e.hp<=0)kill(e,srcT);}
@@ -2046,20 +2047,6 @@ const V24={ver:'v24',enemies:['sweaty','stinker','mudcoat','leech'],boss:'boss5'
  setInterval(()=>{try{const c={};for(const e of enemies)if(!e.dead&&(V24.enemies.includes(e.k)||e.k==='boss5'))c[e.k]=(c[e.k]||0)+1;const s=Object.entries(c).map(([k,n])=>ENEMIES[k].name.replace(/【.*】/,'')+'×'+n).join(' ');st.textContent=s?'⚠ '+s+(puddles.length?'　汗溜まり'+puddles.length:''):'';st.style.display=s?'block':'none';}catch(_){}},400);
 }catch(e){console.warn('v24',e);}})();
 window.__v24=V24;
-let last=performance.now();
-function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
- if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
- if(game&&hudDirty)updHud();
- if(game&&!$('title').classList.contains('on'))draw();
- requestAnimationFrame(loop);}
-layout();reset();requestAnimationFrame(loop);
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,SKINS,TITLES,recordRun,runScore,meta};
-})();
-
-
-
-
-
 // ---------- v20: balance + bugfix ----------
 (function(){try{
  // situ modal clarity: show subtitle hint
@@ -2072,6 +2059,24 @@ window.__yajuu={get game(){return game},get towers(){return towers},get enemies(
  // pause speech when hidden
  document.addEventListener('visibilitychange',()=>{try{if(document.hidden&&window.speechSynthesis)speechSynthesis.cancel();}catch(_){}});
 }catch(err){console.warn('v20',err);}})();
+
+/* ===== v25: stabilize + bugfix ===== */
+const V25={ver:'v25',lite:LITE};
+(function(){try{
+ if(LITE){const _sh=shake;shake=function(a,...r){return _sh(Math.min(a||0,8),...r);};
+  const cv=document.querySelector('canvas');let ft=0,lo=0;const _dr=draw;draw=function(){const t=performance.now();_dr();const d=performance.now()-t;ft=ft*.9+d*.1;if(ft>14){lo=1;if(splats.length>8)splats.splice(0,splats.length-8);if(gibs.length>4)gibs.splice(0,gibs.length-4);}};V25.ft=()=>ft;}
+}catch(e){console.warn('v25',e);}})();
+window.__v25=V25;
+let last=performance.now();
+function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
+ if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
+ if(game&&hudDirty)updHud();
+ if(game&&!$('title').classList.contains('on'))draw();
+ requestAnimationFrame(loop);}
+layout();reset();requestAnimationFrame(loop);
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,SKINS,TITLES,recordRun,runScore,meta};
+})();
+
 </script>
 </body>
 </html>

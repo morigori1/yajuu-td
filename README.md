@@ -1,9 +1,33 @@
-# 野獣先輩タワーディフェンス ～迫真TD部～ (v13)
+# 野獣先輩タワーディフェンス ～迫真TD部～ (v25)
 
 - index.html + assets/ : multi-file build (relative paths, works offline)
 - yajuu-td-single.html : one-file build, all images embedded as data URLs
 - src/template.html + build.py : source; `python3 build.py` regenerates both
 - crop.py : makes the crops in assets/ from assets/src/ (the original attachments)
+
+## v25: 安定化＋バグ修正
+- シチュ選択ヒント等の後付けブロックをメインIIFE内へ統合（未定義参照の防止）
+- モバイル/低スペック端末でFX軽量化（シミ・肉片上限、揺れ上限、描画が重い時の自動間引き）
+- README更新、ウェーブ1-5とRAID開始のスモーク確認
+
+## v24: 新敵＋新ボス
+- 汗だく・悪臭・泥まみれ・吸い付き後輩、ボス「汁の王」（分裂）
+
+## v23: 新マップ＋新タワー
+- マップ追加：十字交差口／汗だくサウナ／下北沢駅前（計8種）
+- タワー追加：アイスティー砲（凍結）／泥だまり罠（道の持続減速床）／ハエ発生器（ステルス看破）
+- ホットキー：T / A / S、P2：B V /
+- 汚い演出：結露・汚泥シミ・ハエ軌道、極覚醒「汚泥噴出」
+- 資料館：外典・語録・FAQ 更新
+
+## v22: ローカル協力2P
+- タイトル「👥 ローカル協力2P」：同一端末・共有💰❤️
+- P1：マウス配置＋ショップ1-0/QWER＋スキル Z/X/C/V
+- P2：矢印カーソル＋Enter配置＋ショップ YUIOP[];-=NM,.＋スキル H/J/K/L（エイムはカーソル地点）／Gでウェーブ
+- 二重カーソル（P2シアン）・配置オーナー色リング・開始ボーナス +180G / +5❤
+
+## v21: RAID + メタ暴走
+- 巨大ボスRAID（10戦）と毎ウェーブルール改変
 
 ## v11 戦術見直し + 汚い演出
 - タワー役割 niche（壁チョーク／範囲レーン／オーラ・応援ハブ／地雷／視線デバフ）と soft counter
