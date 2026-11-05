@@ -246,7 +246,7 @@ body.compact .stChap{margin-bottom:6px}body.compact .stBox{padding:10px}
   <div class="imgs"><img class="hero" id="tHero" alt=""><img class="side" id="tSide" alt=""></div>
   <div class="logo">野獣先輩<br class="pbr">タワーディフェンス</div>
   <div class="sub">～ 迫真TD部・下北沢防衛の裏技 ～</div>
-  <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！14種のタワー（電撃・毒ガス・狙撃・銀行・応援団・視線・集金・道に置く<b>バリケード</b>と<b>地雷</b>…）を置き、覚醒後Lv5で<b>極覚醒A/B</b>に分岐。開始時に<b>シチュエーション</b>を選び、クリア毎に<b>ドラフト</b>。<b>ステージはランごと＆5ウェーブ毎に変わり</b>（ヘアピン/二股/らせん/部室迷路/直線デッドライン）、ウェーブ中に<b>仮設橋・通行止め・工事中・汗だまり・迫真スポット</b>が発生。迫真スポットのタワーは火力+25%。（タグセット含む）で戦術を盛れ。盾・回復・分裂・たかり・透明・跳躍・妨害・<b>応援・自爆・もぐり</b>の後輩、さらに<b>エリート（二重アフィックス／跳ね返し・加速・絆・吸血も）</b>、5・10・15・20 に<b>迫真ボス（位相）</b>。コンボを繋げてイキスギろ。15突破でクリア。<b>立地・撃破・覚醒の演出は暑苦しめ</b>（そうだよ）。<br><span id="ctlHelp"></span></div>
+  <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！14種は役割が違う：<b>壁チョーク</b>・<b>範囲レーン</b>・<b>オーラ／応援ハブ</b>・<b>地雷タイミング</b>・<b>視線デバフ</b>。毒＝装甲、電撃＝盾、狙撃＝特殊優先。マップ向きがあり、ウェーブ中の<b>橋ラッシュ・一本道・工事・汗だまり</b>で配置のやり直し。銀行／集金／応援は攻撃枠トレード。覚醒後Lv5で<b>極覚醒</b>。15突破でクリア。<b>演出は汁と汗で汚い</b>（PG）。<br><span id="ctlHelp"></span></div>
   <button class="go" id="bStart">はじめる（いいよ！こいよ！）</button>
   <button id="bStory" style="margin-top:8px;min-height:44px">ストーリー：ON</button>
   <div class="help" id="best" style="margin-top:8px"></div>
@@ -305,11 +305,11 @@ let lastKillSnd=0;function killSnd(f){const n=performance.now();if(n-lastKillSnd
 // ---------- map (logical world is always 960x576 landscape; portrait view = transposed) ----------
 const T=48,COLS=20,ROWS=12,W=960,H=576;
 const MAPS=[
- {id:'hairpin',name:'ヘアピン坂',desc:'定番の九十九折り。角の内側が一等地',routes:[[[-1,2],[4,2],[4,8],[9,8],[9,3],[14,3],[14,9],[18,9],[18,5],[20.5,5]]],bridges:[[[-1,2],[4,2],[4,5],[9,5],[9,3],[14,3],[14,9],[18,9],[18,5],[20.5,5]],[[-1,2],[4,2],[4,8],[9,8],[9,3],[14,3],[14,6],[18,6],[18,5],[20.5,5]]],hot:[[6,5],[11,6],[16,6]],eSp:1},
- {id:'fork',name:'二股の路地',desc:'上下の二股。片方は途中で通行止めになる',routes:[[[-1,6],[3,6],[3,2],[11,2],[11,4],[16,4],[16,6],[20.5,6]],[[-1,6],[3,6],[3,10],[11,10],[11,8],[16,8],[16,6],[20.5,6]]],bridges:[[[-1,6],[3,6],[11,6],[16,6],[20.5,6]]],hot:[[7,6],[13,6],[18,4]],eSp:.95},
- {id:'spiral',name:'らせん高架',desc:'外周から内へ潜って立体交差。中央が激戦区',routes:[[[-1,1],[16,1],[16,8],[3,8],[3,4],[12,4],[12,10],[20.5,10]]],bridges:[[[-1,1],[16,1],[16,8],[12,8],[12,10],[20.5,10]]],hot:[[8,6],[14,6],[10,2]],eSp:1.1},
- {id:'maze',name:'部室迷路',desc:'長いクネクネ。壁と地雷が映える',routes:[[[-1,10],[2,10],[2,1],[6,1],[6,10],[10,10],[10,1],[14,1],[14,10],[18,10],[18,3],[20.5,3]]],bridges:[[[-1,10],[2,10],[2,5],[6,5],[6,10],[10,10],[10,5],[14,5],[14,10],[18,10],[18,3],[20.5,3]]],hot:[[4,5],[8,5],[12,5],[16,6]],eSp:1.08},
- {id:'deadline',name:'直線デッドライン',desc:'上下2本が中央で合流。短いので敵は遅め',routes:[[[-1,2],[10,2],[10,6],[20.5,6]],[[-1,10],[10,10],[10,6],[20.5,6]]],bridges:[[[-1,2],[5,2],[5,10],[10,10],[10,6],[20.5,6]]],hot:[[9,4],[11,8],[14,5],[14,7]],eSp:.78}];
+ {id:'hairpin',name:'ヘアピン坂',desc:'定番の九十九折り。角の内側が一等地',tip:'角の内側に壁＋胸ぐら。チョーク向き',fav:'壁・減速',buff:{wallHp:.2,slowAdd:.06},routes:[[[-1,2],[4,2],[4,8],[9,8],[9,3],[14,3],[14,9],[18,9],[18,5],[20.5,5]]],bridges:[[[-1,2],[4,2],[4,5],[9,5],[9,3],[14,3],[14,9],[18,9],[18,5],[20.5,5]],[[-1,2],[4,2],[4,8],[9,8],[9,3],[14,3],[14,6],[18,6],[18,5],[20.5,5]]],hot:[[6,5],[11,6],[16,6]],eSp:1},
+ {id:'fork',name:'二股の路地',desc:'上下の二股。片方は途中で通行止めになる',tip:'両レーンに範囲砲か地雷。片側封鎖に備えよ',fav:'範囲・地雷',buff:{splashMul:.12,mineDmg:.12},routes:[[[-1,6],[3,6],[3,2],[11,2],[11,4],[16,4],[16,6],[20.5,6]],[[-1,6],[3,6],[3,10],[11,10],[11,8],[16,8],[16,6],[20.5,6]]],bridges:[[[-1,6],[3,6],[11,6],[16,6],[20.5,6]]],hot:[[7,6],[13,6],[18,4]],eSp:.95},
+ {id:'spiral',name:'らせん高架',desc:'外周から内へ潜って立体交差。中央が激戦区',tip:'中央にトリオ＋応援ハブ。視線で中央支配',fav:'オーラ・応援・視線',buff:{auraRange:.18,hypeAdd:.02,markAdd:.05},routes:[[[-1,1],[16,1],[16,8],[3,8],[3,4],[12,4],[12,10],[20.5,10]]],bridges:[[[-1,1],[16,1],[16,8],[12,8],[12,10],[20.5,10]]],hot:[[8,6],[14,6],[10,2]],eSp:1.1},
+ {id:'maze',name:'部室迷路',desc:'長いクネクネ。壁と地雷が映える',tip:'壁で塞いで地雷を敷く。時間を稼げ',fav:'壁・地雷',buff:{wallHp:.3,mineDmg:.18,wallMaxAdd:2},routes:[[[-1,10],[2,10],[2,1],[6,1],[6,10],[10,10],[10,1],[14,1],[14,10],[18,10],[18,3],[20.5,3]]],bridges:[[[-1,10],[2,10],[2,5],[6,5],[6,10],[10,10],[10,5],[14,5],[14,10],[18,10],[18,3],[20.5,3]]],hot:[[4,5],[8,5],[12,5],[16,6]],eSp:1.08},
+ {id:'deadline',name:'直線デッドライン',desc:'上下2本が中央で合流。短いので敵は遅め',tip:'短い道。狙撃と視線で特殊／ボス優先',fav:'狙撃・視線・減速',buff:{gRange:.1,markAdd:.08,slowAdd:.05},routes:[[[-1,2],[10,2],[10,6],[20.5,6]],[[-1,10],[10,10],[10,6],[20.5,6]]],bridges:[[[-1,2],[5,2],[5,10],[10,10],[10,6],[20.5,6]]],hot:[[9,4],[11,8],[14,5],[14,7]],eSp:.78}];
 function mkRoute(pts,br){const wp=pts.map(([x,y])=>({x:x*T+T/2,y:y*T+T/2}));const seg=[];let total=0;for(let i=0;i<wp.length-1;i++){const l=Math.hypot(wp[i+1].x-wp[i].x,wp[i+1].y-wp[i].y);seg.push(l);total+=l;}return{wp,seg,total,open:!br,br:!!br};}
 function routeTiles(r,set){const WP=r.wp;for(let i=0;i<WP.length-1;i++){const a=WP[i],b=WP[i+1];const ax=Math.floor(a.x/T),ay=Math.floor(a.y/T),bx=Math.floor(b.x/T),by=Math.floor(b.y/T);for(let x=Math.min(ax,bx);x<=Math.max(ax,bx);x++)for(let y=Math.min(ay,by);y<=Math.max(ay,by);y++)set.add(x+','+y);}return set;}
 let MAP=MAPS[0],ROUTES=[],pathTiles=new Set(),deco=[],BLOCK=new Set(),HOT=new Set(),PUDDLE=[],mapIdx=0,mapOrder=[0];
@@ -324,7 +324,7 @@ const rtOf=e=>ROUTES[e&&e.r||0]||ROUTES[0];
 function posAt(d,r){r=r||ROUTES[0];const WP=r.wp,segLen=r.seg;for(let i=0;i<segLen.length;i++){if(d<=segLen[i]){const t=d/segLen[i];return{x:WP[i].x+(WP[i+1].x-WP[i].x)*t,y:WP[i].y+(WP[i+1].y-WP[i].y)*t};}d-=segLen[i];}return{...WP[WP.length-1]};}
 function distOf(x,y,r){r=r||ROUTES[0];let best=0,bd=1e9;for(let d=0;d<=r.total;d+=2){const p=posAt(d,r),q=(p.x-x)**2+(p.y-y)**2;if(q<bd){bd=q;best=d;}}return{d:best,q:bd};}
 function pdsOf(x,y){const o={};ROUTES.forEach((r,i)=>{const z=distOf(x,y,r);if(z.q<26*26)o[i]=z.d;});return o;}
-function pickRoute(){const op=ROUTES.map((r,i)=>i).filter(i=>ROUTES[i].open);if(!op.length)return 0;const br=op.filter(i=>ROUTES[i].br);if(br.length&&Math.random()<.4)return br[Math.floor(Math.random()*br.length)];const b=op.filter(i=>!ROUTES[i].br);return (b.length?b:op)[Math.floor(Math.random()*(b.length?b:op).length)];}
+function pickRoute(){const op=ROUTES.map((r,i)=>i).filter(i=>ROUTES[i].open);if(!op.length)return 0;const br=op.filter(i=>ROUTES[i].br);const rush=game&&game.bridgeRush;if(br.length&&Math.random()<(rush?.85:.4))return br[Math.floor(Math.random()*br.length)];const b=op.filter(i=>!ROUTES[i].br);return (b.length?b:op)[Math.floor(Math.random()*(b.length?b:op).length)];}
 
 // ---------- meme lines ----------
 const L={
@@ -335,14 +335,14 @@ const L={
  waveStart:['おまたせ！（待ってない）','いいよ！こいよ！（来る）','見とけよ見とけよ〜（目をそらす）','じゃけん防衛しましょうね〜','まあ、多少はね？（多少ではない）','おっ、来たな（来た）','まずうちさぁ…ウェーブあんだけど…来てかない？','そうですねぇ…やっぱり僕は、王道を往く、防衛系ですか','後輩「先輩、ウェーブですよ」先輩「ウェーブだよ」','ほら、行くどー（行かない）','あっ、そっかぁ（開戦）','24歳、ウェーブです'],
  waveClear:['いいゾ〜これ','やりますねぇ！（他人事）','あーいいっすねー（棒）','疲れたもおおん（元気）','やったぜ。','すっげぇ綺麗（主観）','はっきりわかんだね','そうだよ（クリア）','あ ほ く さ（勝利）','これもうわかんねぇな（勝った）','王道を往く、クリア系ですか','ま、多少はね？（全滅）'],
  place:['ここ、置いてかない？','そうだよ（設置）','あっ、いいっすねー','おかのした','置いたぜ（置いた）','入って、どうぞ（タワーが）','24歳、タワーです','いいよ！こいよ！（来ないで）'],
- site:['そこ！','立地ォ！','ファッ！？','おかのした！','ここだよォ','置いたぜ（迫真）','いい立地（そうだよ）','ドンッ（設置）','暑苦しい立地（褒めてる）','ここすき（地形）'],
- hitFx:['ヌッ','ッ','痛','汗','ォン','は？','ンッ','チッ'],
+ site:['そこ！','立地ォ！','ファッ！？','おかのした！','ここだよォ','置いたぜ（迫真）','いい立地（そうだよ）','ドンッ（設置）','暑苦しい立地（褒めてる）','ここすき（地形）','床がぬるい','汗のシミ','汚ねぇ立地（褒めてる）'],
+ hitFx:['ヌッ','ッ','痛','汗','ォン','は？','ンッ','チッ','汁','ベチャ','くっさ','湿'],
  splashFx:['114514!','1919!','爆ッ','ンアッー！','ドーン（迫真）','床にペチャ'],
  sell:['もう許せるぞオイ！（許さない）','売っちゃったよ…（後悔）（してない）','返品します（迫真）','お前のことが好きだったんだよ！（売却）','あっ、そっかぁ（売る）','いらないです（即答）'],
  poor:['お金が足りないですよ！','810円しかない（大嘘）（本当）','金ねぇのかよ（素）','財布が汗だく','あ ほ く さ（金欠）','ちょっと待ってくださいよォ！（貧乏）','は？（残高）'],
  bossDown:['迫真ボス撃破！いいゾ〜これ','ボス「あっ、そっかぁ…」（完）','ボス「やめてくれよ…（満足）」','ボス、昇天（意味不明）','ボス「24歳、学生でした」','ボス、顔面から床にペチャ','ボス「ファッ！？ ウーン…」（爆散）'],
  wallDown:['バリケード崩壊！ぬわああん','壁「痛いですね…」（全壊）（元気）','壁が壊れた！まずいですよ！（まずくない）'],
- loseTip:['ヒント：毒×電撃は「感電くさい」で化ける（化けない）','ヒント：エリート「くさい」は死ぬと周りのタワーを気絶させる','ヒント：応援団は数を並べるほど強い（そうだよ）','ヒント：視線塔で見られてる敵は被ダメ増（嘘つけ絶対見てたゾ）','ヒント：跳び後輩はバリケードを飛び越える（飛ぶ）','ヒント：嫌がらせ先輩の近くはタワーが遅くなる','ヒント：地雷は道の上。地雷原カードで再装填爆速'],
+ loseTip:['ヒント：毒＝装甲、電撃＝盾、狙撃＝応援/看病/自爆優先','ヒント：ヘアピンは壁チョーク、二股は範囲、らせんはハブ','ヒント：橋ラッシュ／一本道が出たら配置をやり直せ','ヒント：銀行・応援・集金は攻撃枠トレード（銃は金より重し）','ヒント：汗だまりは減速か「汗知らず」','ヒント：跳躍は壁を飛び越える→減速/視線/地雷','ヒント：応援後輩は狙撃か視線で潰せ'],
  lose:['下北沢陥落…（陥落）','ぬわああん負けたもおおん','あっ…（察し）','これもうわかんねぇな'],
  loseSub:['痛いですね…これは痛い（確信）','また来てくれよな〜頼むよ〜（来るな）','下北沢の地価が810円に暴落した','そうだよ（敗北）','部屋が汗だく（概念）','玄関に後輩の靴が114514足','あっ、そっかぁ（納得できない）'],
  win:['下北沢防衛成功！（成功）','やりますねぇ！完全勝利','いいゾ〜これ（満足）','やったぜ。'],
@@ -352,46 +352,46 @@ const COMBO_MS={10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、�
 
 // ---------- defs ----------
 const TOWERS={
- senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',desc:'単体攻撃。クリで「ファッ！？」',crit:.15,proj:'#ffd36b',
+ senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',role:'単体',vs:'装甲に弱い→毒/狙撃。クリで装甲無視（覚醒A）',desc:'【単体】クリで「ファッ！？」。ボス・特殊狙い',crit:.15,proj:'#ffd36b',
   muts:[{n:'迫真狙い撃ち',d:'クリ率+25%・クリは装甲無視'},{n:'おかわり連射',d:'同時に2体を撃つ'}],
   overs:[{n:'汗の会心',d:'クリで毒も付く（汗）'},{n:'周囲も痛い',d:'クリ時に周囲へ小ダメ'}]},
- navy:{name:'サムライブルー連射塔',short:'連射塔',img:'navy_center_face',cost:150,range:115,dmg:7,rate:.22,ring:'#3d7bff',desc:'高速連射。数で押す',crit:.05,proj:'#8fb4ff',
+ navy:{name:'サムライブルー連射塔',short:'連射塔',img:'navy_center_face',cost:150,range:115,dmg:7,rate:.22,ring:'#3d7bff',role:'連射',vs:'装甲に弱い。数と減速覚醒で雑魚処理',desc:'【連射】高速連射。レーンの雑魚掃除',crit:.05,proj:'#8fb4ff',
   muts:[{n:'貫通サムライ',d:'弾が近くの敵に1回跳ねる'},{n:'焦らしブルー',d:'命中で20%減速'}],
   overs:[{n:'二段跳ね',d:'跳ねがもう1回（貫通時）'},{n:'ビリビリ連射',d:'命中で小スタン10%'}]},
- trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',desc:'オーラ支援：範囲内の攻撃+25%・速度+15%',aura:true,
+ trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',role:'オーラ',vs:'中央ハブ向き。らせんで真価',desc:'【オーラ】範囲内の攻撃+25%・速度+15%。ハブ役（攻撃枠トレード）',aura:true,
   muts:[{n:'便乗の輪',d:'オーラ範囲+40%・効果+15%'},{n:'ありますねぇ商法',d:'範囲内の撃破で+3G'}],
   overs:[{n:'クリ便乗',d:'オーラ内タワーのクリ+8%'},{n:'ライフ便乗',d:'範囲撃破で3%でライフ+1'}]},
- collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',desc:'範囲パルス。敵を減速（指導）',pulse:true,slow:.45,slowT:1.2,
+ collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',role:'減速',vs:'俊足・跳躍・自爆・汗だまり対策',desc:'【減速】範囲パルス指導。チョークの相棒',pulse:true,slow:.45,slowT:1.2,
   muts:[{n:'ふっとばし指導',d:'パルスで敵を押し戻す'},{n:'締め上げ',d:'パルスで0.5秒スタン'}],
   overs:[{n:'二重締め',d:'スタン/ノックバック強化'},{n:'指導は毒',d:'パルス命中で毒'}]},
- cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',desc:'爆風範囲攻撃。迫真の一撃',splash:62,crit:.1,proj:'#ff8a5c',
+ cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',role:'範囲',vs:'二股・密集レーン向き。盾は電撃へ',desc:'【範囲】爆風。二股や合流の密集に刺さる',splash:62,crit:.1,proj:'#ff8a5c',
   muts:[{n:'810焦土',d:'着弾地点が3秒燃える'},{n:'1919連打',d:'攻撃速度x2・威力x0.6'}],
   overs:[{n:'焦土延長',d:'焦土が6秒・炎ダメ+40%'},{n:'着弾スタン',d:'爆風で0.4秒スタン'}]},
- chain:{name:'イキスギ電撃塔',short:'電撃塔',img:'navy_right_face#purple',cost:225,range:125,dmg:16,rate:1.1,ring:'#c98aff',desc:'4体まで連鎖する電撃。盾に2倍',chain:4,crit:.05,
+ chain:{name:'イキスギ電撃塔',short:'電撃塔',img:'navy_right_face#purple',cost:225,range:125,dmg:16,rate:1.1,ring:'#c98aff',role:'電撃',vs:'【対盾】盾に2倍。毒と組むと感電くさい',desc:'【電撃】4体連鎖。【対盾】ダメ2倍',chain:4,crit:.05,
   muts:[{n:'電撃結婚',d:'連鎖+3体'},{n:'ビクンビクン',d:'25%で0.6秒スタン'}],
   overs:[{n:'減衰なし',d:'連鎖ダメが落ちない'},{n:'帯電マーク',d:'命中で視線マーク'}]},
- poison:{name:'くさそうガス',short:'くさガス',img:'locker_right_face#green',cost:160,range:110,dmg:0,rate:1.2,ring:'#8dff6a',desc:'毒ガス。装甲と盾を無視する継続ダメ',poison:9,poisonT:4,proj:'#8dff6a',
+ poison:{name:'くさそうガス',short:'くさガス',img:'locker_right_face#green',cost:160,range:110,dmg:0,rate:1.2,ring:'#8dff6a',role:'毒',vs:'【対装甲】装甲・盾無視のDoT。硬派に効く',desc:'【毒】装甲と盾を無視する継続ダメ',poison:9,poisonT:4,proj:'#8dff6a',
   muts:[{n:'腐臭爆発',d:'毒で死んだ敵が周囲に爆発'},{n:'くっさ濃縮',d:'毒ダメージx2'}],
   overs:[{n:'長持ちくささ',d:'毒時間+2.5秒'},{n:'くささ減速',d:'毒中の敵を15%減速'}]},
- sniper:{name:'見とけよ狙撃手',short:'狙撃手',img:'title_senpai#blue',cost:275,range:420,dmg:120,rate:2.8,ring:'#7ab8ff',desc:'超射程・装甲無視。HPが一番多い敵を狙う',pierce:true,crit:.1,
+ sniper:{name:'見とけよ狙撃手',short:'狙撃手',img:'title_senpai#blue',cost:275,range:420,dmg:120,rate:2.8,ring:'#7ab8ff',role:'狙撃',vs:'【対装甲・対特殊】応援/看病/自爆を優先狙い',desc:'【狙撃】超射程・装甲無視。応援・看病・自爆を優先',pierce:true,crit:.1,
   muts:[{n:'処刑',d:'HP20%以下の雑魚を即死'},{n:'ボス特攻',d:'ボスにx2.5'}],
   overs:[{n:'処刑強化',d:'HP35%以下で処刑'},{n:'かすり弾',d:'本命の近くにも50%ダメ'}]},
- bank:{name:'810銀行',short:'810銀行',img:'trio_sepia_face#gold',cost:150,range:110,dmg:0,rate:0,ring:'#ffd36b',desc:'攻撃しない。毎ウェーブ収入＋範囲内撃破でG',bank:true,
+ bank:{name:'810銀行',short:'810銀行',img:'trio_sepia_face#gold',cost:175,range:110,dmg:0,rate:0,ring:'#ffd36b',role:'経済',vs:'攻撃枠を食う。序盤投資・後半は火力に換金せよ',desc:'【経済】攻撃しない。毎ウェーブ収入＋範囲撃破G（火力とトレード）',bank:true,
   muts:[{n:'利息',d:'毎ウェーブ所持金の4%（上限120）'},{n:'先輩のおごり',d:'ウェーブクリア毎にライフ+1'}],
   overs:[{n:'大利息',d:'利息上限+120'},{n:'金のオーラ',d:'範囲の敵を10%減速'}]},
- wall:{name:'迫真バリケード',short:'バリケード',img:'collar_face#gray',cost:90,range:0,dmg:0,rate:0,ring:'#b0b0b0',desc:'道に置く壁。敵を足止め（壊れる・最大6）',wall:true,hp:260,
+ wall:{name:'迫真バリケード',short:'バリケード',img:'collar_face#gray',cost:90,range:0,dmg:0,rate:0,ring:'#b0b0b0',role:'壁',vs:'ヘアピン/迷路のチョーク。跳躍は飛び越える',desc:'【壁】道に置くチョーク。跳躍は飛び越え注意',wall:true,hp:260,
   muts:[{n:'トゲトゲ',d:'接触中の敵に毎秒反撃ダメ'},{n:'迫真復活',d:'毎秒HP5%回復'}],
   overs:[{n:'爆ぜる壁',d:'破壊時に周囲ダメ'},{n:'連結壁',d:'隣接壁とHPを分け合う'}]},
- hype:{name:'迫真応援団',short:'応援団',img:'trio_sepia_card#red',cost:220,range:0,dmg:0,rate:0,ring:'#ff7a50',desc:'攻撃しない。全タワー攻撃+8%（1基ごと・合計最大+50%）',hype:true,
+ hype:{name:'迫真応援団',short:'応援団',img:'trio_sepia_card#red',cost:240,range:0,dmg:0,rate:0,ring:'#ff7a50',role:'応援',vs:'ハブ向き。置きすぎると攻撃枠不足',desc:'【応援】全タワー攻撃+8%/基（上限あり）。攻撃枠トレード',hype:true,
   muts:[{n:'ホラホラ声援',d:'全タワー攻撃速度も+8%'},{n:'汗だくコール',d:'コンボ猶予+1秒・コンボ報酬x2'}],
   overs:[{n:'声量突破',d:'攻撃バフ上限+20%'},{n:'コンボ加速',d:'25コンボ以上で攻撃速度+15%'}]},
- mine:{name:'810地雷',short:'810地雷',img:'senpai_face#gray',cost:70,range:58,dmg:90,rate:5,ring:'#ff3c3c',desc:'道に置く地雷。踏むと爆発、5秒で再装填（最大8）',onPath:true,mine:true,
+ mine:{name:'810地雷',short:'810地雷',img:'senpai_face#gray',cost:70,range:58,dmg:90,rate:5,ring:'#ff3c3c',role:'地雷',vs:'二股・迷路・橋の近道に。もぐり出現地点に置け',desc:'【地雷】道に置く。踏むと爆発・再装填。橋・チョーク向き',onPath:true,mine:true,
   muts:[{n:'114514連鎖',d:'爆風+50%・威力+30%'},{n:'ヌルヌル地雷',d:'爆風で50%減速・再装填3秒'}],
   overs:[{n:'毒地雷',d:'爆発に毒付き'},{n:'二段爆発',d:'0.6秒後にもう一発'}]},
- gaze:{name:'ほら見ろよ見ろよ塔',short:'視線塔',img:'collar_card#blue',cost:180,range:130,dmg:4,rate:.9,ring:'#6ab8ff',desc:'範囲の敵を「見られてる」状態に：被ダメ+20%',gaze:true,
+ gaze:{name:'ほら見ろよ見ろよ塔',short:'視線塔',img:'collar_card#blue',cost:180,range:130,dmg:4,rate:.9,ring:'#6ab8ff',role:'視線',vs:'デバフハブ。狙撃/範囲と組む。跳躍・もぐりにも効く',desc:'【視線】被ダメ+20%マーク。合流点・中央ハブ向き',gaze:true,
   muts:[{n:'晒し上げ',d:'被ダメ増加+20%（計+40%）'},{n:'公開処刑',d:'マーク中の敵を倒すと+4G'}],
   overs:[{n:'長く見ろよ',d:'マーク6秒・被ダメ+10%'},{n:'睨み減速',d:'マーク中の敵を12%減速'}]},
- siphon:{name:'集金後輩',short:'集金後輩',img:'locker_left_face#gold',cost:140,range:120,dmg:9,rate:.6,ring:'#ffd36b',desc:'命中毎に+1G（1ウェーブ上限120G）',sip:1,proj:'#ffe08a',crit:.05,
+ siphon:{name:'集金後輩',short:'集金後輩',img:'locker_left_face#gold',cost:140,range:120,dmg:9,rate:.6,ring:'#ffd36b',role:'集金',vs:'序盤の金策。火力は控えめ・後半は換金or売却',desc:'【集金】命中毎+1G（上限あり）。序盤向き・攻撃枠トレード',sip:1,proj:'#ffe08a',crit:.05,
   muts:[{n:'高利貸し',d:'命中毎+2G・上限200G'},{n:'借金取り',d:'命中した敵を15%減速・ボス命中+5G'}],
   overs:[{n:'上限撤廃',d:'ウェーブ内集金上限なし'},{n:'取り立て毒',d:'命中で毒'}]},
 };
@@ -401,7 +401,7 @@ const ENEMIES={
  kohai:{name:'後輩',img:'navy_left_face',hp:42,speed:55,bounty:7,r:15,col:'#3d7bff',wd:8},
  sprint:{name:'俊足後輩',img:'navy_right_face',hp:28,speed:100,bounty:8,r:13,col:'#7fe0ff',wd:6},
  bushitsu:{name:'部室の主',img:'locker_left_face',hp:130,speed:38,bounty:14,r:19,col:'#c49a52',wd:20},
- armor:{name:'鉄壁の見学者',img:'locker_right_face',hp:95,speed:48,bounty:13,r:17,col:'#9aa0a8',armor:5,wd:12},
+ armor:{name:'鉄壁の見学者',img:'locker_right_face',hp:95,speed:48,bounty:13,r:17,col:'#9aa0a8',armor:7,wd:12},
  shield:{name:'盾持ち後輩',img:'navy_center_face',hp:70,speed:50,bounty:12,r:16,col:'#6ab8ff',shield:.9,wd:10},
  healer:{name:'看病する先輩',img:'trio_sepia_face',hp:85,speed:45,bounty:15,r:17,col:'#8dff6a',heal:.06,healR:95,wd:8},
  splitter:{name:'分身後輩',img:'navy_left_face#purple',hp:90,speed:46,bounty:10,r:18,col:'#c98aff',split:'mini',wd:10},
@@ -496,6 +496,13 @@ const PERKS=[
  {t:'極みの汗',d:'極覚醒済みタワーの攻撃+30%',img:'grimace_face',tag:'覚醒',ap:s=>s.overDmg+=.3},
  {t:'絆切り',d:'絆エリートのリンクを切る（ダメ共有無効）',img:'collar_card',tag:'エリート',max:1,ap:s=>s.noLink=1},
  {t:'応援潰し',d:'応援後輩のオーラ無効化・撃破+8G',img:'trio_sepia_face',tag:'対特殊',max:1,ap:s=>s.noCheer=1},
+ // v11 tactics
+ {t:'橋の番人',d:'仮設橋ルートの敵へのダメ+30%・橋イベントで語録',img:'collar_face',tag:'対特殊',max:1,ap:s=>s.antiBridge=1},
+ {t:'汗知らず',d:'汗だまり加速を無効（床ヌルでも平気）',img:'senpai_face',tag:'妨害',max:1,ap:s=>s.noPuddle=1},
+ {t:'銃は金より重し',d:'銀行・応援・集金の効果-20%・全攻撃+18%',img:'grimace_face',tag:'戦術',max:1,ap:s=>{s.ecoCut=.2;s.gDmg+=.18;s.gunOverGold=1}},
+ {t:'チョーク職人',d:'壁HP+40%・最大+2・減速中の敵への壁トゲ+8',img:'collar_card',tag:'壁',ap:s=>{s.wallHp+=.4;s.wallMax+=2;s.wallThorn+=8}},
+ {t:'レーン支配',d:'範囲爆風+25%・地雷威力+25%（二股・合流向き）',img:'senpai_face',tag:'範囲',ap:s=>{s.splashMul+=.25;s.mineDmg+=.25}},
+ {t:'ハブ中枢',d:'オーラ範囲+20%・応援+3%/基・視線被ダメ+10%',img:'trio_sepia_card',tag:'ハブ',ap:s=>{s.auraRange+=.2;s.hypeAdd+=.03;s.markAdd+=.1}},
 ];
 const SITU=[
  {t:'真夏の夜の淫夢',d:'敵の速度+15%・撃破報酬+30%',img:'title_senpai',ap:s=>{s.eSpeed*=1.15;s.bounty+=.3}},
@@ -517,6 +524,9 @@ const SITU=[
  {t:'極覚醒道場',d:'Lv3から覚醒可・極覚醒コスト-30%・敵HP+8%',img:'grimace_face',ap:s=>{s.mutLvl=3;s.overCost*=.7;s.eHp*=1.08}},
  {t:'二重エリートの夜',d:'二重アフィックス率UP・報酬+25%',img:'navy_right_face',ap:s=>{s.dualMul=2;s.bounty+=.25}},
  {t:'特殊部隊来襲',d:'跳躍・もぐり・自爆・応援が多め・攻撃+15%',img:'navy_center_face',ap:s=>{s.specWave=1;s.gDmg+=.15}},
+ {t:'チョーク特訓',d:'壁半額・HP+40%・最大12・敵速度+8%',img:'collar_face',ap:s=>{s.wallCost=.5;s.wallHp+=.4;s.wallMax=12;s.eSpeed*=1.08}},
+ {t:'金より銃',d:'銀行・応援・集金-25%・全攻撃+22%・初期+80G',img:'grimace_face',ap:s=>{s.ecoCut=.25;s.gDmg+=.22;game.gold+=80}},
+ {t:'レーン戦争',d:'範囲+地雷向き・爆風+20%・敵数+20%',img:'navy_trio_card',ap:s=>{s.splashMul+=.2;s.mineDmg+=.15;s.eCount*=1.2}},
 ];
 
 // ---------- state ----------
@@ -524,42 +534,45 @@ let gibs=[],splats=[];
 let game,towers,enemies,projs,fx,floats,spawnQ,fires,decals,sel=null,hover=null,picked=null,pending=null,speed=1,paused=false,statsDirty=true;
 function newStats(){const z=()=>Object.fromEntries(TKEYS.map(k=>[k,0]));return{gDmg:0,gCrit:0,critMul:3,gRange:0,gRate:0,tRate:z(),tDmg:z(),auraMul:1,auraRange:0,slowAdd:0,slowT:0,splashMul:1,costMul:1,bounty:0,
  interest:0,sellRate:.7,eSpeed:1,eHp:1,eCount:1,eHeal:1,critStack:0,comboMul:1,comboT:1.5,poisonSpread:0,poisonMul:1,chainAdd:0,wallHp:0,wallThorn:0,wallCost:1,wallMax:6,reveal:0,critKB:0,bankMul:1,noSteal:0,
- chainPois:0,wallPois:0,critPois:0,boomPois:0,markAdd:0,sniperMark:0,hypeAdd:0,mineDmg:0,mineRe:1,mineMax:8,mineCost:1,comboRate:0,mutLvl:4,mutCost:1,sipAdd:0,sipCap:0,slowVuln:0,lowHp:0,lifeRegen:0,eliteHunt:0,mutDmg:0,eliteMul:1,towerMax:99,night:0,debt:0,awakenDmg:0,overCost:1,triAwaken:0,triRing:0,dualHunt:0,ecoBond:0,upCostMul:1,antiJump:0,antiJam:0,setEco:0,setPois:0,overDmg:0,noLink:0,noCheer:0,dualMul:1,specWave:0,maxLvl:5};}
+ chainPois:0,wallPois:0,critPois:0,boomPois:0,markAdd:0,sniperMark:0,hypeAdd:0,mineDmg:0,mineRe:1,mineMax:8,mineCost:1,comboRate:0,mutLvl:4,mutCost:1,sipAdd:0,sipCap:0,slowVuln:0,lowHp:0,lifeRegen:0,eliteHunt:0,mutDmg:0,eliteMul:1,towerMax:99,night:0,debt:0,awakenDmg:0,overCost:1,triAwaken:0,triRing:0,dualHunt:0,ecoBond:0,upCostMul:1,antiJump:0,antiJam:0,setEco:0,setPois:0,overDmg:0,noLink:0,noCheer:0,dualMul:1,specWave:0,maxLvl:5,antiBridge:0,noPuddle:0,ecoCut:0,gunOverGold:0};}
 function reset(){game={gold:300,lives:20,wave:0,maxWave:15,inWave:false,over:false,won:false,endless:false,stats:newStats(),perks:[],kills:0,t:0,lastCritToast:-9,lastFlavor:-9,
- free:0,combo:0,comboT:0,maxCombo:0,shake:0,big:null,situ:'',stolen:0,seen:{},elites:0,gibs:0,banT:6,hypeD:0,hypeR:0,gazeNight:0};
+ free:0,combo:0,comboT:0,maxCombo:0,shake:0,big:null,situ:'',stolen:0,seen:{},elites:0,gibs:0,banT:6,hypeD:0,hypeR:0,gazeNight:0,bridgeRush:false};
  towers=[];enemies=[];projs=[];fx=[];floats=[];spawnQ=[];fires=[];decals=[];gibs=[];splats=[];sel=null;picked=null;pending=null;statsDirty=true;$('wmax').textContent='15';$('bossbar').style.display='none';newRunMap();buildShop();updHud();renderInfo();renderPerks();}
 const S=()=>game.stats;
 function shake(v){game.shake=Math.min(14,Math.max(game.shake,RM?v*.3:v));}
 function big(txt,c='#ffd36b',t=1.1){game.big={txt,c,t,T:t};}
-/* v10 cinematic */
+/* v11 tactics + dirty FX */
 const CAM={z:1,tz:1,x:W/2,y:H/2,t:0,slow:0,bars:0,barT:0,tint:null,tintT:0};
 function punch(x,y,z=1.25,dur=.5,slow=0,bars=0,tint){if(RM){z=1+(z-1)*.3;slow=0;}CAM.tz=Math.max(CAM.tz>1&&CAM.t>0?CAM.tz:1,z);CAM.x=x;CAM.y=y;CAM.t=Math.max(CAM.t,dur);if(slow)CAM.slow=Math.max(CAM.slow,slow);if(bars)CAM.barT=Math.max(CAM.barT,bars);if(tint){CAM.tint=tint;CAM.tintT=.5;}}
 function camTick(dt){if(CAM.t>0){CAM.t-=dt;}else CAM.tz=1;CAM.z+=(CAM.tz-CAM.z)*Math.min(1,dt*(CAM.tz>CAM.z?18:5));if(CAM.slow>0)CAM.slow-=dt;if(CAM.barT>0)CAM.barT-=dt;CAM.bars+=((CAM.barT>0?1:0)-CAM.bars)*Math.min(1,dt*6);if(CAM.tintT>0)CAM.tintT-=dt;
  if(game&&game.card)game.card.t-=dt;if(game&&game.tele>0)game.tele-=dt;if(game&&game.streak)game.streak.t-=dt;}
 const STREAK=[[10,'いいゾ～これ','#ffd36b'],[25,'ホラホラホラホラ','#ff8a5c'],[50,'暴れんなよ…暴れんなよ…','#ff3c8a'],[100,'イキスギィ！イクイクイク','#c98aff'],[200,'迫真空手部、極','#fff']];
 function streakCheck(c,x,y){for(const [n,txt,col] of STREAK)if(c===n){game.streak={n,txt,col,t:2,T:2};big(`${n} STREAK`,col,1.2);punch(x,y,1.12+n/1000,.6,n>=50?.5:0,n>=50?1.2:0,col);shake(6+n/20);flash();snd(440+n*2,.25,'square',.05,300);goro(x,y,null,true,n>=50?3:2);}}
-function waveCard(){const bossW=game.wave%5===0;game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:game.stageEv?'⚠ '+game.stageEv:'',c:bossW?'#ff3c8a':'#ffd36b'};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
+function waveCard(){const bossW=game.wave%5===0;game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:game.stageEv?'⚠ '+game.stageEv:'',c:bossW?'#ff3c8a':'#ffd36b'};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
 const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を往く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
 function goro(x,y,txt,force,lv=1){const n=performance.now();if(!force&&n-goroT<(TOUCH?1500:900))return;goroT=n;txt=txt||GORO[Math.floor(Math.random()*GORO.length)];const c=GOROC[Math.floor(Math.random()*GOROC.length)];
- if(x!=null){float(x,y-30,txt,c,true,1.3);pushFx({ring:true,x,y,r:6,R:70*lv,t:.55,T:.55,c,lw:5});pushFx({ring:true,x,y,r:3,R:40*lv,t:.4,T:.4,c:'#fff',lw:2});for(let i=0;i<8*lv&&fx.length<FX_CAP;i++)pushFx({x,y,vx:(Math.random()-.5)*240,vy:-60-Math.random()*160,t:.6,c:'#cfe8ff',drop:true});}
+ if(x!=null){float(x,y-30,txt,c,true,1.3);pushFx({ring:true,x,y,r:6,R:70*lv,t:.55,T:.55,c,lw:5});pushFx({ring:true,x,y,r:3,R:40*lv,t:.4,T:.4,c:'#fff',lw:2});for(let i=0;i<10*lv&&fx.length<FX_CAP;i++)pushFx({x,y,vx:(Math.random()-.5)*260,vy:-50-Math.random()*170,t:.65,c:i%3?'#cfe8ff':'#c9b08a',drop:true,sticky:i%4===0,sz:2.5+Math.random()*2});}
  if(lv>=2||force){const b=document.createElement('div');b.className='goroBan';b.textContent=txt;b.style.color=c;document.body.appendChild(b);setTimeout(()=>b.remove(),1300);shake(4+lv*2);snd(180+Math.random()*200,.12,'sawtooth',.04,120);}}
 function flash(){const f=$('flash');f.classList.remove('on');void f.offsetWidth;f.classList.add('on');}
 function float(x,y,txt,c,bigF,t=.8){if(floats.length<(RM?28:55))floats.push({x,y,t,txt,c,big:bigF});}
-const FX_CAP=RM?160:280;
+const FX_CAP=RM?180:340;
 function pushFx(o){if(fx.length>=FX_CAP)return false;fx.push(o);return true;}
 function siteBurst(x,y,col,o={}){
  if(fx.length>FX_CAP-12)return;
- const n=RM?Math.min(10,o.n||20):(o.n||30);
+ const n=RM?Math.min(12,o.n||26):(o.n||38);
  const R=o.R||52, rt=o.rt||.55, lw=o.lw||4;
+ const dirt=['#c9b08a','#8a6a40','#6b5232','#9fd8ff','#e8f4ff','#ffb8a0'];
  pushFx({ring:true,x,y,r:6,R,t:rt,T:rt,c:col,lw});
  if(o.ring2!==false)pushFx({ring:true,x,y,r:4,R:R*.62,t:rt*.72,T:rt*.72,c:o.alt||'#ffffffaa',lw:Math.max(2,lw-1.5)});
  if(o.ring3)pushFx({ring:true,x,y,r:8,R:R*1.25,t:rt*1.1,T:rt*1.1,c:col,lw:2});
  for(let i=0;i<n&&fx.length<FX_CAP;i++){
-  const a=Math.random()*6.28,sp=(o.sp||190)+Math.random()*(o.spv||170);
-  pushFx({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-(o.up||50),t:.35+.4*Math.random(),c:i%3?col:(o.alt||'#e8f4ff'),drop:!!(o.sweat&&(i%3===0))||i%5===0,spark:i%4===0,sz:2.2+Math.random()*2.2});
+  const a=Math.random()*6.28,sp=(o.sp||210)+Math.random()*(o.spv||190);
+  const dc=i%4?col:(o.alt||dirt[i%dirt.length]);
+  pushFx({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-(o.up||55),t:.4+.45*Math.random(),c:dc,drop:!!(o.sweat&&(i%2===0))||i%3===0,spark:i%5===0,sz:2.4+Math.random()*2.8,sticky:i%6===0});
  }
- if(o.decal!==false)decal(x,y,o.dr||18,o.dc||col);
+ if(!RM)for(let i=0;i<4&&fx.length<FX_CAP;i++)pushFx({x:x+(Math.random()-.5)*20,y:y+8,vx:(Math.random()-.5)*40,vy:30+Math.random()*50,t:.7+.4*Math.random(),c:dirt[i%dirt.length],drop:true,sz:3+Math.random()*3,sticky:true});
+ if(o.decal!==false){decal(x,y,o.dr||20,o.dc||col);if(Math.random()<.55)decal(x+(Math.random()-.5)*16,y+(Math.random()-.5)*10,(o.dr||18)*.6,'#8a6a40');}
  if(o.shake)shake(o.shake);
  if(o.txt)float(x,y-(o.fy||30),o.txt,col,!!o.big,.95);
 }
@@ -617,31 +630,33 @@ function mutKinds(){return new Set(towers.filter(t=>t.mut!=null).map(t=>t.k)).si
 function hasKinds(...ks){const have=new Set(towers.map(t=>t.k));return ks.every(k=>have.has(k));}
 function tagN(tag){let n=0;for(const p of game.perks){const q=PERKS.find(x=>x.t===p);if(q&&q.tag===tag)n++;}return n;}
 function awakenMul(){const s=S();let m=1+mutN()*s.awakenDmg;if(s.triAwaken&&mutKinds()>=3)m+=.25;if(s.triRing&&hasKinds('poison','chain','gaze'))m+=.2;m+=overN()*s.overDmg;return m;}
-function hypeCalc(){let d=0,r=0;for(const o of towers)if(o.k==='hype'){const v=.08+.02*(o.lvl-1)+S().hypeAdd;d+=v;if(o.mut===0)r+=.08+.02*(o.lvl-1);}const overH=towers.some(t=>t.k==='hype'&&t.over===0);game.hypeD=Math.min(.5+S().hypeAdd*2+(overH?.2:0),d);game.hypeR=Math.min(.4,r);}
-function auraFor(t){const s=S();let m=0;for(const o of towers){if(o.k!=='trio'||o===t)continue;const r=TOWERS.trio.range*(1+.1*(o.lvl-1))*(1+s.gRange)*(1+s.auraRange)*(o.mut===0?1.4:1);
+function mapB(){return(MAP&&MAP.buff)||{};}
+function wallCap(){return S().wallMax+(mapB().wallMaxAdd||0);}
+function hypeCalc(){const mb=mapB();let d=0,r=0;const cut=S().ecoCut||0;for(const o of towers)if(o.k==='hype'){const v=(.08+.02*(o.lvl-1)+S().hypeAdd+(mb.hypeAdd||0))*(1-cut);d+=v;if(o.mut===0)r+=(.08+.02*(o.lvl-1))*(1-cut);}const overH=towers.some(t=>t.k==='hype'&&t.over===0);game.hypeD=Math.min(.5+S().hypeAdd*2+(mb.hypeAdd||0)*2+(overH?.2:0),d);game.hypeR=Math.min(.4,r);}
+function auraFor(t){const s=S(),mb=mapB();let m=0;for(const o of towers){if(o.k!=='trio'||o===t)continue;const r=TOWERS.trio.range*(1+.1*(o.lvl-1))*(1+s.gRange+(mb.gRange||0))*(1+s.auraRange+(mb.auraRange||0))*(o.mut===0?1.4:1);
  if((o.x-t.x)**2+(o.y-t.y)**2<=r*r)m=Math.max(m,(.25+.1*(o.lvl-1))*s.auraMul+(o.mut===0?.15:0));}return m;}
-function calcStats(t){const d=TOWERS[t.k],s=S(),Lv=t.lvl-1,a=(d.aura||d.bank||d.wall||d.hype)?0:auraFor(t);
- const range=d.range*(1+.1*Lv)*(1+s.gRange)*(d.aura?(1+s.auraRange)*(t.mut===0?1.4:1):1);
- let dmg=d.dmg*Math.pow(1.55,Lv)*(1+s.gDmg+s.tDmg[t.k]+game.hypeD+(t.mut!=null?s.mutDmg:0))*(1+a)*awakenMul()*(d.mine?1+s.mineDmg+(t.mut===0?.3:0):1)*(t.lvl>=5?1.12:1)*(HOT.has(t.tx+','+t.ty)?1.25:1);
+function calcStats(t){const d=TOWERS[t.k],s=S(),mb=mapB(),Lv=t.lvl-1,a=(d.aura||d.bank||d.wall||d.hype)?0:auraFor(t);
+ const range=d.range*(1+.1*Lv)*(1+s.gRange+(mb.gRange||0))*(d.aura?(1+s.auraRange+(mb.auraRange||0))*(t.mut===0?1.4:1):1);
+ let dmg=d.dmg*Math.pow(1.55,Lv)*(1+s.gDmg+s.tDmg[t.k]+game.hypeD+(t.mut!=null?s.mutDmg:0))*(1+a)*awakenMul()*(d.mine?1+s.mineDmg+(mb.mineDmg||0)+(t.mut===0?.3:0):1)*(t.lvl>=5?1.12:1)*(HOT.has(t.tx+','+t.ty)?1.25:1);
  let rate=d.rate/((1+.12*Lv)*(1+s.tRate[t.k]+s.gRate+game.hypeR)*(1+a*.6));
  if(d.mine)rate=d.rate*s.mineRe*(t.mut===1?.6:1)/(1+.08*Lv);
  if(t.k==='cannon'&&t.mut===1){rate/=2;dmg*=.6;}
- let tCrit=0;for(const o of towers){if(o.k!=='trio'||o.over!==0||o===t)continue;const rr=TOWERS.trio.range*(1+.1*(o.lvl-1))*(1+s.gRange)*(1+s.auraRange)*(o.mut===0?1.4:1);if((o.x-t.x)**2+(o.y-t.y)**2<=rr*rr)tCrit=.08;}
+ let tCrit=0;for(const o of towers){if(o.k!=='trio'||o.over!==0||o===t)continue;const rr=TOWERS.trio.range*(1+.1*(o.lvl-1))*(1+s.gRange+(mb.gRange||0))*(1+s.auraRange+(mb.auraRange||0))*(o.mut===0?1.4:1);if((o.x-t.x)**2+(o.y-t.y)**2<=rr*rr)tCrit=.08;}
  const crit=d.crit!=null?d.crit+s.gCrit+(t.k==='senpai'&&t.mut===0?.25:0)+tCrit:0;
  const pois=d.poison?d.poison*Math.pow(1.5,Lv)*s.poisonMul*(1+(s.setPois>=1&&tagN('毒')>=2?.2:0))*(1+s.gDmg*.5)*(1+a)*(t.mut===1?2:1)*awakenMul():0;
  const chain=d.chain?d.chain+s.chainAdd+(t.mut===0?3:0):0;
- const maxHp=d.wall?d.hp*Math.pow(1.6,Lv)*(1+s.wallHp):0;
+ const maxHp=d.wall?d.hp*Math.pow(1.6,Lv)*(1+s.wallHp+(mb.wallHp||0)):0;
  const aur=d.aura?(.25+.1*Lv)*s.auraMul+(t.mut===0?.15:0):0;
-  const markV=d.gaze?.2+.05*Lv+s.markAdd+(t.mut===0?.2:0)+(t.over===0?.1:0):0;
- const sip=d.sip?d.sip+s.sipAdd+(t.mut===0?1:0)+(s.ecoBond&&towers.some(o=>o.k==='bank')?1:0):0,sipCap=d.sip?(t.over===0?9999:(t.mut===0?200:120)+s.sipCap):0;
+  const markV=d.gaze?.2+.05*Lv+s.markAdd+(mb.markAdd||0)+(t.mut===0?.2:0)+(t.over===0?.1:0):0;
+ const sipCut=1-(s.ecoCut||0);const sip=d.sip?(d.sip+s.sipAdd+(t.mut===0?1:0)+(s.ecoBond&&towers.some(o=>o.k==='bank')?1:0))*sipCut:0,sipCap=d.sip?(t.over===0?9999:(t.mut===0?200:120)+s.sipCap):0;
  const splash=d.mine?d.range*(t.mut===0?1.5:1)*(1+.08*Lv):0;
  return{range:d.mine?splash:range,dmg,rate,crit,pois,chain,maxHp,aura:a,aur,markV,sip,sipCap,splash};}
 function tStats(t){if(statsDirty){hypeCalc();for(const o of towers)o.st=calcStats(o);statsDirty=false;}return t.st||(t.st=calcStats(t));}
-function bankIncome(t){return Math.round((20+15*t.lvl)*S().bankMul);}
+function bankIncome(t){return Math.round((20+15*t.lvl)*S().bankMul*(1-(S().ecoCut||0)));}
 function canPlace(k,tx,ty){if(tx<0||ty<0||tx>=COLS||ty>=ROWS)return false;if(towers.some(t=>t.tx===tx&&t.ty===ty))return false;if(BLOCK.has(tx+','+ty))return false;const onP=pathTiles.has(tx+','+ty);return TOWERS[k].onPath?onP&&tx>=1:!onP;}
 function place(k,tx,ty){if(!canPlace(k,tx,ty))return false;const c=cost(k);setTimeout(()=>goro(tx*T+T/2,ty*T+T/2,null,false,HOT.has(tx+','+ty)?2:1),0);
  if(game.gold<c){toast(pick(L.poor),'navy_left_face','bad',1200);snd(120,.15);return false;}
- if(TOWERS[k].wall&&towers.filter(t=>t.k==='wall').length>=S().wallMax){toast(`バリケードは${S().wallMax}個まで（欲張りすぎィ！）`,'collar_face','bad',1400);return false;}
+ if(TOWERS[k].wall&&towers.filter(t=>t.k==='wall').length>=wallCap()){toast(`バリケードは${wallCap()}個まで（欲張りすぎィ！）`,'collar_face','bad',1400);return false;}
  if(TOWERS[k].mine&&towers.filter(t=>t.k==='mine').length>=S().mineMax){toast(`地雷は${S().mineMax}個まで（踏み場がない）`,'senpai_face','bad',1400);return false;}
  if(!TOWERS[k].onPath&&towers.filter(t=>!TOWERS[t.k].onPath).length>=S().towerMax){toast(`少数精鋭：タワーは${S().towerMax}基まで（多すぎィ！）`,'grimace_face','bad',1400);return false;}
  if(game.free>0){game.free--;toast(`二人羽織でタダ！（残り${game.free}）`,'trio_sepia_card','',1200);}
@@ -674,17 +689,20 @@ function sell(t){const v=Math.round(t.spent*S().sellRate);game.gold+=v;const ox=
 function toast(text,img,cls='',ms=1800){const box=$('toasts');const el=document.createElement('div');el.className='toast '+cls;el.innerHTML=`<img src="${src(img)}" style="${cssf(img)}"><span></span>`;el.querySelector('span').textContent=text;box.appendChild(el);const max=document.body.classList.contains('portrait')||document.body.classList.contains('compact')?2:4;while(box.children.length>max)box.firstChild.remove();setTimeout(()=>{el.classList.add('out');setTimeout(()=>el.remove(),450)},ms);}
 
 // ---------- combat ----------
-function sweat(e,n){for(let i=0;i<n&&fx.length<FX_CAP;i++)pushFx({x:e.x+(Math.random()-.5)*e.d.r,y:e.y-e.d.r*.4,vx:(Math.random()-.5)*110,vy:-50-Math.random()*110,t:.6,c:i%3?'#9fd8ff':'#e8f4ff',drop:true,sz:2.4});}
-function decal(x,y,r,c){decals.push({x:x+(Math.random()-.5)*10,y:y+(Math.random()-.5)*10,r,c,t:18,rx:.6+Math.random()*.6});if(decals.length>60)decals.shift();}
+function sweat(e,n){const cols=['#9fd8ff','#e8f4ff','#c9b08a','#bfe4ff','#ffb8a0'];for(let i=0;i<n+1&&fx.length<FX_CAP;i++)pushFx({x:e.x+(Math.random()-.5)*e.d.r*1.2,y:e.y-e.d.r*.4,vx:(Math.random()-.5)*130,vy:-40-Math.random()*130,t:.65+.2*Math.random(),c:cols[i%cols.length],drop:true,sz:2.6+Math.random()*1.8,sticky:i%3===0});}
+function decal(x,y,r,c){decals.push({x:x+(Math.random()-.5)*12,y:y+(Math.random()-.5)*12,r:r*(.9+Math.random()*.35),c,t:22+Math.random()*8,rx:.55+Math.random()*.7});if(decals.length>90)decals.shift();}
 function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const st=srcT?tStats(srcT):null;
  if(!o.noCrit&&st&&st.crit){if(Math.random()<st.crit+(srcT.critB||0)){dmg*=s.critMul;crit=true;if(s.critStack)srcT.critB=Math.min(.3,(srcT.critB||0)+.02);}}
  if(srcT&&srcT.k==='sniper'&&srcT.mut===1&&e.d.boss)dmg*=2.5;
  {let v=1;if(e.mark>0)v+=e.markV;if(s.slowVuln&&e.slowT>0)v+=s.slowVuln;if(s.lowHp&&e.hp<e.maxHp*.3)v+=s.lowHp;if(s.eliteHunt&&e.aff)v+=.3;if(s.dualHunt&&e.aff&&e.aff2)v+=.4;
-  if(s.antiJump&&(e.d.jump||e.d.burrow))v+=.45;if(s.chainPois&&srcT&&srcT.k==='chain'&&e.poisT>0)v+=s.chainPois;dmg*=v;}
+  if(s.antiJump&&(e.d.jump||e.d.burrow))v+=.45;if(s.chainPois&&srcT&&srcT.k==='chain'&&e.poisT>0)v+=s.chainPois;
+  if(s.antiBridge&&ROUTES[e.r]&&ROUTES[e.r].br)v+=.3;
+  if(srcT){const k=srcT.k,dd=e.d;if(dd.armor&&(k==='poison'||k==='sniper'))v+=.12;if(dd.shield&&(k==='chain'||k==='gaze'))v+=.12;if((dd.jump||dd.burrow)&&(k==='collar'||k==='gaze'||k==='mine'))v+=.22;if(dd.cheer&&(k==='sniper'||k==='senpai'||k==='gaze'))v+=.28;if(dd.bomb&&(k==='collar'||k==='sniper'))v+=.22;if(dd.jam&&k==='gaze')v+=.15;if(dd.heal&&(k==='sniper'||k==='senpai'))v+=.2;}
+  dmg*=v;}
  const pierce=o.pierce||(crit&&srcT&&srcT.k==='senpai'&&srcT.mut===0);
- if(!pierce)dmg=Math.max(1,dmg-(e.d.armor||0)-((e.aff==='hard'||e.aff2==='hard')?4:0));
+ if(!pierce)dmg=Math.max(1,dmg-(e.d.armor||0)-((e.aff==='hard'||e.aff2==='hard')?6:0));
  if(e.shield>0){const sx=o.shieldX||1,a=dmg*sx;if(a<e.shield){e.shield-=a;dmg=0;}else{dmg=(a-e.shield)/sx;e.shield=0;float(e.x,e.y-e.d.r-14,'ガード崩壊！','#6ab8ff',true);snd(1200,.08,'square',.04,-800);}}
- e.hp-=dmg;e.hitT=.12;if(Math.random()<.45)sweat(e,RM?2:3+Math.floor(Math.random()*2));if(Math.random()<.08&&!crit)float(e.x,e.y-e.d.r-4,pick(L.hitFx),'#cfe6ff',false,.45);
+ e.hp-=dmg;e.hitT=.12;if(Math.random()<.55)sweat(e,RM?2:4+Math.floor(Math.random()*3));if(Math.random()<.12&&!crit)float(e.x,e.y-e.d.r-4,pick(L.hitFx),Math.random()<.5?'#cfe6ff':'#c9b08a',false,.5);if(!RM&&Math.random()<.08)decal(e.x,e.y,6,'#8a6a4088');
  if((e.aff==='haste'||e.aff2==='haste')&&!e.d.boss){e.haste=Math.min(.6,(e.haste||0)+.08);e.slow=0;e.slowT=0;}
  if((e.aff==='reflect'||e.aff2==='reflect')&&srcT&&!TOWERS[srcT.k].onPath&&Math.random()<.18){srcT.stunT=Math.max(srcT.stunT,.7);float(srcT.x,srcT.y-16,'跳ね返し！','#ff9a6a');}
  if((e.aff==='link'||e.aff2==='link')&&e.linkId&&!s.noLink&&dmg>0){const o=enemies.find(x=>!x.dead&&x.id===e.linkId);if(o){o.hp-=dmg*.45;o.hitT=.12;if(o.hp<=0)kill(o,srcT);}}
@@ -703,8 +721,8 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
   if(game.t-game.lastCritToast>6){game.lastCritToast=game.t;goro(e.x,e.y,null,true,2);toast(pick(L.critToast),'grimace_face','',1100);}}
  if(srcT&&srcT.k==='sniper'&&srcT.mut===0&&!e.d.boss&&e.hp>0&&e.hp<e.maxHp*(srcT.over===0?.35:.2)){e.hp=0;float(e.x,e.y-e.d.r-6,'処刑（は？）','#7ab8ff',true);}
  if(e.hp<=0)kill(e,srcT);}
-function splat(c){if(splats.length>=(RM?4:12))return;splats.push({x:Math.random(),y:Math.random(),r:18+Math.random()*40,c:c||'#e8f4ff',t:3,T:3,n:3+Math.floor(Math.random()*4),s:Math.random()*9});}
-function gib(e){if(gibs.length>=(RM?4:12))return;gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*220,vy:-160-Math.random()*140,a:0,va:(Math.random()-.5)*14,r:e.d.r,t:1});}
+function splat(c){if(splats.length>=(RM?6:18))return;const dirt=['#c9b08a','#8a6a40','#e8f4ff','#ffb8a0','#9fd8ff','#6b5232'];splats.push({x:Math.random(),y:Math.random(),r:22+Math.random()*48,c:c||dirt[Math.floor(Math.random()*dirt.length)],t:3.6,T:3.6,n:4+Math.floor(Math.random()*5),s:Math.random()*9});}
+function gib(e){if(gibs.length>=(RM?5:16))return;gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*260,vy:-180-Math.random()*160,a:0,va:(Math.random()-.5)*16,r:e.d.r,t:1.15});if(!RM&&Math.random()<.6)gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*180,vy:-100-Math.random()*100,a:0,va:(Math.random()-.5)*10,r:e.d.r*.55,t:.8});}
 function stunTowers(x,y,R,dur){let n=0;for(const t of towers){if(TOWERS[t.k].onPath)continue;if((t.x-x)**2+(t.y-y)**2<R*R){t.stunT=Math.max(t.stunT,dur);n++;}}
  siteBurst(x,y,'#a8ff3c',{n:18,R:R,shake:2,txt:n?'くっさ！タワー気絶':null,big:true,sweat:true,sp:140,lw:3,decal:false});}
 function dot(e,dmg,srcT){if(e.dead)return;e.hp-=dmg;if(e.hp<=0)kill(e,srcT);}
@@ -719,8 +737,8 @@ function kill(e,srcT){if(e.dead)return;e.dead=true;const s=S();if(e.d.boss)goro(
  game.gold+=b;game.kills++;if(srcT)srcT.kills++;
  if(COMBO_MS[game.combo]){toast(COMBO_MS[game.combo],'senpai_face','combo shake',1600);big(game.combo+' COMBO','#ff5c8a',.9);shake(5);snd(660+game.combo,.12,'square',.05,400);for(let i=0;i<(RM?0:8);i++)splat(i%2?'#ff5c8a':'#ffe08a');}
  if(Math.random()<(e.d.boss?1:.3))float(e.x,e.y-6,pick(L.kill),'#fff',true,.9);else float(e.x,e.y,'+'+b,'#ffd36b');
- const np=e.d.boss?(RM?22:48):(fx.length>FX_CAP-30?0:(RM?8:16));for(let i=0;i<np;i++)pushFx({x:e.x,y:e.y,vx:(Math.random()-.5)*260,vy:(Math.random()-.5)*260-40,t:.55,c:Math.random()<.5?e.d.col:'#9fd8ff',drop:Math.random()<.5,spark:Math.random()<.25,sz:2.5+Math.random()*2});if(e.d.boss||Math.random()<.35)pushFx({ring:true,x:e.x,y:e.y,r:6,R:e.d.boss?90:40,t:.5,T:.5,c:e.d.col,lw:e.d.boss?5:3});
- decal(e.x,e.y,e.d.r*(e.d.boss?1.6:.9),e.pois>0?'#6fbf4a':Math.random()<.5?'#c9b08a':'#8fbfe0');
+ const dirtC=['#c9b08a','#8a6a40','#9fd8ff','#ffb8a0','#e8f4ff'];const np=e.d.boss?(RM?26:56):(fx.length>FX_CAP-30?0:(RM?10:22));for(let i=0;i<np;i++)pushFx({x:e.x,y:e.y,vx:(Math.random()-.5)*300,vy:(Math.random()-.5)*280-50,t:.6+.2*Math.random(),c:Math.random()<.4?e.d.col:dirtC[i%dirtC.length],drop:Math.random()<.65,spark:Math.random()<.2,sz:2.6+Math.random()*2.6,sticky:i%4===0});if(e.d.boss||Math.random()<.45)pushFx({ring:true,x:e.x,y:e.y,r:6,R:e.d.boss?100:48,t:.55,T:.55,c:e.d.col,lw:e.d.boss?6:3});
+ decal(e.x,e.y,e.d.r*(e.d.boss?1.8:1.1),e.pois>0?'#6fbf4a':dirtC[Math.floor(Math.random()*dirtC.length)]);if(Math.random()<.5)decal(e.x+(Math.random()-.5)*20,e.y+(Math.random()-.5)*14,e.d.r*.7,'#6b5232');if(Math.random()<.25)splat(dirtC[Math.floor(Math.random()*dirtC.length)]);
  killSnd(e.d.boss?160:520);gib(e);
  if(e.aff==='stink'||e.aff2==='stink')stunTowers(e.x,e.y,80,1.5);
  if(e.d.bomb)stunTowers(e.x,e.y,e.d.bomb,s.antiJam?.6:1.4);
@@ -765,7 +783,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
   if(d.summon){e.sumT-=dt;if(e.sumT<=0){e.sumT=d.summon;for(let i=0;i<2;i++)spawn('kohai',Math.max(0,e.dist-20-i*14),false,e.r);float(e.x,e.y-40,'後輩おかわり！','#ff5c3c',true);flavor('部室の主・真「後輩呼んだぞ（汗）」','locker_left_face','bad',1300,8);}}
   if(d.shieldRegen&&e.maxSh)e.shield=Math.min(e.maxSh,e.shield+e.maxSh*d.shieldRegen*dt);
   if(d.enrage&&!e.enr&&e.hp<e.maxHp*.5){e.enr=true;toast('野獣の眼光「ファッ！？ は？」（激おこ・速度UP）','grimace_face','boss shake',2200);big('激おこ','#ff3c3c',1.2);shake(10);}
-  if(e.stunT<=0&&!e.buried){let sp=d.speed*s.eSpeed*(1-e.slow)*(e.enr?1.5:1)*((e.aff==='fast'||e.aff2==='fast')?1.45:(e.aff==='giant'||e.aff2==='giant')?.8:1)*(1+(e.haste||0))*((e.cheerT||0)>0&&!s.noCheer?1.2:1)*(MAP.eSp||1)*(PUDDLE.length&&PUDDLE.some(q=>(q.x-e.x)**2+(q.y-e.y)**2<q.r*q.r)?1.35:1)*dt;if(e.cheerT>0)e.cheerT-=dt;e.blocked=false;
+  if(e.stunT<=0&&!e.buried){let sp=d.speed*s.eSpeed*(1-e.slow)*(e.enr?1.5:1)*((e.aff==='fast'||e.aff2==='fast')?1.45:(e.aff==='giant'||e.aff2==='giant')?.8:1)*(1+(e.haste||0))*((e.cheerT||0)>0&&!s.noCheer?1.2:1)*(MAP.eSp||1)*(PUDDLE.length&&!S().noPuddle&&PUDDLE.some(q=>(q.x-e.x)**2+(q.y-e.y)**2<q.r*q.r)?1.35:1)*dt;if(e.cheerT>0)e.cheerT-=dt;e.blocked=false;
    for(const w of walls){if(w.hp<=0)continue;const wpd=w.pds?w.pds[e.r||0]:w.pd;if(wpd==null)continue;const stop=wpd-(d.r+16);if(e.dist<=stop+1&&e.dist+sp>=stop){sp=Math.max(0,stop-e.dist);e.blocked=true;
      const wdm=d.wd*(1+.15*game.wave)*(d.boss?1.5:1)*dt;w.hp-=wdm;w.hitT=.1;if(e.aff==='vamp'||e.aff2==='vamp')e.hp=Math.min(e.maxHp,e.hp+wdm*2);const th=s.wallThorn+(w.mut===0?18*w.lvl:0);if(th)dot(e,th*(1+.1*game.wave)*dt,w);if(s.wallPois)poisonE(e,12*(1+.15*game.wave),1.2,w);
      if(Math.random()<dt*4)sweat(e,1);break;}}
@@ -795,11 +813,11 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
   if(d.gaze){const hit=visTargets(t,r2);if(!hit.length)continue;t.cd=st.rate;for(const e of hit){e.mark=t.over===0?6:3;e.markV=Math.max(e.markV,st.markV);if(t.over===1){e.slow=Math.max(e.slow,.12);e.slowT=Math.max(e.slowT,1.2);}hurt(e,st.dmg,t,{noCrit:true});}
    pushFx({ring:true,x:t.x,y:t.y,r:10,R:st.range,t:.4,T:.4,c:'#6ab8ff',lw:3});if(Math.random()<.18)float(t.x,t.y-24,pick(['見ろよ見ろよ','ガン見','視姦…じゃなくて視察','嘘つけ絶対見てたゾ']),'#6ab8ff',true);continue;}
   if(d.pulse){const hit=visTargets(t,r2);if(!hit.length)continue;t.cd=st.rate;
-   for(const e of hit){e.slow=Math.min(.8,d.slow+s.slowAdd+.05*(t.lvl-1));e.slowT=d.slowT+s.slowT;
+   for(const e of hit){e.slow=Math.min(.8,d.slow+s.slowAdd+(mapB().slowAdd||0)+.05*(t.lvl-1));e.slowT=d.slowT+s.slowT;
     if(t.mut===0)e.dist=Math.max(0,e.dist-(e.d.boss?6:26)*(t.over===0?1.6:1));if(t.mut===1)e.stunT=Math.max(e.stunT,(e.d.boss?.15:.5)*(t.over===0?1.8:1));if(t.over===1)poisonE(e,10*(1+.1*t.lvl),2,t);hurt(e,st.dmg,t);}
    pushFx({ring:true,x:t.x,y:t.y,r:10,R:st.range,t:.45,T:.45,c:t.mut===1?'#ff5c8a':'#5cd6a8',lw:3.5});for(let i=0;i<(RM?2:6)&&fx.length<FX_CAP;i++)pushFx({x:t.x,y:t.y,vx:(Math.random()-.5)*120,vy:(Math.random()-.5)*120,t:.4,c:'#5cd6a8',spark:true});if(Math.random()<.22)float(t.x,t.y-24,t.mut===0?'ふっとべ！':t.mut===1?'締め上げ！':'指導！','#5cd6a8',true);snd(300,.05,'sine',.03);continue;}
   const cand=visTargets(t,r2);if(!cand.length)continue;t.cd=st.rate;
-  if(t.k==='sniper'){let best=cand[0];for(const e of cand)if(e.hp+e.shield>best.hp+best.shield)best=e;t.ang=Math.atan2(best.y-t.y,best.x-t.x);
+  if(t.k==='sniper'){const sc=e=>(e.hp+e.shield)+(e.d.boss?900:0)+(e.d.cheer?260:0)+(e.d.heal?220:0)+(e.d.bomb?200:0)+(e.d.jam?160:0)+(e.d.jump||e.d.burrow?80:0);let best=cand[0];for(const e of cand)if(sc(e)>sc(best))best=e;t.ang=Math.atan2(best.y-t.y,best.x-t.x);
    fx.push({line:true,x:t.x,y:t.y,x2:best.x,y2:best.y,t:.28,c:'#cfe6ff',lw:3});pushFx({ring:true,x:best.x,y:best.y,r:4,R:28,t:.35,T:.35,c:'#7ab8ff',lw:2});hurt(best,st.dmg,t,{pierce:true});
    if(t.over===1){for(const e of cand){if(e!==best&&!e.dead&&(e.x-best.x)**2+(e.y-best.y)**2<55*55)hurt(e,st.dmg*.5,t,{pierce:true,noCrit:true});}}
    shotSnd(1400);shake(2.2);if(Math.random()<.25)float(best.x,best.y-best.d.r-8,'見とけよ','#7ab8ff');continue;}
@@ -812,7 +830,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
    t.ang=Math.atan2(cand[0].y-t.y,cand[0].x-t.x);shotSnd(1600);shake(1.2);continue;}
   const n=t.k==='senpai'&&t.mut===1?2:1;
   for(let i=0;i<Math.min(n,cand.length);i++){const best=cand[i];t.ang=Math.atan2(best.y-t.y,best.x-t.x);
-   projs.push({x:t.x,y:t.y,tg:best,tx:best.x,ty:best.y,sp:d.splash?320:d.poison?300:560,dmg:st.dmg,src:t,splash:d.splash?d.splash*s.splashMul:0,pois:st.pois,c:d.proj,bounce:t.k==='navy'&&t.mut===0?(t.over===0?2:1):0});}
+   projs.push({x:t.x,y:t.y,tg:best,tx:best.x,ty:best.y,sp:d.splash?320:d.poison?300:560,dmg:st.dmg,src:t,splash:d.splash?d.splash*(s.splashMul+(mapB().splashMul||0)):0,pois:st.pois,c:d.proj,bounce:t.k==='navy'&&t.mut===0?(t.over===0?2:1):0});}
   shotSnd(d.splash?180:d.poison?240:(t.k==='navy'?880:600));}
  for(const p of projs){if(p.done)continue;if(p.tg&&!p.tg.dead){p.tx=p.tg.x;p.ty=p.tg.y;}const dx=p.tx-p.x,dy=p.ty-p.y,dd=Math.hypot(dx,dy),step=p.sp*dt;
   if(dd<=step+4){p.done=true;
@@ -829,7 +847,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
   else{p.x+=dx/dd*step;p.y+=dy/dd*step;}}
  for(const f of fires){f.t-=dt;for(const e of enemies){if(!e.dead&&(e.x-f.x)**2+(e.y-f.y)**2<=f.r*f.r)dot(e,f.dps*dt,f.src);}}fires=fires.filter(f=>f.t>0);
  projs=projs.filter(p=>!p.done);enemies=enemies.filter(e=>!e.dead);
- for(const f of fx){f.t-=dt;if(!f.ring&&!f.line&&!f.bolt){f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.drop)f.vy+=420*dt;}}fx=fx.filter(f=>f.t>0);
+ for(const f of fx){f.t-=dt;if(!f.ring&&!f.line&&!f.bolt){f.x+=f.vx*dt;f.y+=f.vy*dt;if(f.drop){f.vy+=f.sticky?520*dt:420*dt;if(f.sticky){f.vx*=.96;if(f.vy>0)f.sz=(f.sz||2.4)+dt*1.2;}}} }fx=fx.filter(f=>f.t>0);
  for(const g of gibs){g.t-=dt;g.x+=g.vx*dt;g.y+=g.vy*dt;g.vy+=600*dt;g.a+=g.va*dt;}if(gibs.length)gibs=gibs.filter(g=>g.t>0);
  for(const p of splats)p.t-=dt;if(splats.length)splats=splats.filter(p=>p.t>0);
  for(const f of floats){f.t-=dt;f.y-=28*dt;}floats=floats.filter(f=>f.t>0);
@@ -851,20 +869,25 @@ function waveClear(){const s=S();game.inWave=false;let inc=20+game.wave*5,lifeUp
 
 // ---------- dynamic stage (v9) ----------
 function stageBurst(x,y,c,n=10){pushFx({ring:true,x,y,r:4,R:60,t:.6,T:.6,c,lw:5});pushFx({ring:true,x,y,r:2,R:34,t:.45,T:.45,c:'#fff',lw:2});for(let i=0;i<n&&fx.length<FX_CAP;i++)pushFx({x,y,vx:(Math.random()-.5)*220,vy:-40-Math.random()*140,t:.6,c,drop:true});}
-function newRunMap(){mapOrder=MAPS.map((_,i)=>i).sort(()=>Math.random()-.5);setMap(mapOrder[0]);game.act=0;game.stageEv='';setTimeout(()=>toast(`ステージ：${MAP.name}　${MAP.desc}`,'navy_trio_card','',2600),300);}
+function newRunMap(){mapOrder=MAPS.map((_,i)=>i).sort(()=>Math.random()-.5);setMap(mapOrder[0]);game.act=0;game.stageEv='';game.bridgeRush=false;setTimeout(()=>toast(`ステージ：${MAP.name}　向き：${MAP.fav||'自由'}　${MAP.tip||MAP.desc}`,'navy_trio_card','',3200),300);}
 function fixTowers(note){let n=0,g=0;for(const t of towers.slice()){const onP=pathTiles.has(t.tx+','+t.ty);const bad=TOWERS[t.k].onPath?!onP:onP;if(bad){g+=t.spent;towers=towers.filter(o=>o!==t);n++;stageBurst(t.x,t.y,'#ffd36b',6);}else if(TOWERS[t.k].onPath){t.pds=pdsOf(t.x,t.y);t.pd=t.pds[0]!=null?t.pds[0]:-999;}}
  if(n){game.gold+=g;toast(`${note}：${n}基を全額返金 +${g}G（ゆるして）`,'navy_left_face','',2200);}statsDirty=true;}
 function shiftAct(){game.act=(game.act||0)+1;const ni=mapOrder[game.act%mapOrder.length];setMap(ni);fixTowers('区画整理');shake(12);punch(W/2,H/2,.88,.9,.6,2,'#ff9a5a');big('ステージ変化','#ff9a5a',1.3);
- toast(`第${game.act+1}幕：${MAP.name}へ移動！　${MAP.desc}`,'collar_card','boss shake',3200);snd(160,.5,'sawtooth',.07,300);for(const r of ROUTES)if(!r.br)for(let i=0;i<r.wp.length;i++)stageBurst(r.wp[i].x,r.wp[i].y,'#ff9a5a',4);}
+ toast(`第${game.act+1}幕：${MAP.name}へ移動！　向き：${MAP.fav||'自由'}　${MAP.tip||MAP.desc}`,'collar_card','boss shake',3400);snd(160,.5,'sawtooth',.07,300);for(const r of ROUTES)if(!r.br)for(let i=0;i<r.wp.length;i++)stageBurst(r.wp[i].x,r.wp[i].y,'#ff9a5a',4);}
 const STAGE_EV=[
  {n:'仮設橋',ok:()=>ROUTES.some(r=>r.br),go(){const bs=ROUTES.filter(r=>r.br);const b=bs[Math.floor(Math.random()*bs.length)];b.open=true;rebuildTiles();
    toast('仮設橋が開通！近道を通る後輩が出るぞ（迫真）','collar_face','bad shake',2400);for(const p of b.wp)stageBurst(p.x,p.y,'#ffd36b',6);}},
+ {n:'橋ラッシュ',ok:()=>ROUTES.some(r=>r.br),go(){for(const r of ROUTES)if(r.br)r.open=true;rebuildTiles();game.bridgeRush=true;
+   toast('橋ラッシュ！ほぼ全員が近道へ殺到（壁・地雷を急げ）','grimace_face','bad shake',2800);for(const r of ROUTES)if(r.br)for(const p of r.wp)stageBurst(p.x,p.y,'#ff6a4a',4);}},
  {n:'通行止め',ok:()=>ROUTES.filter(r=>!r.br).length>1,go(){const bs=ROUTES.filter(r=>!r.br);const c=bs[Math.floor(Math.random()*bs.length)];c.open=false;toast('片側が通行止め！もう片方に後輩が殺到する','grimace_face','bad',2400);const m=c.wp[Math.floor(c.wp.length/2)];stageBurst(m.x,m.y,'#ff6a4a',14);}},
- {n:'工事中',ok:()=>true,go(){let n=0,tries=0;while(n<4&&tries++<200){const x=1+Math.floor(Math.random()*(COLS-2)),y=Math.floor(Math.random()*ROWS),k=x+','+y;if(pathTiles.has(k)||BLOCK.has(k)||towers.some(t=>t.tx===x&&t.ty===y))continue;BLOCK.add(k);n++;stageBurst(x*T+T/2,y*T+T/2,'#ffb03a',5);}toast('工事中！一部の土地に置けない（やめてくれよ…）','navy_left_face','',2200);}},
- {n:'汗だまり',ok:()=>true,go(){PUDDLE=[];const r=ROUTES[0];for(let i=0;i<3;i++){const p=posAt(r.total*(.2+.25*i+Math.random()*.1),r);PUDDLE.push({x:p.x,y:p.y,r:40});stageBurst(p.x,p.y,'#8ad0ff',12);}toast('道に汗だまり！後輩が滑って加速する','senpai_face','bad',2200);}},
+ {n:'一本道',ok:()=>ROUTES.filter(r=>!r.br&&r.open).length>1,go(){const mains=ROUTES.filter(r=>!r.br&&r.open);const keep=mains[Math.floor(Math.random()*mains.length)];
+   for(const r of ROUTES){if(r===keep)continue;if(!r.br)r.open=false;}for(const r of ROUTES)if(r.br)r.open=false;rebuildTiles();
+   toast('一本道チョーク！全軍が1レーンへ集中（範囲・壁が映える）','collar_face','bad shake',2800);const m=keep.wp[Math.floor(keep.wp.length/2)];stageBurst(m.x,m.y,'#ff3c3c',18);}},
+ {n:'工事中',ok:()=>true,go(){let n=0,tries=0;while(n<6&&tries++<240){const x=1+Math.floor(Math.random()*(COLS-2)),y=Math.floor(Math.random()*ROWS),k=x+','+y;if(pathTiles.has(k)||BLOCK.has(k)||towers.some(t=>t.tx===x&&t.ty===y)||HOT.has(k))continue;BLOCK.add(k);n++;stageBurst(x*T+T/2,y*T+T/2,'#ffb03a',5);}toast('工事中！置けないマス増殖（やめてくれよ…）','navy_left_face','',2200);}},
+ {n:'汗だまり',ok:()=>true,go(){PUDDLE=[];const rs=ROUTES.filter(r=>r.open);for(let i=0;i<4;i++){const r=rs[i%rs.length];const p=posAt(r.total*(.15+.2*i+Math.random()*.08),r);PUDDLE.push({x:p.x,y:p.y,r:48});stageBurst(p.x,p.y,'#8ad0ff',12);}toast('道に汗だまり！後輩が滑って加速（減速・壁で抑えろ）','senpai_face','bad',2200);}},
  {n:'迫真スポット移動',ok:()=>true,go(){HOT=new Set();let tries=0;while(HOT.size<4&&tries++<300){const x=Math.floor(Math.random()*COLS),y=Math.floor(Math.random()*ROWS),k=x+','+y;if(pathTiles.has(k)||BLOCK.has(k))continue;if(![[0,1],[1,0],[0,-1],[-1,0]].some(([a,b])=>pathTiles.has((x+a)+','+(y+b))))continue;HOT.add(k);stageBurst(x*T+T/2,y*T+T/2,'#ff7a3a',8);}statsDirty=true;toast('迫真スポットが移動！そこに置いたタワーは火力+25%','collar_card','',2200);}}];
 function stageEvent(){game.stageEv='';if(game.wave<2)return;if(game.wave%5!==0&&Math.random()>.65)return;const pool=STAGE_EV.filter(e=>e.ok());const ev=pool[Math.floor(Math.random()*pool.length)];game.stageEv=ev.n;ev.go();mapCache=null;goro(W/2,H/2,null,true,2);shake(8);big(ev.n,'#ffb03a',1.1);CAM.tintT=.6;CAM.tint='#ffb03a';punch(W/2,H/2,1.08,.5,0,1);snd(330,.3,'square',.05,-120);renderPerks();}
-function stageClear(){const had=game.stageEv;for(const r of ROUTES)r.open=!r.br;rebuildTiles();BLOCK=new Set();PUDDLE=[];game.stageEv='';
+function stageClear(){const had=game.stageEv;for(const r of ROUTES)r.open=!r.br;rebuildTiles();BLOCK=new Set();PUDDLE=[];game.stageEv='';game.bridgeRush=false;
  if(had==='迫真スポット移動'){}else HOT=new Set((MAP.hot||[]).map(([x,y])=>x+','+y).filter(k=>!pathTiles.has(k)));
  if(game.wave%5===0&&game.wave<game.maxWave)shiftAct();else fixTowers('撤去');mapCache=null;statsDirty=true;}
 function stageDraw(){const t=game.t;for(const k of BLOCK){const [x,y]=k.split(',').map(Number);const [a,b]=P(x*T,y*T);ctx.fillStyle=`rgba(255,170,40,${.18+.08*Math.sin(t*6+x)})`;ctx.fillRect(a+2,b+2,T-4,T-4);ctx.strokeStyle='#ffb03a';ctx.lineWidth=2;ctx.strokeRect(a+3,b+3,T-6,T-6);ctx.font='20px sans-serif';ctx.textAlign='center';ctx.fillText('🚧',a+T/2,b+T/2+7);}
@@ -883,7 +906,7 @@ function openDraft(){goro(null,null,null,true,2);const pool=PERKS.filter(p=>!(p.
  openCards(`ウェーブ ${game.wave} クリア！`,'ドラフト：カードを1枚選べ（やりますねぇ）',ch,p=>{p.ap(S());game.perks.push(p.t);toast(p.t+'！（いいゾ〜これ）',p.img.split('#')[0],'',1400);snd(700,.12,'triangle',.06,300);},1);}
 function openSitu(){const pool=SITU.slice(),ch=[];while(ch.length<3)ch.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
  openCards('シチュエーションを選べ','今回のラン全体のルールが変わる（迫真）',ch,p=>{p.ap(S());game.situ=p.t;toast(`シチュ：${p.t}（そうだよ）`,p.img.split('#')[0],'combo',2000);big(p.t,'#ffd36b',1.3);setTimeout(()=>playStory('pro'),30);});}
-function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;const ks=Object.keys(m);$('perks').innerHTML=`<span style="color:#ff9a5a">🗺 ${MAP.name}${game.stageEv?'・'+game.stageEv:''}</span><br>`+(game.situ?`<span style="color:#ffd36b">シチュ：${game.situ}</span><br>`:'')+(ks.length?ks.map(k=>`・${k}${m[k]>1?' x'+m[k]:''}`).join('<br>'):'まだなし');}
+function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;const ks=Object.keys(m);$('perks').innerHTML=`<span style="color:#ff9a5a">🗺 ${MAP.name}${MAP.fav?'（'+MAP.fav+'）':''}${game.stageEv?'・'+game.stageEv:''}</span><br>`+(MAP.tip?`<span style="color:#c9b894;font-size:11px">${MAP.tip}</span><br>`:'')+(game.situ?`<span style="color:#ffd36b">シチュ：${game.situ}</span><br>`:'')+(ks.length?ks.map(k=>`・${k}${m[k]>1?' x'+m[k]:''}`).join('<br>'):'まだなし');}
 
 // ---------- end ----------
 function saveBest(){try{const b=+localStorage.getItem('yajuuTD_best')||0;if(game.wave>b)localStorage.setItem('yajuuTD_best',game.wave);}catch(e){}}
@@ -901,7 +924,7 @@ $('bEndless').onclick=()=>{$('end').classList.remove('on');game.over=false;game.
 // ---------- UI ----------
 function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{const d=TOWERS[k];const el=document.createElement('div');el.className='shop';el.style.setProperty('--rc',d.ring);el.dataset.k=k;
  el.innerHTML=`<img src="${src(d.img)}" style="${cssf(d.img)}"><div style="min-width:0;max-width:100%"><div class="nm"></div><div class="ds"></div></div><div class="cost"></div><div class="key">${(HOTKEYS[i]||"").toUpperCase()}</div>`;
- el.querySelector('.nm').textContent=d.short;el.querySelector('.ds').textContent=d.desc;el.title=d.name+'：'+d.desc;el.onclick=()=>selectShop(k);box.appendChild(el);});updShop();}
+ el.querySelector('.nm').textContent=d.short;el.querySelector('.ds').textContent=(d.role?`[${d.role}] `:'')+d.desc;el.title=d.name+'：'+(d.vs||d.desc);el.onclick=()=>selectShop(k);box.appendChild(el);});updShop();}
 function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k,c=cost(k),ce=el.querySelector('.cost');ce.textContent=c?c+'G':'タダ';ce.classList.toggle('free',!c);el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<c);});}
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave');bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':'ウェーブ開始';
@@ -928,7 +951,7 @@ function renderInfo(){const box=$('info');
   else $('bUp').onclick=()=>upgrade(t);
   $('bSell').onclick=()=>sell(t);updInfoBtns();}
  else if(sel){const d=TOWERS[sel];box.innerHTML=`<div class="wrapI"><div class="row"><img src="${src(d.img)}" style="border-color:${d.ring};${cssf(d.img)}"><div><b></b>　${cost(sel)?cost(sel)+'G':'タダ'}<div class="st" id="selDesc"></div><div class="hint">${d.onPath?'道の上に置く。':''}${TOUCH?'マップを2回タップで設置':'マップをクリックで設置（Escで解除）'}</div></div></div></div>`;box.querySelector('b').textContent=d.name;
-  $('selDesc').textContent=d.desc+`　覚醒(Lv${S().mutLvl})：${d.muts[0].n}/${d.muts[1].n}　極(Lv${S().maxLvl})：${d.overs[0].n}/${d.overs[1].n}`;}
+  $('selDesc').innerHTML=`${d.desc}<br><span style="color:#ff9a5a">${d.role?`役割：${d.role}`:''}${d.vs?`　${d.vs}`:''}</span><br>覚醒(Lv${S().mutLvl})：${d.muts[0].n}/${d.muts[1].n}　極(Lv${S().maxLvl})：${d.overs[0].n}/${d.overs[1].n}`;}
  else{const pk=game.perks.length?`パーク ${game.perks.length}枚：${[...new Set(game.perks)].join('・')}`:'';
   box.innerHTML=`<div class="wrapI"><div class="row"><img src="${ASSETS.senpai_face}"><div><b>先輩「まずタワー置こうぜ」</b><div class="hint" id="idleHint"></div></div></div></div>`;
   $('idleHint').textContent=(document.body.classList.contains('portrait')&&pk)?pk:(TOUCH?'タワーをタップ→マップを2回タップで設置。Lv5で極覚醒。':'タワーを選んでマップに設置。覚醒後Lv5で極覚醒A/B。準備ができたら「ウェーブ開始」。');}}
@@ -1121,7 +1144,7 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
  const sh=game.shake,ox=sh?(Math.random()-.5)*sh*2:0,oy=sh?(Math.random()-.5)*sh*2:0;
  if(sh){ctx.fillStyle='#000';ctx.fillRect(0,0,cv.width,cv.height);}
  ctx.drawImage(mapCache,ox*view.k*view.dpr,oy*view.k*view.dpr);const sc=view.k*view.dpr;ST(sc,0,0,sc,ox*sc,oy*sc);const s=S();
- stageDraw();for(const d of decals){const [x,y]=P(d.x,d.y);ctx.globalAlpha=Math.min(.45,d.t/4);ctx.fillStyle=d.c;ctx.beginPath();ctx.ellipse(x,y,d.r,d.r*d.rx,0,0,7);ctx.fill();}ctx.globalAlpha=1;
+ stageDraw();for(const d of decals){const [x,y]=P(d.x,d.y);ctx.globalAlpha=Math.min(.62,d.t/5);ctx.fillStyle=d.c;ctx.beginPath();ctx.ellipse(x,y,d.r,d.r*d.rx,0,0,7);ctx.fill();}ctx.globalAlpha=1;
  for(const f of fires){const a=Math.min(1,f.t)*(.25+.1*Math.sin(game.t*20+f.x));ring(f.x,f.y,f.r,`rgba(255,110,40,${a})`);if(Math.random()<.3&&fx.length<220)fx.push({x:f.x+(Math.random()-.5)*f.r,y:f.y+(Math.random()-.5)*f.r,vx:0,vy:-40,t:.4,c:'#ffb040'});}
  if(hover&&sel&&!game.over){const ok=canPlace(sel,hover.tx,hover.ty);const cx=hover.tx*T+T/2,cy=hover.ty*T+T/2;const pul=.55+.45*Math.sin(game.t*7);
   const r=TOWERS[sel].wall?22:TOWERS[sel].hype?30:TOWERS[sel].range*(1+s.gRange)*(TOWERS[sel].aura?1+s.auraRange:1);
@@ -1185,22 +1208,22 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
   else if(f.bolt){ctx.strokeStyle=f.c;ctx.globalAlpha=Math.min(1,f.t*7);ctx.lineWidth=3.5;ctx.beginPath();f.bolt.forEach(([a,b],i)=>{const [x,y]=P(a,b);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();ctx.strokeStyle='#fff';ctx.lineWidth=1.4;ctx.stroke();}
   else{const [x,y]=P(f.x,f.y);const sz=f.sz||2.4;ctx.fillStyle=f.c;ctx.globalAlpha=Math.min(1,f.t*2.2);
    if(f.spark){ctx.save();ctx.translate(x,y);ctx.rotate((game.t*10+f.x)*.4);ctx.fillRect(-sz*.35,-sz,sz*.7,sz*2);ctx.fillRect(-sz,-sz*.35,sz*2,sz*.7);ctx.restore();}
-   else if(f.drop){ctx.beginPath();ctx.arc(x,y,sz,0,7);ctx.fill();}
+   else if(f.drop){ctx.beginPath();if(f.sticky)ctx.ellipse(x,y,sz*1.1,sz*1.6,0,0,7);else ctx.arc(x,y,sz,0,7);ctx.fill();}
    else ctx.fillRect(x-sz*.7,y-sz*.7,sz*1.4,sz*1.4);}
   ctx.globalAlpha=1;}
  for(const g of gibs){const [x,y]=P(g.x,g.y);ctx.save();ctx.globalAlpha=Math.min(1,g.t*2);ctx.translate(x,y);ctx.rotate(g.a);ctx.translate(-x,-y);face(g.img,g.x,g.y,g.r*.8,'#fff',{lw:1.5});ctx.restore();}
  for(const f of floats){ctx.globalAlpha=Math.min(1,f.t*2);text(f.txt,f.x,f.y,f.c,f.big?15:12,true);ctx.globalAlpha=1;}
  ctx.setTransform(sc,0,0,sc,0,0);
  if(CAM.tintT>0&&CAM.tint){ctx.globalAlpha=CAM.tintT*.5;ctx.fillStyle=CAM.tint;ctx.fillRect(0,0,VW(),VH());ctx.globalAlpha=1;}
- {const low=game.lives<=5&&!game.over?(.35+.2*Math.sin(game.t*7)):0,hot=Math.min(.35,game.combo/150);if(low||hot>.05||CAM.slow>0){const g=ctx.createRadialGradient(VW()/2,VH()/2,Math.min(VW(),VH())*.35,VW()/2,VH()/2,Math.max(VW(),VH())*.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,low?`rgba(200,0,30,${low})`:CAM.slow>0?'rgba(0,0,0,.55)':`rgba(255,90,40,${hot})`);ctx.fillStyle=g;ctx.fillRect(0,0,VW(),VH());}
-  if(low&&!RM&&Math.random()<.3&&fx.length<FX_CAP-20)pushFx({x:Math.random()*W,y:-5,vx:0,vy:260,t:2.2,c:'#9fd8ff',drop:true,sz:2});}
+ {const low=game.lives<=5&&!game.over?(.4+.22*Math.sin(game.t*7)):0,hot=Math.min(.4,game.combo/130);if(low||hot>.05||CAM.slow>0){const g=ctx.createRadialGradient(VW()/2,VH()/2,Math.min(VW(),VH())*.28,VW()/2,VH()/2,Math.max(VW(),VH())*.82);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.7,low?'rgba(80,20,10,.12)':'rgba(40,20,10,.08)');g.addColorStop(1,low?`rgba(160,20,20,${low})`:CAM.slow>0?'rgba(0,0,0,.6)':`rgba(180,70,30,${hot})`);ctx.fillStyle=g;ctx.fillRect(0,0,VW(),VH());}
+  if((low||hot>.15)&&!RM&&Math.random()<.45&&fx.length<FX_CAP-20){const edge=Math.random();const px=edge<.25?Math.random()*W:edge<.5?Math.random()*W:edge<.75?-8:W+8,py=edge<.25?-8:edge<.5?H+8:Math.random()*H;pushFx({x:px,y:py,vx:(Math.random()-.5)*40,vy:edge<.5?80+Math.random()*120:(Math.random()-.5)*60,t:2.4,c:Math.random()<.5?'#9fd8ff':'#c9b08a',drop:true,sticky:true,sz:2.5});}}
  if(CAM.bars>.01){const bh=VH()*.09*CAM.bars;ctx.fillStyle='#000';ctx.fillRect(0,0,VW(),bh);ctx.fillRect(0,VH()-bh,VW(),bh);}
  if(game.card&&game.card.t>0){const c=game.card,k=1-c.t/c.T,a=Math.min(1,c.t*2,k*6),sl=k<.15?(1-k/.15)*VW():0;ctx.save();ctx.globalAlpha=a;ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,VH()*.36,VW(),VH()*.26);ctx.fillStyle=c.c;ctx.fillRect(0,VH()*.36,VW(),4);ctx.fillRect(0,VH()*.62-4,VW(),4);
   ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${fs(44)} sans-serif`;ctx.lineWidth=7;ctx.strokeStyle='#000';ctx.strokeText(c.title,VW()/2+sl,VH()*.44);ctx.fillStyle=c.c;ctx.fillText(c.title,VW()/2+sl,VH()*.44);
   ctx.font=`bold ${fs(18)} sans-serif`;ctx.fillStyle='#fff';ctx.fillText(c.sub,VW()/2-sl,VH()*.515);if(c.ev){ctx.fillStyle=Math.sin(game.t*14)>0?'#ffb03a':'#ff3c3c';ctx.fillText(c.ev,VW()/2+sl*.5,VH()*.575);}ctx.restore();ctx.textBaseline='alphabetic';}
  if(game.streak&&game.streak.t>0){const st=game.streak,k=st.t/st.T;ctx.save();ctx.globalAlpha=Math.min(1,st.t*2);ctx.translate(VW()-12,VH()*.2);ctx.rotate(-.08);ctx.scale(1+(k>.85?(k-.85)*3:0),1+(k>.85?(k-.85)*3:0));ctx.textAlign='right';ctx.font=`900 ${fs(24)} sans-serif`;ctx.lineWidth=6;ctx.strokeStyle='#000';ctx.strokeText(st.txt,0,0);ctx.fillStyle=st.col;ctx.fillText(st.txt,0,0);ctx.restore();}
- for(const p of splats){const k=p.t/p.T,x=p.x*VW(),y=p.y*VH();ctx.globalAlpha=Math.min(.55,k*.8);ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(x,y,p.r,p.r*.75,p.s,0,7);ctx.fill();
-  for(let i=0;i<p.n;i++){const a=p.s+i*2.1,dx=Math.cos(a)*p.r*1.1,dy=Math.sin(a)*p.r*.9;ctx.beginPath();ctx.arc(x+dx,y+dy,p.r*.22,0,7);ctx.fill();ctx.fillRect(x+dx*.6-2,y+dy*.6,4,(1-k)*p.r*1.4);}}
+ for(const p of splats){const k=p.t/p.T,x=p.x*VW(),y=p.y*VH();ctx.globalAlpha=Math.min(.7,k*.95);ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(x,y,p.r,p.r*.8,p.s,0,7);ctx.fill();
+  for(let i=0;i<p.n;i++){const a=p.s+i*2.1,dx=Math.cos(a)*p.r*1.2,dy=Math.sin(a)*p.r*1.0;ctx.beginPath();ctx.ellipse(x+dx,y+dy,p.r*.28,p.r*.35,a,0,7);ctx.fill();ctx.fillRect(x+dx*.55-2,y+dy*.55,5,(1-k)*p.r*1.7);}}
  ctx.globalAlpha=1;
  if(game.combo>=50&&!RM){const a=.12+.08*Math.sin(game.t*8);ctx.strokeStyle=`rgba(255,60,138,${a})`;ctx.lineWidth=18;ctx.strokeRect(0,0,VW(),VH());}
  if(game.combo>=5){ctx.font=`bold ${fs(game.combo>=25?22:16)} sans-serif`;ctx.textAlign='right';ctx.strokeStyle='#000';ctx.lineWidth=4;const tx=`${game.combo} COMBO`;ctx.strokeText(tx,VW()-10,VH()-12);ctx.fillStyle=game.combo>=100?`hsl(${(game.t*360)%360},100%,65%)`:game.combo>=50?'#ff3c8a':game.combo>=25?'#ff8a5c':'#ffd36b';ctx.fillText(tx,VW()-10,VH()-12);}
