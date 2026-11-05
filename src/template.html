@@ -18,6 +18,8 @@ button:active:not(:disabled){transform:scale(.96)}
 button:disabled{opacity:.45;cursor:default}
 button.go{background:#8a2a1a;border-color:#ff8a5c}
 @media (hover:hover){button.go:hover:not(:disabled){background:#b2381f}}
+#bWave.go:not(:disabled){min-width:148px;box-shadow:0 0 10px #ff8a5c88;animation:wavePulse 1.5s ease-in-out infinite}
+@keyframes wavePulse{50%{box-shadow:0 0 18px #ffd36b;border-color:#ffd36b}}
 /* HUD */
 #hud{flex:none;display:flex;align-items:center;gap:10px;padding:4px 10px;background:linear-gradient(#2b2219,#1d1712);border-bottom:2px solid #6b4b25;flex-wrap:wrap}
 #hud .stats{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
@@ -777,6 +779,7 @@ function overwake(t,i){const c=overCost(t);if(!canOver(t)||game.gold<c)return;ga
  siteBurst(t.x,t.y,'#ffd36b',{n:52,R:110,shake:10,txt:'極覚醒！',big:true,sweat:true,sp:320,lw:6,ring3:true,rt:.85,alt:'#c98aff',dr:28});
  pushFx({ring:true,x:t.x,y:t.y,r:14,R:70,t:.9,T:.9,c:'#c98aff',lw:4});snd(520,.35,'sawtooth',.07,700);if(navigator.vibrate&&TOUCH)try{navigator.vibrate([50,40,50])}catch(_){};renderInfo();updHud();}
 function sell(t){const v=Math.round(t.spent*S().sellRate);game.gold+=v;const ox=t.x,oy=t.y;towers=towers.filter(o=>o!==t);statsDirty=true;picked=null;snd(300,.1,'triangle',.05,-150);
+ float(ox,oy-20,'+'+v+'G','#ffd36b',true,.9);
  siteBurst(ox,oy,'#8a6a40',{n:26,R:54,shake:3.5,txt:Math.random()<.5?'撤去！':'もう許せるぞオイ！',sweat:false,sp:200,lw:3,dc:'#5a4030',dr:20,alt:'#b0b0b0'});
  if(Math.random()<.5)flavor(pick(L.sell),'navy_left_face','',1100,3);renderInfo();updHud();}
 
@@ -810,7 +813,7 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
   if(srcT.k==='chain'&&srcT.over===1){e.mark=3;e.markV=Math.max(e.markV,.2+s.markAdd);}
   if(srcT.k==='siphon'&&srcT.over===1)poisonE(e,8*(1+.1*srcT.lvl),2,srcT);
   if(s.sniperMark&&srcT.k==='sniper'){e.mark=3;e.markV=Math.max(e.markV,.2+s.markAdd);}
-  if(st&&st.sip&&srcT.sipG<st.sipCap){let g=st.sip+(srcT.mut===1&&e.d.boss?5:0);g=Math.min(g,st.sipCap-srcT.sipG);srcT.sipG+=g;game.gold+=g;if(Math.random()<.12)float(srcT.x,srcT.y-18,'+'+g+'G 集金','#ffd36b');}
+  if(st&&st.sip&&srcT.sipG<st.sipCap){let g=st.sip+(srcT.mut===1&&e.d.boss?5:0);g=Math.min(g,st.sipCap-srcT.sipG);srcT.sipG+=g;game.gold+=g;if(g>0)float(srcT.x,srcT.y-16,'+'+g,'#ffd36b');}
   if(srcT.k==='siphon'&&srcT.mut===1){e.slowT=Math.max(e.slowT,1);e.slow=Math.max(e.slow,.15);}}
  if(e.d.boss&&Math.random()<.04)splat(e.d.col);
  if(crit){float(e.x,e.y-e.d.r-6,pick(L.crit)+' '+Math.round(dmg),'#ff5c8a',true,.9);snd(990,.07,'square',.05,-500);shake(3.5);
@@ -979,8 +982,9 @@ function waveClear(){const s=S();game.inWave=false;
  const clearGoro=['いいゾ〜これ','やりますねぇ！','114514！','もう許せるぞオイ！','王道を征く','あーいいっすね～','がんばれ！','キタ！'];
  if(Math.random()<.65&&!(game.wave>=game.maxWave&&!game.endless))big(pick(clearGoro),'#ffd36b',1.05);
  let inc=20+game.wave*5,lifeUp=0,nb0=0;
- for(const t of towers){if(t.k==='bank'){inc+=bankIncome(t);if(t.mut===0)nb0++;if(t.mut===1)lifeUp++;}t.critB=0;t.sipG=0;t.stunT=0;if(t.k==='mine')t.armed=1;if(t.k==='wall')t.hp=tStats(t).maxHp;}
+ for(const t of towers){if(t.k==='bank'){const n=bankIncome(t);inc+=n;float(t.x,t.y-22,'+'+n+'G','#ffd36b',false,.85);if(t.mut===0)nb0++;if(t.mut===1)lifeUp++;}t.critB=0;t.sipG=0;t.stunT=0;if(t.k==='mine')t.armed=1;if(t.k==='wall')t.hp=tStats(t).maxHp;}
  const rate=s.interest+.04*nb0+(s.setEco&&tagN('経済')>=2?.03:0)+(nb0&&s.ecoBond?.01:0);const intr=(rate>0&&game.chal!=='poor')?Math.min(120+100*nb0+(towers.some(t=>t.k==='bank'&&t.over===0)?120:0),Math.floor(game.gold*rate)):0;
+ if(intr){const ib=towers.filter(t=>t.k==='bank'&&t.mut===0);if(ib.length)for(const t of ib)float(t.x,t.y-36,'利息','#ffe08a',false,.9);else float(W/2,80,'利息 +'+intr+'G','#ffe08a',false,.9);}
  game.gold+=inc+intr;game.lives+=lifeUp+s.lifeRegen;fires=[];stageClear();
  if(s.debt){if(game.gold>=s.debt){game.gold-=s.debt;toast(`借金返済 -${s.debt}G（やめてくれよ…）`,'navy_left_face','bad',1600);}else{game.lives-=1;toast('借金払えずライフ-1（取り立て汁まみれ）','navy_left_face','bad shake',1600);if(game.lives<=0){game.lives=0;gameOver();return;}}}
  toast(`ウェーブ ${game.wave} クリア！ +${inc}G${intr?`・利息+${intr}G`:''}${lifeUp?`・おごりライフ+${lifeUp}`:''}　${pick(L.waveClear)}`,'senpai_face','',2200);
@@ -1075,8 +1079,8 @@ function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{
  el.querySelector('.nm').textContent=d.short;el.querySelector('.ds').textContent=(d.role?`[${d.role}] `:'')+d.desc;el.title=d.name+'：'+(d.vs||d.desc);el.onclick=()=>selectShop(k);box.appendChild(el);});updShop();}
 function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k,c=cost(k),ce=el.querySelector('.cost');ce.textContent=c?c+'G':'タダ';ce.classList.toggle('free',!c);el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<c);});}
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
-function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave');bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':'ウェーブ開始';
- const nw=game.wave+1;$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);
+function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave'); bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':(TOUCH?'ウェーブ開始':'ウェーブ開始 (Space)');
+ const nw=game.wave+1;$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?'次: ボス戦！':'次: ウェーブ '+nw)+(game.inWave||TOUCH?'':'　Spaceで開始');
  const di=$('dailyInfo');if(di){if(game&&game.dailyMod){di.style.display='block';di.textContent=`📅 ${game.dailyMod.n}：${game.dailyMod.d}`;}else di.style.display='none';}
  updShop();if(picked)updInfoBtns();}
 function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
@@ -1085,15 +1089,12 @@ function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
  if(d.hype)return `全体 攻撃+${Math.round(game.hypeD*100)}%${game.hypeR?`・速度+${Math.round(game.hypeR*100)}%`:''}（応援団合計）`;
  if(d.mine)return `爆発 ${st.dmg.toFixed(0)}・爆風 ${Math.round(st.splash)}<br>再装填 ${st.rate.toFixed(1)}s・${t.armed?'装填済み':'装填中…'}・撃破 ${t.kills}`;
  if(d.gaze)return `被ダメ +${Math.round(st.markV*100)}%・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}・撃破 ${t.kills}`;
- if(d.hype)return `全体 攻撃+${Math.round(game.hypeD*100)}%${game.hypeR?`・速度+${Math.round(game.hypeR*100)}%`:''}（応援団合計）`;
- if(d.mine)return `爆発 ${st.dmg.toFixed(0)}・爆風 ${Math.round(st.splash)}<br>再装填 ${st.rate.toFixed(1)}s・${t.armed?'装填済み':'装填中…'}・撃破 ${t.kills}`;
- if(d.gaze)return `被ダメ +${Math.round(st.markV*100)}%・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}・撃破 ${t.kills}`;
  if(d.mud)return `泥床 減速帯 半径${Math.round(st.range)}・踏むたび汚泥`;
  if(d.freeze)return `凍結 ${((d.freeze||.7)*(1+.08*(t.lvl-1))*(t.mut===0?1.7:1)).toFixed(2)}s・ダメ ${st.dmg.toFixed(0)}・間隔 ${st.rate.toFixed(2)}s`;
  if(d.flies)return `ハエ群れ・看破・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}・撃破 ${t.kills}`;
  if(d.aura)return `オーラ 攻撃+${Math.round(st.aur*100)}%・射程 ${Math.round(st.range)}`;
  let a=d.poison?`毒 ${st.pois.toFixed(1)}/s`:`攻撃 ${st.dmg.toFixed(1)}`;a+=`・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}`;
- if(st.chain)a+=`・連鎖 ${st.chain}`;if(st.aura)a+=` <span style="color:#d9b36a">★+${Math.round(st.aura*100)}%</span>`;if(st.crit)a+=`・クリ ${Math.round((st.crit+(t.critB||0))*100)}%`;if(st.sip)a+=`・集金 ${t.sipG}/${st.sipCap}G`;if(st.sip)a+=`・集金 ${t.sipG}/${st.sipCap}G`;return a+`・撃破 ${t.kills}`;}
+ if(st.chain)a+=`・連鎖 ${st.chain}`;if(st.aura)a+=` <span style="color:#d9b36a">★+${Math.round(st.aura*100)}%</span>`;if(st.crit)a+=`・クリ ${Math.round((st.crit+(t.critB||0))*100)}%`;if(st.sip)a+=`・集金 ${t.sipG}/${st.sipCap}G`;return a+`・撃破 ${t.kills}`;}
 function getAwakenHint(k,mut,idx){
  const hints={
   senpai:{0:{0:'💥 クリ特化',1:'⚡ 連射特化'},1:{0:'🎯 超射程・処刑',1:'💫 貫通'}},
@@ -1123,7 +1124,7 @@ function updInfoBtns(){if(!picked)return;const c=upCost(picked),mc=mutCost(picke
  if(u){u.textContent=picked.lvl>=mx?'MAX':`強化 ${c}G`;u.disabled=picked.lvl>=mx||game.gold<c;}
  for(const i of [0,1]){const b=$('bM'+i);if(b){b.disabled=game.gold<mc;b.title=`覚醒 ${mc}G`;}}
  for(const i of [0,1]){const b=$('bO'+i);if(b){b.disabled=game.gold<oc;b.title=`極覚醒 ${oc}G`;}}
- if(s)s.textContent=`売却 ${Math.round(picked.spent*S().sellRate)}G`;
+ if(s)s.textContent=`売却 +${Math.round(picked.spent*S().sellRate)}G`;
  const sl=$('stl');if(sl)sl.innerHTML=statLine(picked);}
 function setPaused(v){paused=v;$('bPause').textContent=paused?'▶':'⏸';}
 $('bStart').onclick=()=>{$('title').classList.remove('on');reset();snd(523,.1,'triangle',.06);toast('おっすお願いしまーす（お願いしない）','senpai_face','',1800);openSitu();};
