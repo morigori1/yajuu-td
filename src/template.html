@@ -34,14 +34,15 @@ button.go{background:#8a2a1a;border-color:#ff8a5c}
 #side{flex:none;width:224px;background:#1d1712;border-left:2px solid #6b4b25;padding:8px;display:flex;flex-direction:column;gap:6px;overflow-y:auto}
 #side h3{margin:2px 0;font-size:14px;color:#ffd36b}
 #shop{display:flex;flex-direction:column;gap:6px}
-.shop{display:flex;align-items:center;gap:8px;padding:5px;border:2px solid #4a3720;border-radius:12px;background:#2a2017;cursor:pointer;position:relative;min-height:56px;touch-action:manipulation}
+.shop{display:flex;align-items:center;gap:8px;padding:5px;border:2px solid #4a3720;border-radius:12px;background:#2a2017;cursor:pointer;position:relative;min-height:56px;touch-action:manipulation;transition:all .15s ease}
 @media (hover:hover){.shop:hover{border-color:#c49a52}}
-.shop.sel{border-color:#ffd36b;background:#4a3720;box-shadow:0 0 8px #ffd36b88}
+.shop.sel{border-color:#ffd36b;background:#4a3720;box-shadow:0 0 12px #ffd36b;transform:scale(1.03)}
 .shop.poor{opacity:.5}
 .shop img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:3px solid var(--rc);flex:none}
 .shop .nm{font-size:13px;font-weight:700;line-height:1.15;padding-right:34px}
 .shop .ds{font-size:11px;color:#c9b894;line-height:1.25}
-.shop .cost{position:absolute;right:6px;top:4px;font-size:12px;color:#ffd36b;font-weight:800}
+.shop .cost{position:absolute;right:6px;top:4px;font-size:13px;color:#ffd36b;font-weight:800;background:#1a1511aa;padding:2px 5px;border-radius:4px;border:1px solid #6b4b25}
+.shop.poor .cost{color:#ff5c3c;border-color:#ff5c3c44}
 .shop .key{position:absolute;right:6px;bottom:3px;font-size:10px;color:#8d7b5d}
 #info{border:2px solid #4a3720;border-radius:12px;padding:8px;background:#241b13;font-size:13px;min-height:120px}
 #info .row{display:flex;gap:8px;align-items:center}
@@ -265,6 +266,7 @@ body.tut-lock #draft,body.tut-lock #story,body.tut-lock #explore,body.tut-lock #
       <div class="stat">❤️<b id="lives">0</b></div>
       <div class="stat">🌊<b id="wave">0</b>/<span id="wmax">15</span></div>
       <div id="nextinfo"></div>
+      <div id="dailyInfo" style="display:none;font-size:11px;color:#ffd36b;margin-top:2px"></div>
     </div>
     <div class="ctl">
       <button id="bSpeed" title="速度 (F)">▶x1</button>
@@ -1069,7 +1071,9 @@ function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{
 function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k,c=cost(k),ce=el.querySelector('.cost');ce.textContent=c?c+'G':'タダ';ce.classList.toggle('free',!c);el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<c);});}
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave');bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':'ウェーブ開始';
- const nw=game.wave+1;$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);updShop();if(picked)updInfoBtns();}
+ const nw=game.wave+1;$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);
+ if(game.dailyMod){$('dailyInfo').style.display='block';$('dailyInfo').textContent=`📅 ${game.dailyMod.n}：${game.dailyMod.d}`;}else{$('dailyInfo').style.display='none';}
+ updShop();if(picked)updInfoBtns();}
 function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
  if(d.wall)return `HP ${Math.ceil(t.hp)}/${Math.round(st.maxHp)}${s.wallThorn||t.mut===0?'・トゲあり':''}`;
  if(d.bank)return `毎ウェーブ +${bankIncome(t)}G・範囲撃破 +${t.lvl}G`;
@@ -1771,13 +1775,13 @@ function recordRun(){if(game._rec17)return;game._rec17=1;const m=meta();m.runs++
 const _win17=win;win=function(){_win17();try{recordRun();}catch(_){}};
 const _go17=gameOver;gameOver=function(){const was=game.over;_go17();if(!was)try{recordRun();}catch(_){}};
 const DAILY_MODS=[
- {n:'地雷半額の日',d:'810地雷のコスト-50%',ic:'mine',ap:(g,s)=>{s.tCost.mine=.5;}},
- {n:'銀行利息アップ',d:'810銀行の利息効果+50%',ic:'bank',ap:(g,s)=>{s.bankMul+=.5;}},
- {n:'先輩強化の日',d:'先輩砲台の攻撃速度+25%',ic:'senpai',ap:(g,s)=>{s.tRate.senpai+=.25;}},
- {n:'報酬増額の日',d:'敵の撃破報酬+30%',ic:'senpai_face',ap:g=>{g._dailyBounty=.3;}},
- {n:'射程延長の日',d:'全タワーの射程+20%',ic:'gaze',ap:(g,s)=>{s.gRange+=.2;}},
- {n:'初期資金ボーナス',d:'初期資金+100G',ic:'trio_sepia_face#gold',ap:g=>{g.gold+=100;}},
- {n:'敵弱体の日',d:'敵のHP-15%',ic:'collar_face',ap:g=>{g._dailyHpMul=.85;}}];
+ {n:'810地雷セール',d:'地雷半額！やったぜ',ic:'mine',ap:(g,s)=>{s.tCost.mine=.5;}},
+ {n:'利息ですねぇ',d:'銀行利息+50%（810万円）',ic:'bank',ap:(g,s)=>{s.bankMul+=.5;}},
+ {n:'先輩イキイキ',d:'先輩砲台速度+25%（やりますねぇ）',ic:'senpai',ap:(g,s)=>{s.tRate.senpai+=.25;}},
+ {n:'撃破報酬ボーナス',d:'報酬+30%（もらうぜ）',ic:'senpai_face',ap:g=>{g._dailyBounty=.3;}},
+ {n:'見とけよ射程',d:'全射程+20%（見とけよ見とけよ）',ic:'gaze',ap:(g,s)=>{s.gRange+=.2;}},
+ {n:'おごりの114514G',d:'初期+100G（おかのした）',ic:'trio_sepia_face#gold',ap:g=>{g.gold+=100;}},
+ {n:'汗だく弱体',d:'敵HP-15%（汗で弱る）',ic:'collar_face',ap:g=>{g._dailyHpMul=.85;}}];
 const _reset17=reset;reset=function(){if(V17.pendDaily){const k=todayKey();_dailyRng=mulberry(seedOf('yajuu'+k));V17.daily=k;}else{_dailyRng=null;V17.daily=false;}_reset17();game.daily=V17.daily;game._rec17=0;const dayIdx=game.daily?new Date().getDay():null;if(dayIdx!=null){const mod=DAILY_MODS[dayIdx];game.dailyMod=mod;if(mod.ap)mod.ap(game,game.stats);toast(`📅 デイリー ${game.daily}：${mod.n}（${mod.d}）`,mod.ic,'',3000);}else if(game.daily){toast(`📅 デイリーシード ${game.daily}：全員同じ展開（ズルなし）`,'senpai_face','',2400);}};
 const SKC={sweat:'#9fd8ff',gold:'#ffd36b',mud:'#7a5a30',crown:'#ffcc33',rainbow:null,black:'#111'};
 function drawV17(){if(!game||curSkin==='none'&&!game.daily)return;const sc=view.k*view.dpr,_z=CAM.z;const [vx,vy]=P(CAM.x,CAM.y);const _cx=vx*sc,_cy=vy*sc;ctx.save();ctx.setTransform(sc*_z,0,0,sc*_z,_cx*(1-_z),_cy*(1-_z));const tt=performance.now()/1000;
