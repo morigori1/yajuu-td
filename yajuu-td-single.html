@@ -1690,6 +1690,70 @@ const _draw17=draw;draw=function(){_draw17();try{drawV17();}catch(_){}};
   for(const t of TITLES){const ok=t.ok(m);const k=document.createElement('button');k.className='card';k.disabled=!ok;k.style.opacity=ok?1:.45;k.innerHTML='<b></b><br><small></small>';k.querySelector('b').textContent=(curTitle===t.n?'✔ ':'')+(ok?t.n:'🔒 ???');k.querySelector('small').textContent=t.d;k.onclick=()=>{curTitle=t.n;LSset('yajuuTD_title',t.n);showSkin();updT();};TL.appendChild(k);}};
  bk.onclick=()=>{showSkin();so.classList.add('on');};$('skinBack').onclick=()=>so.classList.remove('on');
  const updT=()=>{const e=$('best');if(e){let s=e.dataset.b??(e.dataset.b=e.textContent);e.textContent=`${s?s+'　':''}称号：${curTitle}`;}};updT();})();
+/* ===== v18: 下北沢公式資料館 ===== */
+const V18={
+ lore:[
+  {h:'第一章　下北沢の伝説',img:'title_senpai',t:'某年某月、下北沢の一角に一人の「先輩」が現れた。年齢は24歳（自称・学生）。以後その名は語録と共にネットの地層に刻まれ、誰も正体を知らないまま伝説だけが増殖した。'},
+  {h:'第二章　屋上の盟約',img:'senpai_face',t:'暑い日だった。屋上で焼いた肌と、冷えたアイスティー。この「おもてなし」の精神こそ当館が定める先輩道の原点である（詳細は機密）。'},
+  {h:'第三章　部室の主たち',img:'locker_left_face',t:'ロッカーの影には先輩を慕う者、恐れる者、ただ汗をかく者がいた。彼らは今日も「後輩」として本作の敵勢力を構成している。'},
+  {h:'第四章　紺の三連星',img:'navy_trio_card',t:'紺の制服に身を包んだ三人組。中央・左・右の各個体は連携して進軍する。公式見解：「仲はいい（迫真）」'},
+  {h:'第五章　セピアの記憶',img:'trio_sepia_card',t:'古ぼけた写真に写る三人。年代測定の結果「114514年前」と判明したが、測定器が壊れていた可能性がある。'},
+  {h:'第六章　胸ぐらの真実',img:'collar_card',t:'掴むか、掴まれるか。胸ぐらは先輩界における最古の契約形式とされる。'},
+  {h:'終章　野獣と化した先輩',img:'grimace_face',t:'真の姿は誰も見ていない。見た者は皆「ファッ！？」と叫んだ後、静かに塔を建て始めるという。'},
+ ],
+ goroku:[
+  ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
+  ['ファッ！？','驚愕・会心時の発声。語源は諸説ある','No.002'],
+  ['やりますねぇ！','称賛。上位者から下位者へ与える最高位の勲章','No.003'],
+  ['まずうちさぁ、屋上あんだけど…焼いてかない？','勧誘定型文。断ると汗をかく','No.004'],
+  ['暴れんなよ…暴れんなよ…','鎮静の呪文。本作では全敵足止めスキル','No.005'],
+  ['アイスティーしかなかったけどいいかな？','もてなしの儀。品切れ時の代替手段は存在しない','No.006'],
+  ['おかのした','了承。「おかしいな、わかった」の古語との説あり','No.007'],
+  ['114514','聖数。あらゆる計算の答えになりうる','No.008'],
+  ['810','補助聖数。「やっと」とも読む','No.009'],
+  ['ンアッー！','意味不明。解読班は全員休職中','No.010'],
+  ['イキスギィ！','限界突破の宣言。ボス戦専用','No.011'],
+  ['ぬわああああん疲れたもおおおん','撤退時の嘆き。体力が1割を切ると聞こえる','No.012'],
+  ['24歳、学生です','自己紹介の定型。真偽不明','No.013'],
+  ['ほら見ろよ見ろよ','注目を促す。視線塔の由来','No.014'],
+  ['頭にきますよ！','怒りの表明。攻撃力が上がる気がする','No.015'],
+  ['［削除済み］','当館規定により閲覧不可。■■■■','No.■■■'],
+ ],
+ bans:['当館の資料はすべてパロディです','実在の人物・団体とは一切関係ありません（迫真）','資料の持ち出しは汗で濡れるため禁止'],
+};
+(function(){
+ const css=document.createElement('style');css.textContent=`#codex .tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 0}#codex .tabs button.on{background:#ffd36b;color:#2a1a08}
+#cdx{max-width:760px;width:94%;max-height:62vh;overflow:auto;text-align:left;background:rgba(30,20,8,.85);border:2px solid #7a5a2a;border-radius:10px;padding:10px;color:#eee}
+#cdx .ent{display:flex;gap:10px;padding:8px;border-bottom:1px dashed #5a4020;align-items:flex-start}#cdx .ent img{width:72px;height:72px;object-fit:cover;border-radius:8px;border:2px solid #ffd36b;flex:none;filter:saturate(1.3) contrast(1.1)}
+#cdx h4{margin:0 0 3px;color:#ffd36b}#cdx small{color:#c9b894}#cdx .gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px}
+#cdx .gal figure{margin:0;text-align:center;cursor:pointer}#cdx .gal img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;border:2px solid #7a5a2a;transition:.15s}#cdx .gal img:hover{transform:scale(1.06) rotate(-2deg);border-color:#ffd36b}
+#cdx .no{font-family:monospace;color:#ff8a5b;margin-right:6px}#cdx .stamp{display:inline-block;border:2px solid #d33;color:#f55;padding:0 6px;transform:rotate(-6deg);font-weight:bold;margin:4px 0}
+#cdxBig{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:99;flex-direction:column;color:#ffd36b}#cdxBig.on{display:flex}#cdxBig img{max-width:88vw;max-height:76vh;border:4px solid #ffd36b;border-radius:10px;animation:cdxz .4s}
+@keyframes cdxz{from{transform:scale(.3) rotate(-20deg);opacity:0}}`;document.head.appendChild(css);
+ const after=$('bSkin')||$('bStory');const b=document.createElement('button');b.id='bCodex';b.style.cssText='margin-top:8px;min-height:44px';b.textContent='📚 下北沢公式資料館';after.after(b);
+ const o=document.createElement('div');o.className='ov';o.id='codex';
+ const tabs=[['lore','📜 人物録'],['gor','🗣 語録保管庫'],['tw','🗼 塔図鑑'],['en','👊 敵図鑑'],['map','🗺 地図'],['sk','🔥 スキル'],['gal','🖼 ギャラリー'],['faq','❓ 公式FAQ']];
+ o.innerHTML='<h2>📚 下北沢公式資料館（非公認）</h2><div class="tabs">'+tabs.map(([k,n])=>`<button data-k="${k}">${n}</button>`).join('')+'</div><div id="cdx"></div><button id="cdxBack" style="margin-top:10px">戻る（おかのした）</button>';
+ document.body.appendChild(o);const big=document.createElement('div');big.id='cdxBig';big.innerHTML='<img><div style="margin-top:8px;font-weight:bold"></div><small style="color:#c9b894">タップで閉じる</small>';big.onclick=()=>big.classList.remove('on');document.body.appendChild(big);
+ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ const im=n=>ASSETS[n]?`<img src="${ASSETS[n]}" alt="">`:'';
+ const ent=(img,h,t,s)=>`<div class="ent">${im(img)}<div><h4>${h}</h4><div>${t}</div>${s?`<small>${s}</small>`:''}</div></div>`;
+ const R={
+  lore:()=>V18.lore.map(l=>ent(l.img,esc(l.h),esc(l.t))).join('')+'<div class="stamp">極秘</div>',
+  gor:()=>V18.goroku.map(([g,d,n])=>`<div class="ent" data-say="${esc(g)}" style="cursor:pointer"><div><h4><span class="no">${n}</span>「${esc(g)}」</h4><small>${esc(d)}　🔊タップで再生</small></div></div>`).join(''),
+  tw:()=>Object.entries(TOWERS).map(([k,t])=>ent(t.img,esc(t.name)+(t.role?` <small>［${esc(t.role)}］</small>`:''),esc(t.desc||''),`💰${t.cost??'-'}　射程${t.range??'-'}　火力${t.dmg??'-'}<br>${esc(t.vs||'')}<br>${(t.muts||[]).map(m=>'◆'+esc(m.n)+'：'+esc(m.d)).join('<br>')}${(t.overs||[]).map(m=>'<br>★'+esc(m.n)+'：'+esc(m.d)).join('')}`)).join(''),
+  en:()=>Object.entries(ENEMIES).map(([k,e])=>ent(e.img,esc(e.name),`HP ${e.hp}　速度 ${e.speed}　賞金 ${e.bounty}`,`危険度：${'💀'.repeat(Math.min(5,Math.ceil((e.hp||1)/120)))}　識別子 ${esc(k)}`)).join(''),
+  map:()=>MAPS.map((m,i)=>ent(['title_senpai','navy_trio_card','trio_sepia_card','locker_right_face','collar_card'][i%5],esc(m.name),esc(m.desc),'攻略：'+esc(m.tip)+'　相性：'+esc(m.fav))).join(''),
+  sk:()=>SK.map(s=>`<div class="ent"><div style="font-size:40px">${s.ic}</div><div><h4>${esc(s.n)} <small>(${s.k.toUpperCase()}) 気合${s.cost}／CD${s.cd}s</small></h4><div>${esc(s.d)}</div></div></div>`).join('')+(typeof SKINS!=='undefined'?'<h4 style="color:#ffd36b">塔スキン</h4>'+SKINS.map(s=>'・'+esc(s.n)+'：'+esc(s.d)).join('<br>'):''),
+  gal:()=>'<div class="gal">'+Object.keys(ASSETS).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
+  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
+ };
+ const show=k=>{o.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.k===k));const c=$('cdx');c.innerHTML=R[k]();c.scrollTop=0;
+  c.querySelectorAll('[data-say]').forEach(e=>e.onclick=()=>{try{if(typeof voice==='function')voice(e.dataset.say,2,1);else if(window.speechSynthesis&&!muted){const u=new SpeechSynthesisUtterance(e.dataset.say);u.lang='ja-JP';u.pitch=.6;speechSynthesis.cancel();speechSynthesis.speak(u);}}catch(_){}try{snd(440,.08,'square',.05);}catch(_){}});
+  c.querySelectorAll('[data-n]').forEach(f=>f.onclick=()=>{big.querySelector('img').src=ASSETS[f.dataset.n];big.querySelector('div').textContent='資料「'+f.dataset.n+'」— 閲覧には汗が必要です';big.classList.add('on');try{snd(220,.15,'sawtooth',.05);}catch(_){}});};
+ o.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>show(x.dataset.k));
+ b.onclick=()=>{show('lore');o.classList.add('on');};$('cdxBack').onclick=()=>o.classList.remove('on');
+})();
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
