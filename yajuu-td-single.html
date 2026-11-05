@@ -304,7 +304,7 @@ body.tut-lock #draft,body.tut-lock #story,body.tut-lock #explore,body.tut-lock #
   <div class="imgs"><img class="hero" id="tHero" alt=""><img class="side" id="tSide" alt=""></div>
   <div class="logo">野獣先輩<br class="pbr">タワーディフェンス</div>
   <div class="sub">～ 迫真TD部・下北沢防衛の裏技 ～</div>
-  <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！14種のベース塔は<b>覚醒で進化</b>：<b>壁チョーク</b>・<b>範囲レーン</b>・<b>オーラ／応援ハブ</b>・<b>地雷／泥床</b>・<b>視線デバフ</b>・<b>凍結</b>・<b>ハエ看破</b>。毒＝装甲、電撃＝盾、狙撃＝特殊優先、胸ぐら覚醒＝凍結、泥だまり＝道の持続減速。マップ8種（十字・サウナ・駅前ほか）。ウェーブ中の<b>橋ラッシュ・一本道・工事・汗だまり</b>で配置のやり直し。銀行／部室トリオは覚醒で集金／応援に変化（攻撃枠トレード）。覚醒後Lv5で<b>極覚醒</b>。15突破でクリア。<b>演出は汁と汗と泥とハエで汚い</b>（PG）。<br><span id="ctlHelp"></span></div>
+  <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！14種のベース塔は<b>覚醒で進化</b>：<b>壁チョーク</b>・<b>範囲レーン</b>・<b>オーラ／応援ハブ</b>・<b>地雷／泥床</b>・<b>視線デバフ</b>・<b>凍結</b>・<b>ハエ看破</b>。毒＝装甲、電撃＝盾、狙撃＝特殊優先、胸ぐら覚醒＝凍結・酔わせ、泥だまり＝道の持続減速。マップ8種（十字・サウナ・駅前ほか）。ウェーブ中の<b>橋ラッシュ・一本道・工事・汗だまり</b>で配置のやり直し。銀行／部室トリオは覚醒で集金／応援に変化（攻撃枠トレード）。覚醒後Lv5で<b>極覚醒</b>。15突破でクリア。<b>演出は汁と汗と泥とハエで汚い</b>（PG）。<br><span id="ctlHelp"></span></div>
   <button class="go" id="bStart">はじめる（いいよ！こいよ！）</button>
   <button id="bTut" style="margin-top:8px;min-height:44px">📘 チュートリアル（初回練習）</button>
   <button id="bCamp" style="margin-top:8px;min-height:48px;background:#7a2b12;color:#ffe9b0">📖 キャンペーン（章選択）</button>
@@ -392,7 +392,11 @@ const MAPS=[
  {id:'deadline',name:'直線デッドライン',desc:'上下2本が中央で合流。短いので敵は遅め',tip:'短い道。狙撃と視線で特殊／ボス優先',fav:'狙撃・視線・減速',buff:{gRange:.1,markAdd:.08,slowAdd:.05},routes:[[[-1,2],[10,2],[10,6],[20.5,6]],[[-1,10],[10,10],[10,6],[20.5,6]]],bridges:[[[-1,2],[5,2],[5,10],[10,10],[10,6],[20.5,6]]],hot:[[9,4],[11,8],[14,5],[14,7]],eSp:.78},
  {id:'cross',name:'十字交差口',desc:'上下から中央交差へ合流。交差点が激戦',tip:'交差点に視線／オーラ／範囲。両レーンを同時に見ろ',fav:'視線・オーラ・範囲',buff:{markAdd:.07,auraRange:.12,splashMul:.1},routes:[[[-1,2],[7,2],[7,6],[20.5,6]],[[-1,10],[7,10],[7,6],[20.5,6]]],bridges:[[[-1,6],[7,6],[20.5,6]]],hot:[[7,4],[7,8],[12,6],[15,5]],eSp:1},
  {id:'sauna',name:'汗だくサウナ',desc:'長いクネクネ。床がぬるぬるで足止め向き',tip:'減速・凍結・泥床で時間を稼げ。毒も刺さる',fav:'減速・凍結・泥床',buff:{slowAdd:.1},routes:[[[-1,1],[15,1],[15,5],[4,5],[4,9],[17,9],[17,6],[20.5,6]]],bridges:[[[-1,1],[15,1],[15,9],[17,9],[17,6],[20.5,6]]],hot:[[9,3],[9,7],[13,7],[16,4]],eSp:1.05},
- {id:'station',name:'下北沢駅前',desc:'三方向から広場へ。短いが入口が多い',tip:'入口ごとに役割分担。狙撃で奥を刈り、前線は範囲／泥',fav:'狙撃・範囲・泥床',buff:{gRange:.08,splashMul:.08,mineDmg:.08},routes:[[[-1,2],[5,2],[5,7],[12,7],[12,5],[20.5,5]],[[-1,10],[5,10],[5,7],[12,7],[12,5],[20.5,5]],[[-1,5],[12,5],[20.5,5]]],bridges:[[[-1,7],[12,7],[12,5],[20.5,5]]],hot:[[6,5],[10,4],[10,8],[15,5]],eSp:.92}];
+ {id:'station',name:'下北沢駅前',desc:'三方向から広場へ。短いが入口が多い',tip:'入口ごとに役割分担。狙撃で奥を刈り、前線は範囲／泥',fav:'狙撃・範囲・泥床',buff:{gRange:.08,splashMul:.08,mineDmg:.08},routes:[[[-1,2],[5,2],[5,7],[12,7],[12,5],[20.5,5]],[[-1,10],[5,10],[5,7],[12,7],[12,5],[20.5,5]],[[-1,5],[12,5],[20.5,5]]],bridges:[[[-1,7],[12,7],[12,5],[20.5,5]]],hot:[[6,5],[10,4],[10,8],[15,5]],eSp:.92},
+ {id:'kitazawa',name:'北沢公園',desc:'中央広場から放射状。短いが同時攻撃が必要',tip:'中央にオーラ／範囲。外周に狙撃で奥を狩れ',fav:'オーラ・範囲・狙撃',buff:{auraRange:.15,splashMul:.12,gRange:.08},routes:[[[-1,6],[8,6],[8,1],[14,1],[14,6],[20.5,6]],[[-1,6],[8,6],[8,11],[14,11],[14,6],[20.5,6]],[[-1,1],[8,1],[8,6],[20.5,6]],[[-1,11],[8,11],[8,6],[20.5,6]]],bridges:[[[-1,6],[14,6],[20.5,6]]],hot:[[8,4],[8,8],[11,6],[16,3],[16,9]],eSp:.88},
+ {id:'azuma',name:'あずま寿し',desc:'カウンター型。敵が並んで来る狭い道',tip:'連射と毒で処理。泥床で時間稼ぎ',fav:'連射・毒・泥床',buff:{tRate:{navy:.15},poisonMul:.15,slowAdd:.08},routes:[[[-1,6],[18,6],[18,3],[20.5,3]],[[-1,6],[18,6],[18,9],[20.5,9]]],bridges:[[[-1,6],[10,6],[10,3],[20.5,3]]],hot:[[8,6],[12,5],[12,7],[16,4],[16,8]],eSp:.95},
+ {id:'laundry',name:'コインランドリー森',desc:'ぐるぐる回る洗濯機ルート。目が回る',tip:'中央ハブに集中砲火。回転を止めろ（無理）',fav:'オーラ・視線・電撃',buff:{auraRange:.18,markAdd:.08,chainAdd:1},routes:[[[-1,6],[3,6],[3,2],[9,2],[9,10],[15,10],[15,4],[20.5,4]]],bridges:[[[-1,6],[9,6],[15,6],[15,4],[20.5,4]]],hot:[[6,6],[12,6],[17,7]],eSp:1.08},
+ {id:'setagaya',name:'世田谷公園',desc:'広々とした芝生。敵が散らばる',tip:'射程と範囲で広域をカバー。狙撃で奥を狩れ',fav:'範囲・狙撃・視線',buff:{gRange:.12,splashMul:.15,markAdd:.06},routes:[[[-1,2],[6,2],[6,6],[14,6],[14,2],[20.5,2]],[[-1,10],[6,10],[6,6],[14,6],[14,10],[20.5,10]],[[-1,6],[14,6],[20.5,6]]],bridges:[[[-1,6],[6,6],[14,6],[20.5,6]]],hot:[[10,4],[10,8],[17,4],[17,8]],eSp:.9}];
 function mkRoute(pts,br){const wp=pts.map(([x,y])=>({x:x*T+T/2,y:y*T+T/2}));const seg=[];let total=0;for(let i=0;i<wp.length-1;i++){const l=Math.hypot(wp[i+1].x-wp[i].x,wp[i+1].y-wp[i].y);seg.push(l);total+=l;}return{wp,seg,total,open:!br,br:!!br};}
 function routeTiles(r,set){const WP=r.wp;for(let i=0;i<WP.length-1;i++){const a=WP[i],b=WP[i+1];const ax=Math.floor(a.x/T),ay=Math.floor(a.y/T),bx=Math.floor(b.x/T),by=Math.floor(b.y/T);for(let x=Math.min(ax,bx);x<=Math.max(ax,bx);x++)for(let y=Math.min(ay,by);y<=Math.max(ay,by);y++)set.add(x+','+y);}return set;}
 let MAP=MAPS[0],ROUTES=[],pathTiles=new Set(),deco=[],BLOCK=new Set(),HOT=new Set(),PUDDLE=[],mapIdx=0,mapOrder=[0];
@@ -412,11 +416,11 @@ function pickRoute(){const op=ROUTES.map((r,i)=>i).filter(i=>ROUTES[i].open);if(
 // ---------- meme lines ----------
 const L={
  kill:['ヌッ！','ンアッー！（了解）','あっ、そっかぁ…（昇天）','痛いですね…（他人事）','オォン！アォン！','ひでぇ…（褒め言葉）','あ ほ く さ','ぬわああん（完）','顔面ペチャ（物理）','そうだよ（死亡）','いかんでしょ（いく）','えぇ…（困惑して死ぬ）','は？（倒れる）','おかのした（成仏）','24歳、撃破です','ファッ！？ ウーン…','やめちくり〜（手遅れ）','114514（断末魔）','これもうわかんねぇな','汗だく（最期）','帰って、どうぞ（帰らぬ人）','やったぜ。','はっきりわかんだね（死）','なんだお前（素）','大丈夫か大丈夫か（大丈夫じゃない）'],
- crit:['ファッ！？','迫真の、迫真','ホラ、ホラ（ホラではない）','オラァ！（丁寧語）','FA！？','見とけよ（見えない速さ）','王道を往く一撃','は？（威圧）','お ま た せ','114514倍','ン゛ッ（会心）','ここすき'],
+ crit:['ファッ！？','迫真の、迫真','ホラ、ホラ（ホラではない）','オラァ！（丁寧語）','FA！？','見とけよ（見えない速さ）','王道を征く一撃','は？（威圧）','お ま た せ','114514倍','ン゛ッ（会心）','ここすき'],
  critToast:['ファッ！？（会心の会心）','迫真！（何が？）','今の見た？ 嘘つけ絶対見てたゾ','痛いですね…これは痛い（確信）','ホラ、ホラ、ホラ（何もない）'],
  leak:['まずいですよ！（まずくない）','入って、どうぞ（入るな）','あっ…（察し）（察せない）','やめてくれよ…（絶望）（希望）','何やってんだお前ぇ！（俺）','いいよ！こいよ！（来ないで）','おかしいですよ！カテジナさん！（誰）','ちょっと待ってくださいよォ！（もう遅い）','そうだよ（入られた）','玄関、汗だく（意味不明）','は？ 抜けた？ 抜けたって何？'],
- waveStart:['おまたせ！（待ってない）','いいよ！こいよ！（来る）','見とけよ見とけよ〜（目をそらす）','じゃけん防衛しましょうね〜','まあ、多少はね？（多少ではない）','おっ、来たな（来た）','まずうちさぁ…ウェーブあんだけど…来てかない？','そうですねぇ…やっぱり僕は、王道を往く、防衛系ですか','後輩「先輩、ウェーブですよ」先輩「ウェーブだよ」','ほら、行くどー（行かない）','あっ、そっかぁ（開戦）','24歳、ウェーブです'],
- waveClear:['いいゾ〜これ','やりますねぇ！（他人事）','あーいいっすねー（棒）','疲れたもおおん（元気）','やったぜ。','すっげぇ綺麗（主観）','はっきりわかんだね','そうだよ（クリア）','あ ほ く さ（勝利）','これもうわかんねぇな（勝った）','王道を往く、クリア系ですか','ま、多少はね？（全滅）'],
+ waveStart:['おまたせ！（待ってない）','いいよ！こいよ！（来る）','見とけよ見とけよ〜（目をそらす）','じゃけん防衛しましょうね〜','まあ、多少はね？（多少ではない）','おっ、来たな（来た）','まずうちさぁ…ウェーブあんだけど…来てかない？','そうですねぇ…やっぱり僕は、王道を征く、防衛系ですか','後輩「先輩、ウェーブですよ」先輩「ウェーブだよ」','ほら、行くどー（行かない）','あっ、そっかぁ（開戦）','24歳、ウェーブです'],
+ waveClear:['いいゾ〜これ','やりますねぇ！（他人事）','あーいいっすねー（棒）','疲れたもおおん（元気）','やったぜ。','すっげぇ綺麗（主観）','はっきりわかんだね','そうだよ（クリア）','あ ほ く さ（勝利）','これもうわかんねぇな（勝った）','王道を征く、クリア系ですか','ま、多少はね？（全滅）'],
  place:['ここ、置いてかない？','そうだよ（設置）','あっ、いいっすねー','おかのした','置いたぜ（置いた）','入って、どうぞ（タワーが）','24歳、タワーです','いいよ！こいよ！（来ないで）'],
  site:['そこ！','立地ォ！','ファッ！？','おかのした！','ここだよォ','置いたぜ（迫真）','いい立地（そうだよ）','ドンッ（設置）','暑苦しい立地（褒めてる）','ここすき（地形）','床がぬるい','汗のシミ','汚ねぇ立地（褒めてる）'],
  hitFx:['ヌッ','ッ','痛','汗','ォン','は？','ンッ','チッ','汁','ベチャ','くっさ','湿'],
@@ -429,7 +433,7 @@ const L={
  lose:['下北沢陥落…（陥落）','ぬわああん負けたもおおん','あっ…（察し）','これもうわかんねぇな'],
  loseSub:['痛いですね…これは痛い（確信）','また来てくれよな〜頼むよ〜（来るな）','下北沢の地価が810円に暴落した','そうだよ（敗北）','部屋が汗だく（概念）','玄関に後輩の靴が114514足','あっ、そっかぁ（納得できない）'],
  win:['下北沢防衛成功！（成功）','やりますねぇ！完全勝利','いいゾ〜これ（満足）','やったぜ。'],
- winSub:['114514点満点の防衛だった','先輩「お前のことが好きだったんだよ！」（部屋が）','王道を往く、勝利系ですか','そうだよ（便乗）（勝利）','はっきりわかんだね（何が）','屋上で日焼けしながら勝利の一服（屋上はない）','24歳、勝者です'],
+ winSub:['114514点満点の防衛だった','先輩「お前のことが好きだったんだよ！」（部屋が）','王道を征く、勝利系ですか','そうだよ（便乗）（勝利）','はっきりわかんだね（何が）','屋上で日焼けしながら勝利の一服（屋上はない）','24歳、勝者です'],
 };
 const COMBO_MS={10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、多少はね？',25:'25コンボ！ファッ！？',35:'35コンボ！これもうわかんねぇな',50:'50コンボ！ンアッー！（了解）',75:'75コンボ！あ ほ く さ',100:'100コンボ！114514！！（断定）',150:'150コンボ！下北沢が意味不明',200:'200コンボ！？ ファッ！？ ウーン…',300:'300コンボ！？ そうだよ（もう出ないよ）'};
 
@@ -443,13 +447,13 @@ const TOWERS={
   overs:[{n:'二段跳ね',d:'跳ねがもう1回（貫通時）'},{n:'ビリビリ連射',d:'命中で小スタン10%'}]},
  trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',role:'オーラ',vs:'中央ハブ向き。らせんで真価',desc:'【オーラ】範囲内の攻撃+25%・速度+15%。ハブ役（攻撃枠トレード）',aura:true,
   muts:[{n:'便乗の輪',d:'オーラ範囲+40%・効果+15%'},{n:'応援モード',d:'全体攻撃+8%/基（上限あり）'}],
-  overs:[{n:'クリ便乗',d:'オーラ内タワーのクリ+8%'},{n:'声量突破',d:'応援時攻撃バフ上限+20%'}]},
+  overs:[{n:'クリ便乗',d:'オーラ内タワーのクリ+8%'},{n:'観葉植物',d:'範囲内HP回復+速度+12%（癒し）'}]},
  collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',role:'減速',vs:'俊足・跳躍・自爆・汗だまり対策',desc:'【減速】範囲パルス指導。チョークの相棒',pulse:true,slow:.45,slowT:1.2,proj:'#b8ecff',freeze:.7,
   muts:[{n:'ふっとばし指導',d:'パルスで敵を押し戻す'},{n:'アイスティーモード',d:'凍結で硬直＋減速・結露演出'}],
-  overs:[{n:'二重締め',d:'ノックバック強化＋0.5秒スタン'},{n:'冷蔵庫解放',d:'凍結が近く1体にも波及'}]},
+  overs:[{n:'二重締め',d:'ノックバック強化＋0.5秒スタン'},{n:'生ビールモード',d:'泡で減速＋混乱（酔わせ）'}]},
  cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',role:'範囲',vs:'二股・密集レーン向き。盾は電撃へ',desc:'【範囲】爆風。二股や合流の密集に刺さる',splash:62,crit:.1,proj:'#ff8a5c',
-  muts:[{n:'810焦土',d:'着弾地点が3秒燃える'},{n:'1919連打',d:'攻撃速度x2・威力x0.6'}],
-  overs:[{n:'焦土延長',d:'焦土が6秒・炎ダメ+40%'},{n:'着弾スタン',d:'爆風で0.4秒スタン'}]},
+  muts:[{n:'810焦土',d:'着弾地点が3秒燃える'},{n:'円定規モード',d:'周囲同心円攻撃・数学的'}],
+  overs:[{n:'焦土延長',d:'焦土が6秒・炎ダメ+40%'},{n:'黄金比',d:'円定規時クリ+20%・同心円x2'}]},
  chain:{name:'イキスギ電撃塔',short:'電撃塔',img:'navy_right_face#purple',cost:225,range:125,dmg:16,rate:1.1,ring:'#c98aff',role:'電撃',vs:'【対盾】盾に2倍。毒と組むと感電くさい',desc:'【電撃】4体連鎖。【対盾】ダメ2倍',chain:4,crit:.05,
   muts:[{n:'電撃結婚',d:'連鎖+3体'},{n:'ビクンビクン',d:'25%で0.6秒スタン'}],
   overs:[{n:'減衰なし',d:'連鎖ダメが落ちない'},{n:'帯電マーク',d:'命中で視線マーク'}]},
@@ -469,8 +473,8 @@ const TOWERS={
   muts:[{n:'114514連鎖',d:'爆風+50%・威力+30%'},{n:'ヌルヌル地雷',d:'爆風で50%減速・再装填3秒'}],
   overs:[{n:'毒地雷',d:'爆発に毒付き'},{n:'二段爆発',d:'0.6秒後にもう一発'}]},
  gaze:{name:'ほら見ろよ見ろよ塔',short:'視線塔',img:'collar_card#blue',cost:180,range:130,dmg:4,rate:.9,ring:'#6ab8ff',role:'視線',vs:'デバフハブ。狙撃/範囲と組む。跳躍・もぐりにも効く',desc:'【視線】被ダメ+20%マーク。合流点・中央ハブ向き',gaze:true,
-  muts:[{n:'晒し上げ',d:'被ダメ増加+20%（計+40%）'},{n:'公開処刑',d:'マーク中の敵を倒すと+4G'}],
-  overs:[{n:'長く見ろよ',d:'マーク6秒・被ダメ+10%'},{n:'睨み減速',d:'マーク中の敵を12%減速'}]},
+  muts:[{n:'晒し上げ',d:'被ダメ増加+20%（計+40%）'},{n:'アクエリアスモード',d:'バフ解除＋減速・応援対策'}],
+  overs:[{n:'長く見ろよ',d:'マーク6秒・被ダメ+10%'},{n:'イオンの力',d:'アクエリ時射程+30%・解除100%'}]},
  mud:{name:'泥だまり罠',short:'泥だまり',img:'locker_right_face#gray',cost:85,range:50,dmg:0,rate:0,ring:'#8a6a40',role:'泥床',vs:'【対俊足】道に置く持続減速床。地雷と違い何度でも踏める',desc:'【泥床】道の上。踏むと大幅減速・汚泥シミ。橋・チョーク向き',onPath:true,mud:true,
   muts:[{n:'ぬるぬる増し',d:'減速強化・範囲+30%'},{n:'ハエ湧き',d:'泥上の敵に毎秒小ダメ＋ハエ演出'}],
   overs:[{n:'底なし沼',d:'ボス以外を時々掴んで止める'},{n:'汚泥噴出',d:'ウェーブ開始時に一度範囲ダメ'}]},
@@ -493,18 +497,22 @@ const ENEMIES={
  ghost:{name:'覗き見学者',img:'locker_right_face#gray',hp:60,speed:58,bounty:14,r:15,col:'#bbbbbb',stealth:true,wd:8},
  boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:30,bounty:150,r:34,col:'#c46bff',armor:3,boss:true,phaseEnr:1,wd:60,
   intro:['迫真ボス「ファッ！？ お前ら何してんの」','迫真ボス襲来！（顔がうるさい）'],
-  ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」']},
+  ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」','迫真ボス「イキスギィ！（お前が）」','迫真ボス「ま、多少はね？（効いてる）」','迫真ボス「王道を征く、ボス系ですか」']},
  boss2:{name:'部室の主・真',img:'locker_left_face#red',hp:1650,speed:26,bounty:250,r:36,col:'#ff5c3c',armor:5,boss:true,summon:3,phaseSum:1,wd:90,
   intro:['部室の主・真「ぬわああん、後輩呼ぶぞ」','部室の主・真 降臨（部屋が汗臭い）'],
-  ban:['部室の主・真「ロッカー、あるんだけど…（ない）」','部室の主・真「まずうちさぁ…部室あんだけど…」','部室の主・真「疲れたもおおん（3秒）」','部室の主・真「24歳、部室です」']},
+  ban:['部室の主・真「ロッカー、あるんだけど…（ない）」','部室の主・真「まずうちさぁ…部室あんだけど…」','部室の主・真「疲れたもおおん（3秒）」','部室の主・真「24歳、部室です」','部室の主・真「見とけよ見とけよ～（見ない）」','部室の主・真「あーいいっすね～（棒）」','部室の主・真「じゃけん後輩召喚しましょうね～」']},
  boss3:{name:'野獣の眼光',img:'grimace_face#purple',hp:2600,speed:32,bounty:400,r:38,col:'#ff3c8a',armor:4,boss:true,shield:.35,shieldRegen:.03,enrage:true,phaseGaze:1,wd:120,
   intro:['野獣の眼光「お前のことが好きだったんだよ！」','最終形態：野獣の眼光（眼光が鋭い）'],
-  ban:['野獣の眼光「見とけよ（見ないで）」','野獣の眼光「ちょっと汗かいてきたな…（乾燥）」','野獣の眼光「やりますねぇ！（自分に）」','野獣の眼光「は？（眼光）」']},
+  ban:['野獣の眼光「見とけよ（見ないで）」','野獣の眼光「ちょっと汗かいてきたな…（乾燥）」','野獣の眼光「やりますねぇ！（自分に）」','野獣の眼光「は？（眼光）」','野獣の眼光「ンギモッヂイイ！（盾が）」','野獣の眼光「サッー！（迫真）」','野獣の眼光「ヤジュ立ちで威圧するぞ」','野獣の眼光「こ↑こ↓で止まれ（無理）」']},
  jumper:{name:'跳び後輩',img:'navy_center_face#red',hp:55,speed:50,bounty:11,r:15,col:'#ff7a50',jump:70,wd:6},
  jammer:{name:'嫌がらせ先輩',img:'title_senpai#gray',hp:120,speed:40,bounty:18,r:18,col:'#9a9a9a',jam:90,wd:14},
  cheer:{name:'応援後輩',img:'trio_sepia_face#red',hp:70,speed:48,bounty:14,r:16,col:'#ff7a50',cheer:85,wd:8},
  bomber:{name:'自爆後輩',img:'navy_left_face#red',hp:50,speed:70,bounty:12,r:14,col:'#ff5c3c',bomb:70,wd:6},
  burrow:{name:'もぐり後輩',img:'locker_left_face#gray',hp:80,speed:52,bounty:15,r:15,col:'#a09080',burrow:1,wd:10},
+ toono:{name:'屈託のない笑顔',img:'navy_center_face#cyan',hp:110,speed:44,bounty:17,r:18,col:'#7fd4ff',heal:.04,healR:85,shield:.25,wd:12},
+ ngm:{name:'ンギモッヂイイ！',img:'grimace_face#red',hp:95,speed:82,bounty:14,r:16,col:'#ff7a50',sprint:1,wd:8},
+ kokoko:{name:'こ↑こ↓',img:'locker_right_face#purple',hp:75,speed:60,bounty:13,r:15,col:'#c98aff',teleport:.15,wd:8},
+ mur:{name:'MURさん',img:'trio_sepia_face#gold',hp:140,speed:36,bounty:20,r:20,col:'#ffd36b',cheer:100,armor:4,wd:16},
  boss4:{name:'迫真の淫獣',img:'grimace_face#gold',hp:3400,speed:30,bounty:600,r:40,col:'#ffd36b',armor:5,boss:true,phases:true,wd:150,
   intro:['迫真の淫獣「ンアッー！ 待たせたな」','迫真の淫獣 降臨（下北沢が汗臭い）'],
   ban:['迫真の淫獣「ンアッー！（挨拶）」','迫真の淫獣「お前らのタワー、くっさ！（いい匂い）」','迫真の淫獣「まだ終わらんよ（終わる）」','迫真の淫獣「114514（説明）」']},
@@ -571,7 +579,7 @@ const PERKS=[
  {t:'毒視電の輪',d:'毒・電撃・視線タワーが全部あると各+20%',img:'navy_center_face',tag:'シナジー',max:1,ap:s=>s.triRing=1},
  {t:'二重の汗',d:'二重エリートへのダメ+40%・報酬+1.5倍',img:'navy_right_face',tag:'エリート',max:1,ap:s=>s.dualHunt=1},
  {t:'後輩の結束',d:'集金と銀行が互いの範囲で収入+1G',img:'locker_left_face',tag:'経済',max:1,ap:s=>s.ecoBond=1},
- {t:'王道を往く、強化系',d:'強化コスト-20%・Lv上限5のまま',img:'senpai_face',tag:'強化',max:1,ap:s=>s.upCostMul*=.8},
+ {t:'王道を征く、強化系',d:'強化コスト-20%・Lv上限5のまま',img:'senpai_face',tag:'強化',max:1,ap:s=>s.upCostMul*=.8},
  {t:'飛びもぐり対策',d:'跳躍・もぐり後輩へのダメ+45%',img:'navy_center_face',tag:'対特殊',max:1,ap:s=>s.antiJump=1},
  {t:'妨害遮断',d:'嫌がらせ先輩の減速無効・自爆の気絶半減',img:'title_senpai',tag:'対特殊',max:1,ap:s=>s.antiJam=1},
  {t:'セット：経済の輪',d:'【経済タグ2枚以上で発動】利息+3%常時',img:'trio_sepia_card',tag:'経済',ap:s=>s.setEco+=1},
@@ -631,8 +639,8 @@ function camTick(dt){if(CAM.t>0){CAM.t-=dt;}else CAM.tz=1;CAM.z+=(CAM.tz-CAM.z)*
  if(game&&game.card)game.card.t-=dt;if(game&&game.tele>0)game.tele-=dt;if(game&&game.streak)game.streak.t-=dt;}
 const STREAK=[[10,'いいゾ～これ','#ffd36b'],[25,'ホラホラホラホラ','#ff8a5c'],[50,'暴れんなよ…暴れんなよ…','#ff3c8a'],[100,'イキスギィ！イクイクイク','#c98aff'],[200,'迫真空手部、極','#fff']];
 function streakCheck(c,x,y){for(const [n,txt,col] of STREAK)if(c===n){game.streak={n,txt,col,t:2,T:2};big(`${n} STREAK`,col,1.2);punch(x,y,1.12+n/1000,.6,n>=50?.5:0,n>=50?1.2:0,col);shake(6+n/20);flash();snd(440+n*2,.25,'square',.05,300);goro(x,y,null,true,n>=50?3:2);}}
-function waveCard(){const bossW=game.wave%5===0;game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:game.stageEv?'⚠ '+game.stageEv:'',c:bossW?'#ff3c8a':'#ffd36b'};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
-const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を往く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ'];
+function waveCard(){const bossW=game.wave%5===0;game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:game.stageEv?'⚠ '+game.stageEv:'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
+const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を征く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ','ｱｰｲｷｿ','ありますあります','いいねぇー','行きませんか？行きましょうよ','痛いですね…これは痛い','おかのした','こ↑こ↓','これもうわかんねぇな','じゃけん夜行きましょうね～','だいぶ溜まってんじゃんアゼルバイジャン','ダメみたいですね','で、出ますよ…','ないです','ヌッ！','喉渇いた…喉渇かない？','白菜かけますね','はっきりわかんだね','バッチェ冷えてますよ','ビール！ビール！','Foo↑気持ちいい～','ブッチッパ！','ほらいくどー','やんほぬ','わかるわかる（タメ口）','ありがとナス！','ウッソだろお前ｗｗｗ','かしこまり！','悲しいなぁ','最後の一発くれてやるよオラ！','もう許せるぞオイ！','知らねーよ、そんなの','いつもの','汚汚汚～～～～～～～～～','オッスオッス！','勝手にたまげてろ','がんばれ！','くさい（確信）','ここすき','すき','誰？','もっとやれ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
 function goro(x,y,txt,force,lv=1){const n=performance.now();if(!force&&n-goroT<(TOUCH?1500:900))return;goroT=n;txt=txt||GORO[Math.floor(Math.random()*GORO.length)];const c=GOROC[Math.floor(Math.random()*GOROC.length)];voice(txt,lv);
  if(x!=null){float(x,y-30,txt,c,true,1.3);pushFx({ring:true,x,y,r:6,R:70*lv,t:.55,T:.55,c,lw:5});pushFx({ring:true,x,y,r:3,R:40*lv,t:.4,T:.4,c:'#fff',lw:2});for(let i=0;i<10*lv&&fx.length<FX_CAP;i++)pushFx({x,y,vx:(Math.random()-.5)*260,vy:-50-Math.random()*170,t:.65,c:i%3?'#cfe8ff':'#c9b08a',drop:true,sticky:i%4===0,sz:2.5+Math.random()*2});}
@@ -730,17 +738,16 @@ function calcStats(t){const d=TOWERS[t.k],s=S(),mb=mapB(),Lv=t.lvl-1,a=(d.aura||
  let rate=d.rate/((1+.12*Lv)*(1+s.tRate[t.k]+s.gRate+game.hypeR)*(1+a*.6));
  if(bankSip)rate=.6/((1+.12*Lv)*(1+s.gRate+game.hypeR)*(1+a*.6));
  if(d.mine)rate=d.rate*s.mineRe*(t.mut===1?.6:1)/(1+.08*Lv);
- if(t.k==='cannon'&&t.mut===1){rate/=2;dmg*=.6;}
+ if(t.k==='cannon'&&t.mut===1){rate*=.67;dmg*=.54;}
  let tCrit=0;for(const o of towers){if(o.k!=='trio'||o.over!==0||o===t)continue;const rr=TOWERS.trio.range*(1+.1*(o.lvl-1))*(1+s.gRange+(mb.gRange||0))*(1+s.auraRange+(mb.auraRange||0))*(o.mut===0?1.4:1);if((o.x-t.x)**2+(o.y-t.y)**2<=rr*rr)tCrit=.08;}
- const crit=d.crit!=null||bankSip?((d.crit||0)+s.gCrit+(t.k==='senpai'&&t.mut===0?.25:0)+tCrit):0;
+ const crit=(d.crit!=null||bankSip||(t.k==='cannon'&&t.mut===1))?((d.crit||0)+s.gCrit+(t.k==='senpai'&&t.mut===0?.25:0)+tCrit+(t.k==='cannon'&&t.mut===1&&t.over===1?.2:0)):0;
  const pois=d.poison?d.poison*Math.pow(1.5,Lv)*s.poisonMul*(1+(s.setPois>=1&&tagN('毒')>=2?.2:0))*(1+s.gDmg*.5)*(1+a)*(t.mut===1?2:1)*awakenMul():0;
  const chain=d.chain?d.chain+s.chainAdd+(t.mut===0?3:0):0;
  const maxHp=d.wall?d.hp*Math.pow(1.6,Lv)*(1+s.wallHp+(mb.wallHp||0)):0;
  const aur=d.aura?(.25+.1*Lv)*s.auraMul+(t.mut===0?.15:0):0;
   const markV=d.gaze?.2+.05*Lv+s.markAdd+(mb.markAdd||0)+(t.mut===0?.2:0)+(t.over===0?.1:0):0;
- const sipCut=1-(s.ecoCut||0);const sip=(d.sip||bankSip)?(((d.sip||1)+s.sipAdd+(bankSip&&t.over===1?1:0)+(s.ecoBond&&towers.some(o=>o.k==='bank'&&o!==t)?1:0))*sipCut):0,sipCap=(d.sip||bankSip)?(t.over===0||bankSip&&t.over===1?9999:(bankSip?100:120)+s.sipCap):0;
- if(bankSip&&t.over===1)sipCap=200+s.sipCap;
- const splash=d.mine?d.range*(t.mut===0?1.5:1)*(1+.08*Lv):0;
+ const sipCut=1-(s.ecoCut||0);const sip=bankSip?(((1)+s.sipAdd+(bankSip&&t.over===1?1:0)+(s.ecoBond&&towers.some(o=>o.k==='bank'&&o!==t)?1:0))*sipCut):0,sipCap=bankSip?(t.over===1?200+s.sipCap:100+s.sipCap):0;
+ const splash=d.mine?d.range*(t.mut===0?1.5:1)*(1+.08*Lv):(t.k==='cannon'&&t.mut===1?75:d.splash||0);
  const mudR=d.mud?d.range*(t.mut===0?1.3:1)*(1+.06*Lv):0;
  return{range:d.mine?splash:d.mud?mudR:range,dmg,rate,crit,pois,chain,maxHp,aura:a,aur,markV,sip,sipCap,splash:d.mud?mudR:splash};}
 function tStats(t){if(statsDirty){hypeCalc();for(const o of towers)o.st=calcStats(o);statsDirty=false;}return t.st||(t.st=calcStats(t));}
@@ -756,10 +763,11 @@ function place(k,tx,ty){if(!canPlace(k,tx,ty))return false;const c=cost(k);setTi
  game.gold-=c;const t={k,tx,ty,x:tx*T+T/2,y:ty*T+T/2,lvl:1,cd:0,spent:c,ang:0,pulseT:0,kills:0,critB:0,mut:null,over:null,stunT:0,sipG:0,armed:1};
  if(TOWERS[k].onPath){t.pds=pdsOf(t.x,t.y);t.pd=t.pds[0]!=null?t.pds[0]:-999;}
  towers.push(t);statsDirty=true;if(HOT.has(tx+','+ty))punch(t.x,t.y,1.18,.45,.3,.6,'#ffb03a');else punch(t.x,t.y,1.05,.2);if(TOWERS[k].wall)t.hp=tStats(t).maxHp;picked=null;snd(660,.08,'triangle',.06,200);
- {const d=TOWERS[k],col=d.ring;const special=!!(d.wall||d.mine||d.mud||d.flies);
+ {const d=TOWERS[k],col=d.ring;const special=!!(d.wall||d.mine||d.hype||d.mud||d.flies);
   siteBurst(t.x,t.y,col,{n:special?40:32,R:special?78:58,shake:special?7:4.5,txt:Math.random()<.7?pick(L.site):null,big:true,sweat:true,sp:special?240:200,lw:5,ring3:true,dr:special?24:18});
   if(d.wall){decal(t.x,t.y,26,'#6b5232');for(let i=0;i<10&&fx.length<FX_CAP;i++)pushFx({x:t.x,y:t.y,vx:(Math.random()-.5)*160,vy:-40-Math.random()*120,t:.55,c:'#8a6a40',drop:true,sz:3});}
   if(d.mine){pushFx({ring:true,x:t.x,y:t.y,r:10,R:42,t:.5,T:.5,c:'#ff3c3c',lw:3});float(t.x,t.y-26,'危険！（そうだよ）','#ff3c3c',true);}
+  if(d.hype){for(let i=0;i<3;i++)pushFx({ring:true,x:t.x,y:t.y,r:8+i*6,R:40+i*22,t:.4+i*.12,T:.4+i*.12,c:'#ff7a50',lw:2});float(t.x,t.y-28,'盛り上がれェ！','#ff7a50',true);}
   if(d.mud){decal(t.x,t.y,28,'#5a4030');for(let i=0;i<14&&fx.length<FX_CAP;i++)pushFx({x:t.x,y:t.y,vx:(Math.random()-.5)*140,vy:-20-Math.random()*90,t:.7,c:i%2?'#8a6a40':'#6b5232',drop:true,sticky:true,sz:3+Math.random()*3});float(t.x,t.y-26,'ぬるッ！','#8a6a40',true);splat('#6b5232');}
   if(d.freeze){for(let i=0;i<10&&fx.length<FX_CAP;i++)pushFx({x:t.x,y:t.y,vx:(Math.random()-.5)*100,vy:-40-Math.random()*100,t:.55,c:i%2?'#b8ecff':'#e8f4ff',drop:true,sz:2.5});float(t.x,t.y-26,'冷えてるゾ','#7fd4ff',true);}
   if(d.flies){for(let i=0;i<12&&fx.length<FX_CAP;i++){const a=Math.random()*6.28;pushFx({x:t.x,y:t.y,vx:Math.cos(a)*80,vy:Math.sin(a)*80-20,t:.6,c:'#9ac84a',spark:true,sz:2});}float(t.x,t.y-26,'ブーン…','#9ac84a',true);splat('#7a7a2a');}
@@ -792,7 +800,7 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
  {let v=1;if(e.mark>0)v+=e.markV;if(s.slowVuln&&e.slowT>0)v+=s.slowVuln;if(s.lowHp&&e.hp<e.maxHp*.3)v+=s.lowHp;if(s.eliteHunt&&e.aff)v+=.3;if(s.dualHunt&&e.aff&&e.aff2)v+=.4;
   if(s.antiJump&&(e.d.jump||e.d.burrow))v+=.45;if(s.chainPois&&srcT&&srcT.k==='chain'&&e.poisT>0)v+=s.chainPois;
   if(s.antiBridge&&ROUTES[e.r]&&ROUTES[e.r].br)v+=.3;
-  if(srcT){const k=srcT.k,dd=e.d;const icedMode=k==='collar'&&srcT.mut===1;if(dd.armor&&(k==='poison'||k==='sniper'))v+=.12;if(dd.shield&&(k==='chain'||k==='gaze'))v+=.12;if((dd.jump||dd.burrow)&&(k==='collar'||k==='gaze'||k==='mine'||icedMode||k==='mud'))v+=.22;if(dd.stealth&&(k==='flies'||k==='gaze'))v+=.25;if((dd.speed||0)>=90&&(icedMode||k==='mud'||k==='collar'))v+=.18;if(dd.cheer&&(k==='sniper'||k==='senpai'||k==='gaze'))v+=.28;if(dd.bomb&&(k==='collar'||k==='sniper'))v+=.22;if(dd.jam&&k==='gaze')v+=.15;if(dd.heal&&(k==='sniper'||k==='senpai'))v+=.2;}
+  if(srcT){const k=srcT.k,dd=e.d;if(dd.armor&&(k==='poison'||k==='sniper'))v+=.12;if(dd.shield&&(k==='chain'||k==='gaze'))v+=.12;if((dd.jump||dd.burrow)&&(k==='collar'||k==='gaze'||k==='mine'||k==='iced'||k==='mud'))v+=.22;if(dd.stealth&&(k==='flies'||k==='gaze'))v+=.25;if((dd.speed||0)>=90&&(k==='iced'||k==='mud'||k==='collar'))v+=.18;if(dd.cheer&&(k==='sniper'||k==='senpai'||k==='gaze'))v+=.28;if(dd.bomb&&(k==='collar'||k==='sniper'))v+=.22;if(dd.jam&&k==='gaze')v+=.15;if(dd.heal&&(k==='sniper'||k==='senpai'))v+=.2;}
   dmg*=v;}
  const pierce=o.pierce||(crit&&srcT&&srcT.k==='senpai'&&srcT.mut===0);
  if(!pierce)dmg=Math.max(1,dmg-(e.d.armor||0)-((e.aff==='hard'||e.aff2==='hard')?6:0));
@@ -805,8 +813,10 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
   if(srcT.k==='senpai'&&srcT.over===1&&crit){for(const o of enemies)if(!o.dead&&o!==e&&(o.x-e.x)**2+(o.y-e.y)**2<70*70)dot(o,dmg*.25,srcT);}
   if(srcT.k==='navy'&&srcT.over===1&&Math.random()<.1)e.stunT=Math.max(e.stunT,.25);
   if(srcT.k==='chain'&&srcT.over===1){e.mark=3;e.markV=Math.max(e.markV,.2+s.markAdd);}
+  if(srcT.k==='siphon'&&srcT.over===1)poisonE(e,8*(1+.1*srcT.lvl),2,srcT);
   if(s.sniperMark&&srcT.k==='sniper'){e.mark=3;e.markV=Math.max(e.markV,.2+s.markAdd);}
-  if(st&&st.sip&&srcT.sipG<st.sipCap){let g=st.sip;g=Math.min(g,st.sipCap-srcT.sipG);srcT.sipG+=g;game.gold+=g;if(Math.random()<.12)float(srcT.x,srcT.y-18,'+'+g+'G 集金','#ffd36b');}}
+  if(st&&st.sip&&srcT.sipG<st.sipCap){let g=st.sip+(srcT.mut===1&&e.d.boss?5:0);g=Math.min(g,st.sipCap-srcT.sipG);srcT.sipG+=g;game.gold+=g;if(Math.random()<.12)float(srcT.x,srcT.y-18,'+'+g+'G 集金','#ffd36b');}
+  if(srcT.k==='siphon'&&srcT.mut===1){e.slowT=Math.max(e.slowT,1);e.slow=Math.max(e.slow,.15);}}
  if(e.d.boss&&Math.random()<.04)splat(e.d.col);
  if(crit){float(e.x,e.y-e.d.r-6,pick(L.crit)+' '+Math.round(dmg),'#ff5c8a',true,.9);snd(990,.07,'square',.05,-500);shake(3.5);
   siteBurst(e.x,e.y,'#ff5c8a',{n:14,R:36,shake:0,txt:null,sweat:true,sp:160,lw:3,decal:false,ring2:true,rt:.4});
@@ -823,7 +833,7 @@ function poisonE(e,dps,dur,srcT){if(e.pois<dps)e.pois=dps;e.poisT=Math.max(e.poi
 function kill(e,srcT){if(e.dead)return;e.dead=true;const s=S();if(e.d.boss)goro(e.x,e.y,'イキスギィ！',true,3);else if(e.aff||Math.random()<.12)goro(e.x,e.y,null,false,e.aff?2:1);
  game.combo=game.comboT>0?game.combo+1:1;streakCheck(game.combo,e.x,e.y);if(e.d.boss){punch(e.x,e.y,1.45,1.1,1,1.6,'#ffffff');}else if(e.aff2)punch(e.x,e.y,1.12,.3,.25,0);game.comboT=s.comboT;game.maxCombo=Math.max(game.maxCombo,game.combo);
  let b=Math.round(e.d.bounty*Math.max(.2,1+s.bounty)*(e.aff?(s.eliteHunt?3.2:1.6):1)*(e.aff2?(s.dualHunt?1.5:1.25):1))+(e.d.cheer&&s.noCheer?8:0);
- if(e.mark>0&&towers.some(t=>t.k==='gaze'&&t.mut===1))b+=4;if(game.combo>=10)b+=Math.round(1*s.comboMul*(game.combo>=50?3:game.combo>=25?2:1));
+ if(e.mark>0&&towers.some(t=>t.k==='gaze'&&t.mut===1))b+=4;if(game.combo>=10)b+=Math.round(1*s.comboMul*(game.combo>=50?3:game.combo>=25?2:1)*(towers.some(t=>t.k==='hype'&&t.mut===1)?2:1));
  for(const t of towers){if(t.k==='bank'){const r=tStats(t).range;if((t.x-e.x)**2+(t.y-e.y)**2<=r*r)b+=t.lvl;}
   else if(t.k==='trio'&&t.mut===1){const r=tStats(t).range;if((t.x-e.x)**2+(t.y-e.y)**2<=r*r)b+=3;}
   else if(t.k==='trio'&&t.over===1){const r=tStats(t).range;if((t.x-e.x)**2+(t.y-e.y)**2<=r*r&&Math.random()<.03){game.lives++;float(t.x,t.y-20,'ライフ便乗','#8dff6a');}}}
@@ -892,7 +902,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
   if(w.hp<=0){const ox=w.x,oy=w.y,ov=w.over;towers=towers.filter(o=>o!==w);statsDirty=true;if(picked===w){picked=null;renderInfo();}toast(pick(L.wallDown),'collar_face','bad shake',1500);shake(10);
    if(ov===0){for(const e of enemies)if(!e.dead&&(e.x-ox)**2+(e.y-oy)**2<90*90)hurt(e,80*(1+.1*game.wave),null,{noCrit:true});}
    siteBurst(ox,oy,'#ff7a50',{n:36,R:ov===0?100:70,shake:0,txt:'崩壊！',big:true,sweat:true,sp:280,lw:5,ring3:true,dc:'#6b5232',dr:28,alt:'#8a6a40'});snd(110,.3,'sawtooth',.07,-50);}}
- const cRate=((s.comboRate&&game.combo>=25)?1+s.comboRate:1);
+ const cRate=((s.comboRate&&game.combo>=25)?1+s.comboRate:1)*((game.combo>=25&&towers.some(t=>t.k==='hype'&&t.over===1))?1.15:1);
  for(const t of towers){const d=TOWERS[t.k];t.pulseT=(t.pulseT||0)+dt;siteDrip(t,d);if(t.stunT>0){t.stunT-=dt;continue;}
   if(d.mine){const st=tStats(t);if(!t.armed){t.cd-=dt;if(t.cd<=0){t.armed=1;}continue;}
    if(enemies.some(e=>!e.dead&&!e.buried&&(e.x-t.x)**2+(e.y-t.y)**2<24*24)){t.armed=0;t.cd=st.rate;const R=st.splash,R2=R*R;
@@ -907,7 +917,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
     if(Math.random()<dt*1.2){decal(e.x,e.y,8,'#5a403088');if(Math.random()<.15)splat('#6b5232');}}
    if(Math.random()<.08)pushFx({ring:true,x:t.x,y:t.y,r:6,R:R,t:.35,T:.35,c:'#8a6a40',lw:2});continue;}
   if(d.bank&&t.over===1){const br=tStats(t).range;for(const e of enemies){if(!e.dead&&(e.x-t.x)**2+(e.y-t.y)**2<=br*br){e.slow=Math.max(e.slow,.1);e.slowT=Math.max(e.slowT,.4);}}}
-  if(d.aura||d.bank||d.wall){continue;}const st=tStats(t);
+  if(d.aura||d.bank||d.wall||d.hype){continue;}const st=tStats(t);
   let cdr=dt*cRate;if(jams.length&&jams.some(j=>(j.x-t.x)**2+(j.y-t.y)**2<j.d.jam*j.d.jam))cdr*=(s.antiJam?1:.6);t.cd-=cdr;if(t.cd>0)continue;const r2=st.range*st.range;
   if(d.gaze){const hit=visTargets(t,r2);if(!hit.length)continue;t.cd=st.rate;for(const e of hit){e.mark=t.over===0?6:3;e.markV=Math.max(e.markV,st.markV);if(t.over===1){e.slow=Math.max(e.slow,.12);e.slowT=Math.max(e.slowT,1.2);}hurt(e,st.dmg,t,{noCrit:true});}
    pushFx({ring:true,x:t.x,y:t.y,r:10,R:st.range,t:.4,T:.4,c:'#6ab8ff',lw:3});if(Math.random()<.18)float(t.x,t.y-24,pick(['見ろよ見ろよ','ガン見','視姦…じゃなくて視察','嘘つけ絶対見てたゾ']),'#6ab8ff',true);continue;}
@@ -934,9 +944,9 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
    t.ang=Math.atan2(cand[0].y-t.y,cand[0].x-t.x);shotSnd(1600);shake(1.2);continue;}
   const n=t.k==='senpai'&&t.mut===1?2:1;
   for(let i=0;i<Math.min(n,cand.length);i++){const best=cand[i];t.ang=Math.atan2(best.y-t.y,best.x-t.x);
-   const useFreeze=d.freeze&&(t.k!=='collar'||t.mut===1);
-   projs.push({x:t.x,y:t.y,tg:best,tx:best.x,ty:best.y,sp:d.splash?320:d.poison?300:useFreeze?380:560,dmg:st.dmg,src:t,splash:d.splash?d.splash*(s.splashMul+(mapB().splashMul||0)):0,pois:st.pois,c:d.proj,bounce:t.k==='navy'&&t.mut===0?(t.over===0?2:1):0,freeze:useFreeze?d.freeze*(1+.08*(t.lvl-1))*(t.k==='collar'?1:1.7):0});}
-  shotSnd(d.splash?180:d.poison?240:(d.freeze&&(t.k!=='collar'||t.mut===1))?260:(t.k==='navy'?880:600));}
+   const useFreeze=(d.freeze||t.k==='collar'&&t.mut===1);const useSplash=st.splash>0;
+   projs.push({x:t.x,y:t.y,tg:best,tx:best.x,ty:best.y,sp:useSplash?320:d.poison?300:useFreeze?380:560,dmg:st.dmg,src:t,splash:useSplash?st.splash*(s.splashMul+(mapB().splashMul||0)):0,pois:st.pois,c:d.proj,bounce:t.k==='navy'&&t.mut===0?(t.over===0?2:1):0,freeze:useFreeze?(d.freeze||.7)*(1+.08*(t.lvl-1)):0,drunk:t.k==='collar'&&t.over===1});}
+  shotSnd(useSplash?180:d.poison?240:useFreeze?260:(t.k==='navy'?880:600));}
  for(const p of projs){if(p.done)continue;if(p.tg&&!p.tg.dead){p.tx=p.tg.x;p.ty=p.tg.y;}const dx=p.tx-p.x,dy=p.ty-p.y,dd=Math.hypot(dx,dy),step=p.sp*dt;
   if(dd<=step+4){p.done=true;
    if(p.splash){pushFx({ring:true,x:p.tx,y:p.ty,r:8,R:p.splash,t:.45,T:.45,c:'#ff8a5c',lw:4});pushFx({ring:true,x:p.tx,y:p.ty,r:4,R:p.splash*.7,t:.35,T:.35,c:'#ffe08a',lw:2});
@@ -1059,9 +1069,11 @@ function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').text
  const nw=game.wave+1;$('nextinfo').textContent=game.inWave?`残り ${spawnQ.length+enemies.length}`:(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);updShop();if(picked)updInfoBtns();}
 function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
  if(d.wall)return `HP ${Math.ceil(t.hp)}/${Math.round(st.maxHp)}${s.wallThorn||t.mut===0?'・トゲあり':''}`;
- if(d.bank&&t.mut===1)return `集金 ${t.sipG}G・残り上限 ${st.sipCap-t.sipG}G・ダメ ${st.dmg.toFixed(0)}・間隔 ${st.rate.toFixed(2)}s`;
  if(d.bank)return `毎ウェーブ +${bankIncome(t)}G・範囲撃破 +${t.lvl}G`;
- if(t.k==='trio'&&t.mut===1)return `全体 攻撃+${Math.round(game.hypeD*100)}%（応援モード）`;
+ if(d.hype)return `全体 攻撃+${Math.round(game.hypeD*100)}%${game.hypeR?`・速度+${Math.round(game.hypeR*100)}%`:''}（応援団合計）`;
+ if(d.mine)return `爆発 ${st.dmg.toFixed(0)}・爆風 ${Math.round(st.splash)}<br>再装填 ${st.rate.toFixed(1)}s・${t.armed?'装填済み':'装填中…'}・撃破 ${t.kills}`;
+ if(d.gaze)return `被ダメ +${Math.round(st.markV*100)}%・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}・撃破 ${t.kills}`;
+ if(d.hype)return `全体 攻撃+${Math.round(game.hypeD*100)}%${game.hypeR?`・速度+${Math.round(game.hypeR*100)}%`:''}（応援団合計）`;
  if(d.mine)return `爆発 ${st.dmg.toFixed(0)}・爆風 ${Math.round(st.splash)}<br>再装填 ${st.rate.toFixed(1)}s・${t.armed?'装填済み':'装填中…'}・撃破 ${t.kills}`;
  if(d.gaze)return `被ダメ +${Math.round(st.markV*100)}%・間隔 ${st.rate.toFixed(2)}s<br>射程 ${Math.round(st.range)}・撃破 ${t.kills}`;
  if(d.mud)return `泥床 減速帯 半径${Math.round(st.range)}・踏むたび汚泥`;
@@ -1089,7 +1101,7 @@ function updInfoBtns(){if(!picked)return;const c=upCost(picked),mc=mutCost(picke
  for(const i of [0,1]){const b=$('bM'+i);if(b){b.disabled=game.gold<mc;b.title=`覚醒 ${mc}G`;}}
  for(const i of [0,1]){const b=$('bO'+i);if(b){b.disabled=game.gold<oc;b.title=`極覚醒 ${oc}G`;}}
  if(s)s.textContent=`売却 ${Math.round(picked.spent*S().sellRate)}G`;
- const sl=$('stl');if(sl&&['wall','mine'].includes(picked.k)||(picked.k==='bank'&&picked.mut===1)||(picked.k==='trio'&&picked.mut===1))sl.innerHTML=statLine(picked);}
+ const sl=$('stl');if(sl&&['wall','mine','siphon','hype'].includes(picked.k))sl.innerHTML=statLine(picked);}
 function setPaused(v){paused=v;$('bPause').textContent=paused?'▶':'⏸';}
 $('bStart').onclick=()=>{$('title').classList.remove('on');reset();snd(523,.1,'triangle',.06);toast('おっすお願いしまーす（お願いしない）','senpai_face','',1800);openSitu();};
 $('bWave').onclick=startWave;
@@ -1140,7 +1152,7 @@ const STORY={
   ['boss2','…ま、多少はね？（冷静）']]},
  w10:{ch:'第7章「汗は嘘をつく」',L:[
   ['senpai','…なあ後輩。なんで俺たち、こんなに…なんで？'],
-  ['kohai','そうですねぇ…やっぱり僕は、王道を往く、汗系ですか'],
+  ['kohai','そうですねぇ…やっぱり僕は、王道を征く、汗系ですか'],
   ['senpai','あっ、そっかぁ…（汗か涙か麦茶）',2],
   ['narr','二人は拳を合わせた。拳はヌルヌルだった。意味は、ない。']]},
  w12:{ch:'第8章「眼光の、噂の、眼光」',L:[
@@ -1183,7 +1195,7 @@ const LOSE_STORY=[
 ];
 let storyOn=true;try{storyOn=localStorage.getItem('yajuuTD_story')!=='0';}catch(e){}
 let stQ=null;
-function epiKey(){const sc={poison:0,chain:0,econ:0,fort:0,crit:0,hype:0},m={poison:'poison',chain:'chain',bank:'econ',wall:'fort',mine:'fort',sniper:'crit',senpai:'crit',cannon:'crit',gaze:'hype',trio:'hype'};
+function epiKey(){const sc={poison:0,chain:0,econ:0,fort:0,crit:0,hype:0},m={poison:'poison',chain:'chain',bank:'econ',siphon:'econ',wall:'fort',mine:'fort',sniper:'crit',senpai:'crit',cannon:'crit',hype:'hype',gaze:'hype',trio:'hype'};
  for(const t of towers){const c=m[t.k];if(c)sc[c]+=TOWERS[t.k].cost*t.lvl;}const tm={'毒':'poison','電撃':'chain','経済':'econ','壁':'fort','地雷':'fort','クリ':'crit','狙撃':'crit','応援':'hype','視線':'hype'};
  for(const p of game.perks){const q=PERKS.find(x=>x.t===p);if(q&&tm[q.tag])sc[tm[q.tag]]+=150;}
  const best=Object.keys(sc).sort((a,b)=>sc[b]-sc[a])[0];return sc[best]>0?best:'none';}
@@ -1276,12 +1288,12 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
  stageDraw();for(const d of decals){const [x,y]=P(d.x,d.y);ctx.globalAlpha=Math.min(.62,d.t/5);ctx.fillStyle=d.c;ctx.beginPath();ctx.ellipse(x,y,d.r,d.r*d.rx,0,0,7);ctx.fill();}ctx.globalAlpha=1;
  for(const f of fires){const a=Math.min(1,f.t)*(.25+.1*Math.sin(game.t*20+f.x));ring(f.x,f.y,f.r,`rgba(255,110,40,${a})`);if(Math.random()<.3&&fx.length<220)fx.push({x:f.x+(Math.random()-.5)*f.r,y:f.y+(Math.random()-.5)*f.r,vx:0,vy:-40,t:.4,c:'#ffb040'});}
  if(hover&&sel&&!game.over){const ok=canPlace(sel,hover.tx,hover.ty);const cx=hover.tx*T+T/2,cy=hover.ty*T+T/2;const pul=.55+.45*Math.sin(game.t*7);
-  const r=TOWERS[sel].wall?22:TOWERS[sel].mud?TOWERS[sel].range:TOWERS[sel].range*(1+s.gRange)*(TOWERS[sel].aura?1+s.auraRange:1);
+  const r=TOWERS[sel].wall?22:TOWERS[sel].hype?30:TOWERS[sel].mud?TOWERS[sel].range:TOWERS[sel].range*(1+s.gRange)*(TOWERS[sel].aura?1+s.auraRange:1);
   ring(cx,cy,r,ok?`rgba(255,211,107,${.1+.08*pul})`:'rgba(255,60,60,.18)',ok?'#ffd36bcc':'#ff3c3ccc');
   if(ok)ring(cx,cy,18+pul*10,null,`rgba(255,211,107,${.35+.35*pul})`);
   ctx.globalAlpha=pending?.9:.55+.2*pul;face(TOWERS[sel].img,cx,cy,19,ok?TOWERS[sel].ring:'#f33');ctx.globalAlpha=1;
   if(pending){const [x,y]=P(cx-T/2,cy-T/2);ctx.strokeStyle='#ffd36b';ctx.lineWidth=3+pul;ctx.setLineDash([4,4]);ctx.strokeRect(x,y,T,T);ctx.setLineDash([]);}}
- if(picked&&!TOWERS[picked.k].wall)ring(picked.x,picked.y,tStats(picked).range,null,'#ffd36bcc',[5,5]);
+ if(picked&&!TOWERS[picked.k].wall&&!TOWERS[picked.k].hype)ring(picked.x,picked.y,tStats(picked).range,null,'#ffd36bcc',[5,5]);
  if(game.tele>0){const a=Math.min(1,game.tele);ROUTES.forEach((r,ri)=>{const col=['#ff3c8a','#ffd36b','#6ab8ff','#8dff6a'][ri%4];ctx.globalAlpha=a*.8;ctx.strokeStyle=col;ctx.lineWidth=5;ctx.setLineDash([14,12]);ctx.lineDashOffset=-game.t*90;ctx.beginPath();r.wp.forEach((w,i)=>{const [x,y]=P(w.x,w.y);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;
   const k=((2.4-game.tele)*.6+ri*.13)%1,tot=r.wp.length-1,f=k*tot,i0=Math.min(tot-1,Math.floor(f)),u=f-i0,w0=r.wp[i0],w1=r.wp[i0+1];if(w1){const px=w0.x+(w1.x-w0.x)*u,py=w0.y+(w1.y-w0.y)*u;ring(px,py,9+4*Math.sin(game.t*12),col);text('▶',px,py-14,col,12,true);}
   const w=r.wp[0];text(ROUTES.length>1?`進入路${ri+1}${r.br?'（橋）':''}`:'進入路',w.x,w.y-18,col,13,true);});ctx.globalAlpha=1;}
@@ -1294,7 +1306,7 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
    ctx.globalAlpha=.28+.22*pul+(t.over!=null?.22:0);ctx.strokeStyle=t.over!=null?'#ffd36b':t.mut!=null?'#c98aff':d.ring;ctx.lineWidth=t.over!=null?3.5:t.mut!=null?2.6:2;
    ctx.beginPath();ctx.arc(sx,sy,12+pul*4+(t.over!=null?5:0)+(d.wall?6:0),0,7);ctx.stroke();
    if(t.over!=null||t.mut!=null){const k=(game.t*(t.over!=null?2:1.4)+t.tx)%1;ctx.globalAlpha=(1-k)*.5;ctx.beginPath();ctx.arc(sx,sy,10+k*(t.over!=null?34:22),0,7);ctx.stroke();}
-   if(t.k==='trio'&&t.mut===1){const k=(t.pulseT*1.8)%1;ctx.globalAlpha=(1-k)*.55;ctx.strokeStyle='#ff7a50';ctx.lineWidth=2;ctx.beginPath();ctx.arc(sx,sy,14+k*36,0,7);ctx.stroke();}
+   if(d.hype){const k=(t.pulseT*1.8)%1;ctx.globalAlpha=(1-k)*.55;ctx.strokeStyle='#ff7a50';ctx.lineWidth=2;ctx.beginPath();ctx.arc(sx,sy,14+k*36,0,7);ctx.stroke();}
    if(d.mine&&t.armed){ctx.globalAlpha=.35+.25*Math.sin(game.t*10+t.tx);ctx.strokeStyle='#ff3c3c';ctx.lineWidth=2;ctx.beginPath();ctx.arc(sx,sy,16+pul*3,0,7);ctx.stroke();}
    ctx.globalAlpha=1;}
   if(d.wall){const j=t.hitT>0?(Math.random()-.5)*3:0;ctx.fillStyle='#6b4a28';ctx.fillRect(bx+4+j,by+4,T-8,T-8);ctx.strokeStyle=t===picked?'#ffd36b':'#3a2812';ctx.lineWidth=3;ctx.strokeRect(bx+4+j,by+4,T-8,T-8);
@@ -1310,7 +1322,7 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
    if(d.hype){const k=(t.pulseT*1.5)%1;ring(t.x,t.y,14+k*30,null,`rgba(255,122,80,${(1-k)*.6})`);}
    const recoil=(!d.aura&&!d.pulse&&!d.bank&&t.cd>st.rate-.08)?2:0;
    face(d.img,t.x-Math.cos(t.ang)*recoil,t.y-Math.sin(t.ang)*recoil,19,d.ring);
-   if(t.k==='cannon')text('810',t.x,t.y+27,'#ff5c3c',9);if(t.k==='bank'&&t.mut===1)text('💴',t.x+14,t.y+16,'#ffd36b',11);else if(t.k==='bank')text('💰',t.x+14,t.y+16,'#ffd36b',11);if(t.k==='trio'&&t.mut===1)text('📣',t.x+14,t.y+16,'#ff7a50',11);if(t.k==='gaze')text('👁',t.x+14,t.y+16,'#6ab8ff',11);if(t.k==='collar'&&t.mut===1)text('🧊',t.x+14,t.y+16,'#7fd4ff',11);if(t.k==='mud')text('🟫',t.x+14,t.y+16,'#8a6a40',11);if(t.k==='flies')text('🪰',t.x+14,t.y+16,'#9ac84a',11);
+   if(t.k==='cannon')text('810',t.x,t.y+27,'#ff5c3c',9);if(t.k==='bank')text('💰',t.x+14,t.y+16,'#ffd36b',11);if(t.k==='hype')text('📣',t.x+14,t.y+16,'#ff7a50',11);if(t.k==='gaze')text('👁',t.x+14,t.y+16,'#6ab8ff',11);if(t.k==='siphon')text('💴',t.x+14,t.y+16,'#ffd36b',11);if(t.k==='iced')text('🧊',t.x+14,t.y+16,'#7fd4ff',11);if(t.k==='mud')text('🟫',t.x+14,t.y+16,'#8a6a40',11);if(t.k==='flies')text('🪰',t.x+14,t.y+16,'#9ac84a',11);
    if(t.stunT>0){text('くさっ💫',t.x,t.y-22,'#a8ff3c',10);}
    if(st.aura&&!d.aura){ctx.fillStyle='#d9b36a';ctx.font='10px sans-serif';ctx.textAlign='center';ctx.fillText('★',bx+T-9,by+12);}}
   ctx.fillStyle='#ffd36b';for(let i=0;i<t.lvl;i++){ctx.beginPath();ctx.arc(bx+8+i*7,by+8,2.5,0,7);ctx.fill();}
@@ -1348,9 +1360,9 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
  {const low=game.lives<=5&&!game.over?(.4+.22*Math.sin(game.t*7)):0,hot=Math.min(.4,game.combo/130);if(low||hot>.05||CAM.slow>0){const g=ctx.createRadialGradient(VW()/2,VH()/2,Math.min(VW(),VH())*.28,VW()/2,VH()/2,Math.max(VW(),VH())*.82);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(.7,low?'rgba(80,20,10,.12)':'rgba(40,20,10,.08)');g.addColorStop(1,low?`rgba(160,20,20,${low})`:CAM.slow>0?'rgba(0,0,0,.6)':`rgba(180,70,30,${hot})`);ctx.fillStyle=g;ctx.fillRect(0,0,VW(),VH());}
   if((low||hot>.15)&&!RM&&Math.random()<.45&&fx.length<FX_CAP-20){const edge=Math.random();const px=edge<.25?Math.random()*W:edge<.5?Math.random()*W:edge<.75?-8:W+8,py=edge<.25?-8:edge<.5?H+8:Math.random()*H;pushFx({x:px,y:py,vx:(Math.random()-.5)*40,vy:edge<.5?80+Math.random()*120:(Math.random()-.5)*60,t:2.4,c:Math.random()<.5?'#9fd8ff':'#c9b08a',drop:true,sticky:true,sz:2.5});}}
  if(CAM.bars>.01){const bh=VH()*.09*CAM.bars;ctx.fillStyle='#000';ctx.fillRect(0,0,VW(),bh);ctx.fillRect(0,VH()-bh,VW(),bh);}
- if(game.card&&game.card.t>0){const c=game.card,k=1-c.t/c.T,a=Math.min(1,c.t*2,k*6),sl=k<.15?(1-k/.15)*VW():0;ctx.save();ctx.globalAlpha=a;ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,VH()*.36,VW(),VH()*.26);ctx.fillStyle=c.c;ctx.fillRect(0,VH()*.36,VW(),4);ctx.fillRect(0,VH()*.62-4,VW(),4);
-  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${fs(44)} sans-serif`;ctx.lineWidth=7;ctx.strokeStyle='#000';ctx.strokeText(c.title,VW()/2+sl,VH()*.44);ctx.fillStyle=c.c;ctx.fillText(c.title,VW()/2+sl,VH()*.44);
-  ctx.font=`bold ${fs(18)} sans-serif`;ctx.fillStyle='#fff';ctx.fillText(c.sub,VW()/2-sl,VH()*.515);if(c.ev){ctx.fillStyle=Math.sin(game.t*14)>0?'#ffb03a':'#ff3c3c';ctx.fillText(c.ev,VW()/2+sl*.5,VH()*.575);}ctx.restore();ctx.textBaseline='alphabetic';}
+ if(game.card&&game.card.t>0){const c=game.card,k=1-c.t/c.T,a=Math.min(1,c.t*2,k*6),sl=k<.15?(1-k/.15)*VW():0;ctx.save();ctx.globalAlpha=a;ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(0,VH()*.3,VW(),VH()*.4);if(c.img&&ASSETS[c.img]){try{const img=document.createElement('img');img.src=ASSETS[c.img];const imgS=Math.min(VW()*.28,VH()*.32),imgX=(VW()-imgS)/2-VW()*.15,imgY=VH()*.38;ctx.save();ctx.globalAlpha=a*.6;ctx.shadowColor=c.c;ctx.shadowBlur=20;ctx.drawImage(img,imgX,imgY,imgS,imgS);ctx.restore();}catch(_){}}ctx.globalAlpha=a;ctx.fillStyle=c.c;ctx.shadowColor=c.c;ctx.shadowBlur=15;ctx.fillRect(0,VH()*.36,VW(),3);ctx.fillRect(0,VH()*.64-3,VW(),3);ctx.shadowBlur=0;
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${fs(48)} sans-serif`;ctx.lineWidth=8;ctx.strokeStyle='#000';ctx.strokeText(c.title,VW()/2+sl,VH()*.46);ctx.fillStyle=c.c;ctx.shadowColor=c.c;ctx.shadowBlur=12;ctx.fillText(c.title,VW()/2+sl,VH()*.46);ctx.shadowBlur=0;
+  ctx.font=`bold ${fs(19)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText(c.sub,VW()/2-sl,VH()*.545);if(c.ev){ctx.fillStyle=Math.sin(game.t*14)>0?'#ffb03a':'#ff3c3c';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;ctx.fillText(c.ev,VW()/2+sl*.5,VH()*.6);}ctx.restore();ctx.textBaseline='alphabetic';}
  if(game.streak&&game.streak.t>0){const st=game.streak,k=st.t/st.T;ctx.save();ctx.globalAlpha=Math.min(1,st.t*2);ctx.translate(VW()-12,VH()*.2);ctx.rotate(-.08);ctx.scale(1+(k>.85?(k-.85)*3:0),1+(k>.85?(k-.85)*3:0));ctx.textAlign='right';ctx.font=`900 ${fs(24)} sans-serif`;ctx.lineWidth=6;ctx.strokeStyle='#000';ctx.strokeText(st.txt,0,0);ctx.fillStyle=st.col;ctx.fillText(st.txt,0,0);ctx.restore();}
  for(const p of splats){const k=p.t/p.T,x=p.x*VW(),y=p.y*VH();ctx.globalAlpha=Math.min(.7,k*.95);ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(x,y,p.r,p.r*.8,p.s,0,7);ctx.fill();
   for(let i=0;i<p.n;i++){const a=p.s+i*2.1,dx=Math.cos(a)*p.r*1.2,dy=Math.sin(a)*p.r*1.0;ctx.beginPath();ctx.ellipse(x+dx,y+dy,p.r*.28,p.r*.35,a,0,7);ctx.fill();ctx.fillRect(x+dx*.55-2,y+dy*.55,5,(1-k)*p.r*1.7);}}
@@ -1773,7 +1785,7 @@ const _draw17=draw;draw=function(){_draw17();try{drawV17();}catch(_){}};
   for(const t of TITLES){const ok=t.ok(m);const k=document.createElement('button');k.className='card';k.disabled=!ok;k.style.opacity=ok?1:.45;k.innerHTML='<b></b><br><small></small>';k.querySelector('b').textContent=(curTitle===t.n?'✔ ':'')+(ok?t.n:'🔒 ???');k.querySelector('small').textContent=t.d;k.onclick=()=>{curTitle=t.n;LSset('yajuuTD_title',t.n);showSkin();updT();};TL.appendChild(k);}};
  bk.onclick=()=>{showSkin();so.classList.add('on');};$('skinBack').onclick=()=>so.classList.remove('on');
  const updT=()=>{const e=$('best');if(e){let s=e.dataset.b??(e.dataset.b=e.textContent);e.textContent=`${s?s+'　':''}称号：${curTitle}`;}};updT();})();
-/* ===== v18: 下北沢公式資料館 ===== */
+/* ===== v18+v29: 下北沢公式資料館（Wiki拡張版） ===== */
 const V18={
  lore:[
   {h:'第一章　下北沢の伝説',img:'title_senpai',t:'某年某月、下北沢の一角に一人の「先輩」が現れた。年齢は24歳（自称・学生）。以後その名は語録と共にネットの地層に刻まれ、誰も正体を知らないまま伝説だけが増殖した。'},
@@ -1807,8 +1819,57 @@ const V18={
   ['冷えてるゾ','アイスティー砲の命中音。結露で床がぬるい','No.016'],
   ['ぬるッ！','泥だまり設置時。靴が取れます','No.017'],
   ['ブーン…','ハエ発生器の稼働音。ステルスがバレる','No.018'],
+  ['ｱｰｲｷｿ','Wiki収録語録','No.019'],['ありますあります','Wiki収録語録','No.020'],['いいねぇー','伸ばす語録（余韻）','No.021'],['いいよ、来いよ！胸にかけて！胸に！','強調語録（威圧）','No.022'],['いきますよーいくいく','伸ばす語録（余韻）','No.023'],['行きませんか？行きましょうよ','疑問形語録','No.024'],['痛いですね…これは痛い','沈黙語録（意味深）','No.025'],['王道を征く','確信の語録','No.026'],['オッスお願いしまーす！','強調語録（威圧）','No.027'],['おっ大丈夫か大丈夫か？','疑問形語録','No.028'],['お前どう？','疑問形語録','No.029'],['お前のことが好きだったんだよ！','強調語録（威圧）','No.030'],['俺もやったんだからさ','Wiki収録語録','No.031'],['菅野美穂','固有名詞語録','No.032'],['今日タァイムはどう？伸びた？伸びない？','疑問形語録','No.033'],['†悔い改めて†','厨二語録','No.034'],['ｸｩｰﾝ...','沈黙語録（意味深）','No.035'],['クチアケーナ・ホラ','伸ばす語録（余韻）','No.036'],['こ、去年ですね','時系列語録','No.037'],['こ↑こ↓','イントネ語録','No.038'],['この辺にぃ、うまいラーメン屋の屋台、来てるらしいっすよ','勧誘語録','No.039'],['これもうわかんねぇな','混乱語録','No.040'],['しかし、修行やってます。いつの日か世界を救うと信じて。','覚悟語録（迫真）','No.041'],['じゃけん夜行きましょうね～','誘導語録','No.042'],['しょうがねぇなぁ（悟空）','諦観語録','No.043'],['そして天は鳴き、大地は震えるだろうね','壮大語録','No.044'],['大会近いからね、しょうがないね','言い訳語録','No.045'],['だいぶ溜まってんじゃんアゼルバイジャン','謎語録','No.046'],['多少はね？','疑問形語録','No.047'],['出そうと思えば','可能性語録','No.048'],['ダメみたいですね','諦観語録','No.049'],['ちょっと歯ぁ当たんよ～（指摘）','指摘語録','No.050'],['であることを意味していますよねぇ','論理語録','No.051'],['で、出ますよ…','沈黙語録（意味深）','No.052'],['ないです','否定語録','No.053'],['ヌッ！','強調語録（威圧）','No.054'],['喉渇いた…喉渇かない？','疑問形語録','No.055'],['伸びた？伸びない？','疑問形語録','No.056'],['入って、どうぞ！','歓迎語録','No.057'],['白菜かけますね','料理語録','No.058'],['はっきりわかんだね','確信語録','No.059'],['バッチェ冷えてますよ','冷却語録','No.060'],['He didn't…he begin…','英語語録','No.061'],['ビール！ビール！','強調語録（威圧）','No.062'],['ピトン…ポチョン…（明鏡止水）','沈黙語録（意味深）','No.063'],['Foo↑気持ちいい～','快感語録','No.064'],['ふたいたい','謎語録','No.065'],['ブッチッパ！','強調語録（威圧）','No.066'],['ほらいくどー','開始語録','No.067'],['MURさん夜中腹減んないすか？','疑問形語録','No.068'],['見とけよ見とけよ～','注目語録','No.069'],['焼く時は！','強調語録（威圧）','No.070'],['やめたくなりますよなんか部っ活ぅ～','弱音語録','No.071'],['やんほぬ','謎語録','No.072'],['You have a 夜中腹減んないすか？','英語語録','No.073'],['わかるわかる（タメ口）','同意語録','No.074'],['あーっ！おぅううっす！おーっ！うーっす！','挨拶語録','No.075'],['ありがとナス！','感謝語録','No.076'],['ウッソだろお前ｗｗｗ','驚愕語録','No.077'],['お金タダでいいから','提案語録','No.078'],['かしこまり！','承諾語録','No.079'],['悲しいなぁ','感傷語録','No.080'],['キメてるんだろ？くれよ…','疑問形語録','No.081'],['殺されてぇかお前','脅迫語録','No.082'],['髪なんか必要ねぇんだよ！','強調語録（威圧）','No.083'],['最後の一発くれてやるよオラ！','強調語録（威圧）','No.084'],['縛らなきゃ（使命感）','使命語録','No.085'],['総理大臣の誕生か？','疑問形語録','No.086'],['つべこべ言わずに来いホイ','命令語録','No.087'],['とか何とかわけわかんねーこと叫びながらコイツ目がイっちゃてる','長文語録','No.088'],['ドジョウと俺のさ、子供ができたらどうする？','疑問形語録','No.089'],['20人以上、30人以下？','疑問形語録','No.090'],['卍解～','厨二語録','No.091'],['ムラムラジェラシーを感じる','感情語録','No.092'],['もう許せるぞオイ！','強調語録（威圧）','No.093'],['知らねーよ、そんなの','否定語録','No.094'],['いつしか雨はやみ、そこには虹がかかるんだよなぁ・・・','詩的語録','No.095'],['いつもの','定番語録','No.096'],['淫夢要素はありません','否定語録','No.097'],['汚汚汚～～～～～～～～～','擬音語録','No.098'],['オッスオッス！','挨拶語録','No.099'],['親の顔より見た光景','慣用語録','No.100'],['俺達の雑音に負けるな','応援語録','No.101'],['勝手にたまげてろ','命令語録','No.102'],['関係ないだろ！いい加減にしろ！','怒り語録','No.103'],['がんばれ！','応援語録','No.104'],['きたない','評価語録','No.105'],['くさい（確信）','評価語録','No.106'],['くさそう','評価語録','No.107'],['ケツかな？','疑問形語録','No.108'],['こいついつも疲れてんな','観察語録','No.109'],['ここすき','評価語録','No.110'],['実家のような安心感','比喩語録','No.111'],['すき','評価語録','No.112'],['世界一やお前！','称賛語録','No.113'],['誰？','疑問形語録','No.114'],['ひでたるとまひろじゅんぺい','固有名詞語録','No.115'],['二人は幸せなキスをして終了','締め語録','No.116'],['もっとやれ','命令語録','No.117'],['桃かな？','疑問形語録','No.118'],
  ],
- bans:['当館の資料はすべてパロディです','実在の人物・団体とは一切関係ありません（迫真）','資料の持ち出しは汗で濡れるため禁止'],
+ seichi:[
+  {n:'下北沢駅',d:'伝説の起点。当館の名を冠する聖地（非公認）'},
+  {n:'赤坂プリンスホテル',d:'往時の舞台。現在は解体済み（惜しい）'},
+  {n:'世田谷公園',d:'緑豊かな聖地。噴水で汗を流す後輩の目撃情報あり'},
+  {n:'所沢航空記念公園',d:'広大な聖地。飛行機より先輩が有名（当館調べ）'},
+  {n:'新宿駅',d:'巨大ターミナル。迷子の後輩を収容する施設（嘘）'},
+  {n:'東京大学駒場地区キャンパス',d:'学府の聖地。24歳学生説の根拠とされる（真偽不明）'},
+  {n:'代々木公園',d:'都心のオアシス。休日は後輩で溢れる（体感）'},
+  {n:'多摩川河川敷',d:'開放的な聖地。夏は汗だく必至'},
+  {n:'小田急ホテルセンチュリーサザンタワー',d:'高層ホテル。屋上でアイスティーが出るとの噂（未確認）'},
+  {n:'北沢川緑道',d:'静かな聖地。散策中の先輩が目撃されたとされる'},
+  {n:'七里ヶ浜海岸',d:'海辺の聖地。潮風と汗が混ざる（塩辛い）'},
+  {n:'砧公園',d:'桜の名所。春は花見客と後輩で大混雑'},
+ ],
+ jinki:[
+  {n:'アイスティー',d:'最重要神器。冷えてないと意味がない'},
+  {n:'ゴローズ',d:'伝説のアクセサリー。入手難易度：極'},
+  {n:'TM collection',d:'謎のコレクション。中身は機密'},
+  {n:'爽健美茶',d:'定番飲料。アイスティーの代替品とされる（異論あり）'},
+  {n:'Weeklyぴあ',d:'情報誌。当時の先輩界を記録した貴重資料'},
+  {n:'サッカー日本代表ユニフォーム',d:'青い神器。着用で士気+810%（体感）'},
+  {n:'観葉植物くん',d:'緑の神器。部室の守護者（水やり必須）'},
+  {n:'S&W M36',d:'重火器神器。取り扱い注意（当然）'},
+  {n:'ペンドルトン',d:'高級シャツ。先輩の正装とされる'},
+  {n:'ボルコム',d:'サーフブランド。夏の定番神器'},
+  {n:'さわやかドライの白くまくん',d:'冷房神器。真夏の部室を守る'},
+  {n:'MERCEDESのネクタイ',d:'高級神器。首に巻くと威圧感+114%'},
+ ],
+ meibamen:[
+  {k:'wiki/00_見返り美人',a:'見返り美人'},
+  {k:'wiki/01_トヨタ_センチュリー',a:'あずま寿し'},
+  {k:'wiki/02_目線DB',a:'目線DB'},
+  {k:'wiki/03_ンギモッヂイイ！',a:'ンギモッヂイイ！'},
+  {k:'wiki/04_こ↑こ↓',a:'こ↑こ↓'},
+  {k:'wiki/05_まずうちさぁ',a:'コカコーラ北島'},
+  {k:'wiki/06_遠野',a:'屈託のない笑顔'},
+  {k:'wiki/07_四章野獣の眼光',a:'野獣の眼光'},
+  {k:'wiki/08_ご満悦先輩',a:'ご満悦先輩'},
+  {k:'wiki/09_ヤジュ立ち',a:'ヤジュ立ち'},
+  {k:'wiki/10_サッー',a:'サッー！（迫真）'},
+  {k:'wiki/11_したり顔先輩',a:'したり顔先輩'},
+  {k:'wiki/12_おっ大丈夫か大丈夫か',a:'おっ大丈夫か大丈夫か？'},
+  {k:'wiki/13_小鳥の囀り',a:'小鳥の囀り'},
+  {k:'wiki/14_やわらかスマホ',a:'やわらかスマホ'},
+  {k:'wiki/15_野獣ステップ',a:'野獣ステップ'},
+  {k:'wiki/16_林檎',a:'林檎'},
+  {k:'wiki/17_世界のトオノ',a:'世界のトオノ'},
+ ],
+ bans:['当館の資料はすべてパロディです','実在の人物・団体とは一切関係ありません（迫真）','資料の持ち出しは汗で濡れるため禁止','v29：Wiki資料を内部利用許諾の下で収録'],
 };
 (function(){
  const css=document.createElement('style');css.textContent=`#codex .tabs{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:6px 0}#codex .tabs button.on{background:#ffd36b;color:#2a1a08}
@@ -1821,7 +1882,7 @@ const V18={
 @keyframes cdxz{from{transform:scale(.3) rotate(-20deg);opacity:0}}`;document.head.appendChild(css);
  const after=$('bSkin')||$('bStory');const b=document.createElement('button');b.id='bCodex';b.style.cssText='margin-top:8px;min-height:44px';b.textContent='📚 下北沢公式資料館';after.after(b);
  const o=document.createElement('div');o.className='ov';o.id='codex';
- const tabs=[['lore','📜 人物録'],['gor','🗣 語録保管庫'],['tw','🗼 塔図鑑'],['en','👊 敵図鑑'],['map','🗺 地図'],['sk','🔥 スキル'],['gal','🖼 ギャラリー'],['faq','❓ 公式FAQ']];
+ const tabs=[['lore','📜 人物録'],['gor','🗣 語録保管庫'],['sei','⛩ 聖地'],['jin','📿 神器'],['mei','🎬 名場面'],['tw','🗼 塔図鑑'],['en','👊 敵図鑑'],['map','🗺 地図'],['sk','🔥 スキル'],['gal','🖼 ギャラリー'],['faq','❓ 公式FAQ']];
  o.innerHTML='<h2>📚 下北沢公式資料館（非公認）</h2><div class="tabs">'+tabs.map(([k,n])=>`<button data-k="${k}">${n}</button>`).join('')+'</div><div id="cdx"></div><button id="cdxBack" style="margin-top:10px">戻る（おかのした）</button>';
  document.body.appendChild(o);const big=document.createElement('div');big.id='cdxBig';big.innerHTML='<img><div style="margin-top:8px;font-weight:bold"></div><small style="color:#c9b894">タップで閉じる</small>';big.onclick=()=>big.classList.remove('on');document.body.appendChild(big);
  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -1830,12 +1891,15 @@ const V18={
  const R={
   lore:()=>V18.lore.map(l=>ent(l.img,esc(l.h),esc(l.t))).join('')+'<div class="stamp">極秘</div>',
   gor:()=>V18.goroku.map(([g,d,n])=>`<div class="ent" data-say="${esc(g)}" style="cursor:pointer"><div><h4><span class="no">${n}</span>「${esc(g)}」</h4><small>${esc(d)}　🔊タップで再生</small></div></div>`).join(''),
+  sei:()=>V18.seichi.map((p,i)=>`<div class="ent"><div style="font-size:32px">⛩</div><div><h4><span class="no">${String(i+1).padStart(2,'0')}</span> ${esc(p.n)}</h4><small>${esc(p.d)}</small></div></div>`).join('')+'<div class="stamp">聖地巡礼は自己責任で（汗）</div>',
+  jin:()=>V18.jinki.map((j,i)=>`<div class="ent"><div style="font-size:32px">📿</div><div><h4><span class="no">${String(i+1).padStart(2,'0')}</span> ${esc(j.n)}</h4><small>${esc(j.d)}</small></div></div>`).join('')+'<div class="stamp">複製品も多数出回っています</div>',
+  mei:()=>'<div class="gal">'+V18.meibamen.map((m,i)=>`<figure data-n="${m.k}">${im(m.k)}<figcaption><small>名場面${String(i+1).padStart(2,'0')}　${esc(m.a)}</small></figcaption></figure>`).join('')+'</div><div class="stamp">Wiki提供・内部利用許諾済み</div>',
   tw:()=>Object.entries(TOWERS).map(([k,t])=>ent(t.img,esc(t.name)+(t.role?` <small>［${esc(t.role)}］</small>`:''),esc(t.desc||''),`💰${t.cost??'-'}　射程${t.range??'-'}　火力${t.dmg??'-'}<br>${esc(t.vs||'')}<br>${(t.muts||[]).map(m=>'◆'+esc(m.n)+'：'+esc(m.d)).join('<br>')}${(t.overs||[]).map(m=>'<br>★'+esc(m.n)+'：'+esc(m.d)).join('')}`)).join(''),
   en:()=>Object.entries(ENEMIES).map(([k,e])=>ent(e.img,esc(e.name),`HP ${e.hp}　速度 ${e.speed}　賞金 ${e.bounty}`,`${e.desc?esc(e.desc)+'　':''}危険度：${'💀'.repeat(Math.min(5,Math.ceil((e.hp||1)/120)))}　識別子 ${esc(k)}`)).join(''),
   map:()=>MAPS.map((m,i)=>ent(['title_senpai','navy_trio_card','trio_sepia_card','locker_right_face','collar_card'][i%5],esc(m.name),esc(m.desc),'攻略：'+esc(m.tip)+'　相性：'+esc(m.fav))).join(''),
   sk:()=>SK.map(s=>`<div class="ent"><div style="font-size:40px">${s.ic}</div><div><h4>${esc(s.n)} <small>(${s.k.toUpperCase()}) 気合${s.cost}／CD${s.cd}s</small></h4><div>${esc(s.d)}</div></div></div>`).join('')+(typeof SKINS!=='undefined'?'<h4 style="color:#ffd36b">塔スキン</h4>'+SKINS.map(s=>'・'+esc(s.n)+'：'+esc(s.d)).join('<br>'):''),
-  gal:()=>'<div class="gal">'+Object.keys(ASSETS).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
-  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','アイスティー砲（凍結）・泥だまり罠（道の減速床）・ハエ発生器（看破）'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','地雷は一発爆発、泥は何度でも踏める持続減速（汚い）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
+  gal:()=>'<div class="gal">'+Object.keys(ASSETS).filter(n=>!n.startsWith('wiki/')).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
+  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','アイスティー砲（凍結）・泥だまり罠（道の減速床）・ハエ発生器（看破）'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','地雷は一発爆発、泥は何度でも踏める持続減速（汚い）'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
  };
  const show=k=>{o.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.k===k));const c=$('cdx');c.innerHTML=R[k]();c.scrollTop=0;
   c.querySelectorAll('[data-say]').forEach(e=>e.onclick=()=>{try{if(typeof voice==='function')voice(e.dataset.say,2,1);else if(window.speechSynthesis&&!muted){const u=new SpeechSynthesisUtterance(e.dataset.say);u.lang='ja-JP';u.pitch=.6;speechSynthesis.cancel();speechSynthesis.speak(u);}}catch(_){}try{snd(440,.08,'square',.05);}catch(_){}});
