@@ -309,6 +309,7 @@ body.tut-lock #draft,body.tut-lock #story,body.tut-lock #explore,body.tut-lock #
   <button id="bTut" style="margin-top:8px;min-height:44px">📘 チュートリアル（初回練習）</button>
   <button id="bCamp" style="margin-top:8px;min-height:48px;background:#7a2b12;color:#ffe9b0">📖 キャンペーン（章選択）</button>
   <button id="bStory" style="margin-top:8px;min-height:44px">ストーリー：ON</button>
+  <button id="bSet28" style="margin-top:8px;min-height:44px">⚙ 設定・セーブ引継ぎ</button>
   <div class="help" id="best" style="margin-top:8px"></div>
 </div>
 <div class="ov" id="story">
@@ -2176,8 +2177,51 @@ if($('bTut'))$('bTut').onclick=()=>{try{if(typeof V16!=='undefined')V16.pend=nul
  $('title').classList.remove('on');reset();snd(392,.15,'triangle',.06);tutClearFlag();V27.force=true;tutStart(true);V27.force=false;};
 window.__v27=V27;
 
+/* ===== v28: settings + save transfer ===== */
+(function(){const st=document.createElement('style');st.textContent=`
+#v28{position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.78);display:none;align-items:center;justify-content:center}
+#v28.on{display:flex}#v28 .bx{background:#2a1d10;border:3px solid #ffd36b;border-radius:14px;padding:14px;width:min(520px,94vw);max-height:90vh;overflow:auto;color:#fff}
+#v28 h3{margin:4px 0 8px;color:#ffd36b}#v28 .row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:6px 0}
+#v28 textarea{width:100%;height:110px;font-size:11px;background:#120c06;color:#ffe9b0;border:1px solid #c49a52;border-radius:8px;box-sizing:border-box}
+#v28 .bt{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}#v28 small{color:#c9b08a}#v28 .ms{min-height:18px;color:#8dff6a;font-weight:700}`;document.head.appendChild(st);
+const d=document.createElement('div');d.id='v28';d.innerHTML=`<div class="bx"><h3>⚙ 設定</h3>
+<div class="row">音・声<button id="s28m"></button></div>
+<div class="row">読み上げ声<button id="s28v"></button></div>
+<div class="row">見やすさモード<button id="s28c"></button></div>
+<div class="row">ダメージ数値<button id="s28d"></button></div>
+<div class="row">ストーリー<button id="s28s"></button></div>
+<div class="row">チュートリアル<button id="s28t">もう一度出す</button></div>
+<h3>💾 セーブ引継ぎ</h3><small>スキン・称号・日替わりランキング・章進行・チャレンジ記録・設定をまとめてJSONで持ち出し／読み込み。</small>
+<textarea id="s28x" placeholder="ここにセーブJSON"></textarea>
+<div class="bt"><button id="s28e">書き出し（表示）</button><button id="s28cp">コピー</button><button id="s28f">ファイル保存</button><button id="s28o">ファイル読込</button><button id="s28i" class="go">テキスト読込</button><input type="file" id="s28fi" accept=".json,application/json,text/plain" style="display:none"></div>
+<div class="ms" id="s28ms"></div><div class="bt"><button id="s28z">閉じる</button></div></div>`;document.body.appendChild(d);
+const on=b=>b?'ON':'OFF',ms=t=>$('s28ms').textContent=t;
+const lab=()=>{$('s28m').textContent=muted?'🔇 OFF':'🔊 ON';$('s28v').textContent=on(vOn);$('s28c').textContent=on(V19.clear);$('s28d').textContent=on(V19.dmg);$('s28s').textContent=on(storyOn);};
+muted=!!LS('yajuuTD_muted',false);vOn=LS('yajuuTD_voice',true)!==false;if($('bMute'))$('bMute').textContent=muted?'🔇':'🔊';
+$('bMute').addEventListener('click',()=>{LSset('yajuuTD_muted',muted);lab();});
+$('s28m').onclick=()=>$('bMute').click();
+$('s28v').onclick=()=>{vOn=!vOn;LSset('yajuuTD_voice',vOn);if(!vOn&&window.speechSynthesis)speechSynthesis.cancel();lab();};
+$('s28c').onclick=()=>{$('b19c').click();lab();};$('s28d').onclick=()=>{$('b19d').click();lab();};
+$('s28s').onclick=()=>{$('bStory').click();lab();};
+$('s28t').onclick=()=>{tutClearFlag();ms('次の「はじめる」でチュートリアルが出るゾ');};
+const keep=k=>/^yajuuTD_/.test(k);
+function dump(){const o={};for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(keep(k))o[k]=localStorage.getItem(k);}return JSON.stringify({game:'yajuu-td',v:28,at:new Date().toISOString(),data:o});}
+function load(txt){let j;try{j=JSON.parse(txt);}catch(_){ms('JSONが壊れてるゾ');return;}if(!j||j.game!=='yajuu-td'||typeof j.data!=='object'){ms('野獣TDのセーブじゃないゾ');return;}
+ const ks=Object.keys(j.data).filter(keep);if(!ks.length){ms('中身が空');return;}if(!confirm(ks.length+'件を上書きする？'))return;
+ try{for(const k of ks)localStorage.setItem(k,String(j.data[k]));}catch(_){ms('保存失敗');return;}ms('読込完了、再起動するゾ');setTimeout(()=>location.reload(),700);}
+$('s28e').onclick=()=>{$('s28x').value=dump();ms('書き出した');};
+$('s28cp').onclick=async()=>{const t=$('s28x').value||dump();$('s28x').value=t;try{await navigator.clipboard.writeText(t);ms('コピーした');}catch(_){$('s28x').select();ms('選択したので手動コピーして');}};
+$('s28f').onclick=()=>{const b=new Blob([dump()],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='yajuu-td-save-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();ms('ファイル保存した');};
+$('s28o').onclick=()=>$('s28fi').click();$('s28fi').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{$('s28x').value=r.result;load(r.result);};r.readAsText(f);e.target.value='';};
+$('s28i').onclick=()=>load($('s28x').value);
+const open=()=>{lab();ms('');d.classList.add('on');};$('bSet28').onclick=open;$('s28z').onclick=()=>d.classList.remove('on');d.onclick=e=>{if(e.target===d)d.classList.remove('on');};
+const hb=document.createElement('button');hb.id='b28';hb.title='設定 (O)';hb.textContent='⚙';hb.onclick=open;const ctl=document.querySelector('#hud .ctl');if(ctl)ctl.insertBefore(hb,ctl.firstChild);
+addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;if(e.key.toLowerCase()==='o')open();else if(e.key==='Escape')d.classList.remove('on');});
+window.__v28={dump,load};})();
+
 window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,V27,SKINS,TITLES,recordRun,runScore,meta};
 })();
+
 
 </script>
 </body>
