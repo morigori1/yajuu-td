@@ -28,7 +28,7 @@ body.compact #bWave.go:not(:disabled),body.portrait #bWave.go:not(:disabled){min
 #hud .stat b{color:#ffd36b}
 #hud .avatar{width:40px;height:40px;border-radius:50%;border:2px solid #ffd36b;object-fit:cover;flex:none}
 #nextinfo{font-size:13px;color:#c9b894;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-#dailyInfo{display:none;flex-basis:100%;font-size:11px;color:#ffd36b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin:0;line-height:1.3}
+#dailyInfo{display:none;flex-basis:100%;font-size:11px;color:#ffd36b;white-space:normal;overflow:hidden;margin:0;line-height:1.3;max-height:2.8em}
 #hud .ctl{display:flex;gap:6px;align-items:center;min-width:0;flex-wrap:wrap}
 #bWave{min-width:120px}
 /* main */
@@ -425,12 +425,12 @@ function pickRoute(){const op=ROUTES.map((r,i)=>i).filter(i=>ROUTES[i].open);if(
 
 // ---------- meme lines ----------
 const L={
- kill:['ヌッ！','ンアッー！（了解）','あっ、そっかぁ…（昇天）','痛いですね…（他人事）','オォン！アォン！','ひでぇ…（褒め言葉）','あ ほ く さ','ぬわああん（完）','顔面ペチャ（物理）','そうだよ（死亡）','いかんでしょ（いく）','えぇ…（困惑して死ぬ）','は？（倒れる）','おかのした（成仏）','24歳、撃破です','ファッ！？ ウーン…','やめちくり〜（手遅れ）','114514（断末魔）','これもうわかんねぇな','汗だく（最期）','帰って、どうぞ（帰らぬ人）','やったぜ。','はっきりわかんだね（死）','なんだお前（素）','大丈夫か大丈夫か（大丈夫じゃない）'],
+ kill:['ヌッ！','ンアッー！（了解）','あっ、そっかぁ…（昇天）','痛いですね…（他人事）','オォン！アォン！','ひでぇ…（褒め言葉）','あ ほ く さ','ぬわああん（完）','顔面ペチャ（物理）','そうだよ（死亡）','いかんでしょ（いく）','えぇ…（困惑して死ぬ）','は？（倒れる）','おかのした（成仏）','24歳、撃破です','ファッ！？ ウーン…','やめちくり〜（手遅れ）','114514（断末魔）','これもうわかんねぇな','汗だく（最期）','帰って、どうぞ（帰らぬ人）','やったぜ。','はっきりわかんだね（死）','なんだお前（素）','大丈夫か大丈夫か（大丈夫じゃない）','サッー！（撃破）','ふらふらして沈んだ'],
  crit:['ファッ！？','迫真の、迫真','ホラ、ホラ（ホラではない）','オラァ！（丁寧語）','FA！？','見とけよ（見えない速さ）','王道を征く一撃','は？（威圧）','お ま た せ','114514倍','ン゛ッ（会心）','ここすき'],
  critToast:['ファッ！？（会心の会心）','迫真！（何が？）','今の見た？ 嘘つけ絶対見てたゾ','痛いですね…これは痛い（確信）','ホラ、ホラ、ホラ（何もない）'],
  leak:['まずいですよ！（まずくない）','入って、どうぞ（入るな）','あっ…（察し）（察せない）','やめてくれよ…（絶望）（希望）','何やってんだお前ぇ！（俺）','いいよ！こいよ！（来ないで）','おかしいですよ！カテジナさん！（誰）','ちょっと待ってくださいよォ！（もう遅い）','そうだよ（入られた）','玄関、汗だく（意味不明）','は？ 抜けた？ 抜けたって何？'],
- waveStart:['おまたせ！（待ってない）','いいよ！こいよ！（来る）','見とけよ見とけよ〜（目をそらす）','じゃけん防衛しましょうね〜','まあ、多少はね？（多少ではない）','おっ、来たな（来た）','まずうちさぁ…ウェーブあんだけど…来てかない？','そうですねぇ…やっぱり僕は、王道を征く、防衛系ですか','後輩「先輩、ウェーブですよ」先輩「ウェーブだよ」','ほら、行くどー（行かない）','あっ、そっかぁ（開戦）','24歳、ウェーブです','ほかにないかなあ？（あるぞ）','王道を征く、開戦系ですか'],
- waveClear:['いいゾ〜これ','やりますねぇ！（他人事）','あーいいっすねー（棒）','疲れたもおおん（元気）','やったぜ。','すっげぇ綺麗（主観）','はっきりわかんだね','そうだよ（クリア）','あ ほ く さ（勝利）','これもうわかんねぇな（勝った）','王道を征く、クリア系ですか','ま、多少はね？（全滅）','いいゾ〜これ（おかわり）','サッー！（クリア）'],
+ waveStart:['おまたせ！（待ってない）','いいよ！こいよ！（来る）','見とけよ見とけよ〜（目をそらす）','じゃけん防衛しましょうね〜','まあ、多少はね？（多少ではない）','おっ、来たな（来た）','まずうちさぁ…ウェーブあんだけど…来てかない？','そうですねぇ…やっぱり僕は、王道を征く、防衛系ですか','後輩「先輩、ウェーブですよ」先輩「ウェーブだよ」','ほら、行くどー（行かない）','あっ、そっかぁ（開戦）','24歳、ウェーブです','ほかにないかなあ？（あるぞ）','王道を征く、開戦系ですか','サッー！（開戦）'],
+ waveClear:['いいゾ〜これ','やりますねぇ！（他人事）','あーいいっすねー（棒）','疲れたもおおん（元気）','やったぜ。','すっげぇ綺麗（主観）','はっきりわかんだね','そうだよ（クリア）','あ ほ く さ（勝利）','これもうわかんねぇな（勝った）','王道を征く、クリア系ですか','ま、多少はね？（全滅）','いいゾ〜これ（おかわり）','サッー！（クリア）','ふらふらして勝った（安定）'],
  place:['ここ、置いてかない？','そうだよ（設置）','あっ、いいっすねー','おかのした','置いたぜ（置いた）','入って、どうぞ（タワーが）','24歳、タワーです','いいよ！こいよ！（来ないで）'],
  site:['そこ！','立地ォ！','ファッ！？','おかのした！','ここだよォ','置いたぜ（迫真）','いい立地（そうだよ）','ドンッ（設置）','暑苦しい立地（褒めてる）','ここすき（地形）','床がぬるい','汗のシミ','汚ねぇ立地（褒めてる）'],
  hitFx:['ヌッ','ッ','痛','汗','ォン','は？','ンッ','チッ','汁','ベチャ','くっさ','湿'],
@@ -489,7 +489,7 @@ const ENEMIES={
  ghost:{name:'覗き見学者',img:'locker_right_face#gray',hp:60,speed:58,bounty:14,r:15,col:'#bbbbbb',stealth:true,stealthLv:1,wd:8},
  boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:32,bounty:150,r:34,col:'#c46bff',armor:3,boss:true,phaseEnr:1,wd:60,
   intro:['迫真ボス「ファッ！？ お前ら何してんの」','迫真ボス襲来！（顔がうるさい）'],
-  ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」','迫真ボス「イキスギィ！（お前が）」','迫真ボス「ま、多少はね？（効いてる）」','迫真ボス「王道を征く、ボス系ですか」'],
+  ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」','迫真ボス「イキスギィ！（お前が）」','迫真ボス「ま、多少はね？（効いてる）」','迫真ボス「王道を征く、ボス系ですか」','迫真ボス「ほかにないかなあ？（ある）」'],
   die:['迫真ボス「やめてくださいよ本当に！（乾燥）」','迫真ボス「あっ、そっかぁ…（倒された）」']},
  boss2:{name:'部室の主・真',img:'locker_left_face#red',hp:1650,speed:24,bounty:250,r:36,col:'#ff5c3c',armor:5,boss:true,summon:3,phaseSum:1,wd:90,
   intro:['部室の主・真「ぬわああん、後輩呼ぶぞ」','部室の主・真 降臨（部屋が汗臭い）'],
@@ -508,7 +508,7 @@ const ENEMIES={
  ngm:{name:'ンギモッヂイイ！',img:'grimace_face#red',hp:95,speed:90,bounty:14,r:16,col:'#ff7a50',sprint:1,wd:8},
  kokoko:{name:'こ↑こ↓',img:'locker_right_face#purple',hp:75,speed:60,bounty:13,r:15,col:'#c98aff',teleport:.15,wd:8},
  mur:{name:'MURさん',img:'trio_sepia_face#gold',hp:140,speed:36,bounty:20,r:20,col:'#ffd36b',cheer:100,armor:4,wd:16},
- dash:{name:'野獣ステップ後輩',img:'navy_center_face#gold',hp:62,speed:68,bounty:13,r:14,col:'#ffd36b',dash:1,wd:6},
+ dash:{name:'野獣ステップ後輩',img:'navy_center_face#gold',hp:62,speed:68,bounty:13,r:14,col:'#ffd36b',dash:1,wd:6,desc:'被弾でサッーと加速する。減速・壁で止めろ'},
  boss4:{name:'迫真の淫獣',img:'grimace_face#gold',hp:3400,speed:30,bounty:600,r:40,col:'#ffd36b',armor:5,boss:true,phases:true,wd:150,
   intro:['迫真の淫獣「ンアッー！ 待たせたな」','迫真の淫獣 降臨（下北沢が汗臭い）'],
   ban:['迫真の淫獣「ンアッー！（挨拶）」','迫真の淫獣「お前らのタワー、くっさ！（いい匂い）」','迫真の淫獣「まだ終わらんよ（終わる）」','迫真の淫獣「114514（説明）」','迫真の淫獣「ほかにないかなあ？（あるぞ）」']},
@@ -593,6 +593,8 @@ const PERKS=[
  {t:'銀行防衛網',d:'810銀行の収入+35%・バリケードHP+30%',img:'trio_sepia_card',tag:'経済',ap:s=>{s.bankMul+=.35;s.wallHp+=.3}},
  {t:'特殊狩り',d:'自爆・応援・嫌がらせ・たかりへのダメ+40%',img:'navy_center_face',tag:'対特殊',max:1,ap:s=>s.antiSpec=.4},
  {t:'素振り特訓',d:'未覚醒タワーの攻撃+18%（素で征け）',img:'senpai_face',tag:'強化',ap:s=>s.plainDmg=.18},
+ {t:'ステップ潰し',d:'野獣ステップ後輩へのダメ+45%',img:'navy_center_face',tag:'対特殊',max:1,ap:s=>s.antiDash=.45},
+ {t:'ふらふら狩り',d:'ふらふらエリートへのダメ+35%',img:'collar_card',tag:'エリート',max:1,ap:s=>s.tipsyHunt=.35},
 ];
 const SITU=[
  {t:'真夏の夜の淫夢',d:'敵の速度+15%・撃破報酬+30%',img:'title_senpai',ap:s=>{s.eSpeed*=1.15;s.bounty+=.3}},
@@ -622,6 +624,7 @@ const SITU=[
  {t:'置き直し道場',d:'売却全額返金・設置代+8%（置き直せ）',img:'navy_trio_card',ap:s=>{s.sellRate=1;s.costMul*=1.08}},
  {t:'近道全開',d:'仮設橋が最初から開通・報酬+15%・敵数+10%',img:'collar_card',ap:s=>{s.forceBridge=1;s.bounty+=.15;s.eCount*=1.1;try{for(const r of ROUTES)if(r.br)r.open=true;rebuildTiles();if(game)game.tele=2.2;}catch(_){}}},
  {t:'密着指導',d:'射程-22%・攻撃+28%・速度+12%（近づけ）',img:'collar_face',ap:s=>{s.gRange-=.22;s.gDmg+=.28;s.gRate+=.12}},
+ {t:'サッー道場',d:'野獣ステップ多め・攻撃速度+10%・報酬+10%',img:'navy_center_face',ap:s=>{s.specDash=1;s.gRate+=.1;s.bounty+=.1}},
 ];
 
 // ---------- state ----------
@@ -629,7 +632,7 @@ let gibs=[],splats=[];
 let game,towers,enemies,projs,fx,floats,spawnQ,fires,decals,sel=null,hover=null,picked=null,pending=null,speed=1,paused=false,statsDirty=true;
 function newStats(){const z=()=>Object.fromEntries(TKEYS.map(k=>[k,0]));return{gDmg:0,gCrit:0,critMul:3,gRange:0,gRate:0,tRate:z(),tDmg:z(),auraMul:1,auraRange:0,slowAdd:0,slowT:0,splashMul:1,costMul:1,bounty:0,
  interest:0,sellRate:.7,eSpeed:1,eHp:1,eCount:1,eHeal:1,critStack:0,comboMul:1,comboT:1.5,poisonSpread:0,poisonMul:1,chainAdd:0,wallHp:0,wallThorn:0,wallCost:1,wallMax:6,reveal:0,critKB:0,bankMul:1,noSteal:0,
- chainPois:0,wallPois:0,critPois:0,boomPois:0,markAdd:0,sniperMark:0,hypeAdd:0,mineDmg:0,mineRe:1,mineMax:8,mineCost:1,comboRate:0,mutLvl:4,mutCost:1,sipAdd:0,sipCap:0,slowVuln:0,lowHp:0,lifeRegen:0,eliteHunt:0,mutDmg:0,eliteMul:1,towerMax:99,night:0,debt:0,awakenDmg:0,overCost:1,triAwaken:0,triRing:0,dualHunt:0,ecoBond:0,upCostMul:1,antiJump:0,antiJam:0,setEco:0,setPois:0,overDmg:0,noLink:0,noCheer:0,dualMul:1,specWave:0,maxLvl:5,antiBridge:0,noPuddle:0,ecoCut:0,gunOverGold:0,antiSpec:0,plainDmg:0,forceBridge:0};}
+ chainPois:0,wallPois:0,critPois:0,boomPois:0,markAdd:0,sniperMark:0,hypeAdd:0,mineDmg:0,mineRe:1,mineMax:8,mineCost:1,comboRate:0,mutLvl:4,mutCost:1,sipAdd:0,sipCap:0,slowVuln:0,lowHp:0,lifeRegen:0,eliteHunt:0,mutDmg:0,eliteMul:1,towerMax:99,night:0,debt:0,awakenDmg:0,overCost:1,triAwaken:0,triRing:0,dualHunt:0,ecoBond:0,upCostMul:1,antiJump:0,antiJam:0,setEco:0,setPois:0,overDmg:0,noLink:0,noCheer:0,dualMul:1,specWave:0,maxLvl:5,antiBridge:0,noPuddle:0,ecoCut:0,gunOverGold:0,antiSpec:0,plainDmg:0,forceBridge:0,specDash:0,antiDash:0,tipsyHunt:0};}
 function reset(){game={gold:300,lives:20,wave:0,maxWave:15,inWave:false,over:false,won:false,endless:false,stats:newStats(),perks:[],kills:0,t:0,lastCritToast:-9,lastFlavor:-9,
  free:0,combo:0,comboT:0,maxCombo:0,shake:0,big:null,situ:'',stolen:0,seen:{},elites:0,gibs:0,banT:6,hypeD:0,hypeR:0,gazeNight:0,bridgeRush:false};
  towers=[];enemies=[];projs=[];fx=[];floats=[];spawnQ=[];fires=[];decals=[];gibs=[];splats=[];sel=null;picked=null;pending=null;statsDirty=true;$('wmax').textContent='15';$('bossbar').style.display='none';newRunMap();buildShop();updHud();renderInfo();renderPerks();}
@@ -701,7 +704,7 @@ function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math
  if(w>=8)add('cheer',Math.floor((w-6)/3)+(S().specWave?2:0),1.2);
  if(w>=9)add('bomber',Math.floor((w-7)/3)+(S().specWave?2:0),.7);
  if(w>=10)add('burrow',Math.floor((w-8)/3)+(S().specWave?1:0),1.0);
- if(w>=6)add('dash',Math.floor((w-4)/4)+(S().specWave?1:0),.7);
+ if(w>=6)add('dash',Math.max(1,Math.floor((w-5)/3))+(S().specWave?1:0)+(S().specDash?2:0),.7);
  if(w%5===0){L2.push({k:BOSSES[(w/5-1)%4],gap:3.5});add('kohai',4+w,.4);if(w>15)L2.push({k:BOSSES[(w/5)%4],gap:3});}
  for(let i=L2.length-1;i>0;i--){if(!ENEMIES[L2[i].k]||ENEMIES[L2[i].k].boss)continue;const j=Math.floor(Math.random()*(i+1));if(!ENEMIES[L2[j].k]||ENEMIES[L2[j].k].boss)continue;[L2[i],L2[j]]=[L2[j],L2[i]];}
  return L2;}
@@ -713,11 +716,14 @@ function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.w
  snd(220,.25,'sawtooth',.05,220);updHud();}
 function spawn(k,dist=0,noAff,rIdx){const d=ENEMIES[k];if(!d)return null;let aff=null;const rI=rIdx!=null?rIdx:pickRoute();
  let aff2=null;if(!noAff&&!d.boss&&k!=='mini'&&game.wave>=6&&Math.random()<Math.min(.5,(game.wave-5)*.028*S().eliteMul))aff=AFK[Math.floor(Math.random()*AFK.length)];
+ if(!noAff&&!d.boss&&k!=='mini'&&!aff&&AFFIX.tipsy){if(d.dash&&game.wave>=6&&Math.random()<.22)aff='tipsy';else if(game.wave>=8&&Math.random()<.05)aff='tipsy';}
  if(aff&&game.wave>=10&&Math.random()<Math.min(.35,(game.wave-9)*.025*S().dualMul)){do{aff2=AFK[Math.floor(Math.random()*AFK.length)];}while(aff2===aff);}
  let hp=d.hp*hpScale(game.wave)*S().eHp*(game.endless?1+(game.wave-15)*.12:1);if(aff==='giant'||aff2==='giant')hp*=2;if(aff==='hard'||aff2==='hard')hp*=1.15;const sh=d.shield?hp*d.shield:0;const p=posAt(dist,ROUTES[rI]);
  const e={r:rI,k,d,hp,maxHp:hp,shield:sh,maxSh:sh,dist,slowT:0,slow:0,stunT:0,pois:0,poisT:0,poisSrc:null,healCd:1,sumT:d.summon||0,vis:!d.stealth,enr:false,x:p.x,y:p.y,hitT:0,id:Math.random(),aff,aff2,mark:0,markV:0,jumpT:d.jump?2.5:0,burT:d.burrow?3:0,buried:0,phase:0,banT:4,linkId:null,haste:0};if(aff==='phase'||aff2==='phase')e.vis=false;if(aff==='link'||aff2==='link'){const o=enemies.find(x=>!x.dead&&(x.aff==='link'||x.aff2==='link')&&!x.linkId);if(o){e.linkId=o.id;o.linkId=e.id;}}if(aff)game.elites++;enemies.push(e);
  if(d.boss){$('bossbar').style.display='flex';$('bossimg').src=src(d.img);$('bossimg').style.cssText=cssf(d.img);snd(90,.6,'sawtooth',.08,-40);
   game._bossToastAt=performance.now();toast(pick(d.intro),d.img.split('#')[0],'boss shake',3000);big('迫真','#ff3c8a',1.4);shake(10);if(navigator.vibrate&&TOUCH)try{navigator.vibrate([60,40,60])}catch(_){}}
+ try{if(d.dash&&!game._seenDash){game._seenDash=1;toast('新敵：野獣ステップ後輩　被弾でサッーと加速するぞ','navy_center_face','',2600);}
+  if((aff==='tipsy'||aff2==='tipsy')&&!game._seenTipsy){game._seenTipsy=1;toast('ふらふらエリート！歩幅が揺れる（減速で止めろ）','collar_face','',2200);}}catch(_){}
  return e;}
 
 // ---------- towers ----------
@@ -813,7 +819,7 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
  if(!o.noCrit&&st&&st.crit){if(Math.random()<st.crit+(srcT.critB||0)){dmg*=s.critMul;crit=true;if(s.critStack)srcT.critB=Math.min(.3,(srcT.critB||0)+.02);}}
  if(srcT&&srcT.k==='senpai'&&srcT.over===0&&e.d.boss)dmg*=2.5;
  {let v=1;if(e.mark>0)v+=e.markV;if(s.slowVuln&&e.slowT>0)v+=s.slowVuln;if(s.lowHp&&e.hp<e.maxHp*.3)v+=s.lowHp;if(s.eliteHunt&&e.aff)v+=.3;if(s.dualHunt&&e.aff&&e.aff2)v+=.4;
-  if(s.antiJump&&(e.d.jump||e.d.burrow))v+=.45;if(s.antiSpec&&(e.d.bomb||e.d.cheer||e.d.jam||e.d.steal||e.d.dash))v+=s.antiSpec;if(s.chainPois&&srcT&&srcT.k==='cannon'&&srcT.over===1&&e.poisT>0)v+=s.chainPois;
+  if(s.antiJump&&(e.d.jump||e.d.burrow))v+=.45;if(s.antiDash&&e.d.dash)v+=s.antiDash;if(s.tipsyHunt&&(e.aff==='tipsy'||e.aff2==='tipsy'))v+=s.tipsyHunt;if(s.antiSpec&&(e.d.bomb||e.d.cheer||e.d.jam||e.d.steal||e.d.dash))v+=s.antiSpec;if(s.chainPois&&srcT&&srcT.k==='cannon'&&srcT.over===1&&e.poisT>0)v+=s.chainPois;
   if(s.antiBridge&&ROUTES[e.r]&&ROUTES[e.r].br)v+=.3;
   if(srcT){const k=srcT.k,dd=e.d;if(dd.armor&&(k==='gaze'||k==='senpai'))v+=.12;if(dd.shield&&(k==='cannon'||k==='gaze'))v+=.12;if((dd.jump||dd.burrow)&&(k==='collar'||k==='gaze'||k==='mine'))v+=.22;if(dd.stealth&&(k==='gaze'))v+=.25;if((dd.speed||0)>=90&&(k==='collar'||k==='mine'))v+=.18;if(dd.cheer&&(k==='senpai'||k==='gaze'))v+=.28;if(dd.bomb&&(k==='collar'||k==='senpai'))v+=.22;if(dd.jam&&k==='gaze')v+=.15;if(dd.heal&&(k==='senpai'))v+=.2;}
   dmg*=v;}
@@ -1049,7 +1055,7 @@ const STAGE_EV=[
  {n:'消灯タイム',ok:()=>true,go(){game.gazeNight=Math.max(game.gazeNight||0,7);toast('消灯タイム！タワーから離れると見えない（見とけよ）','collar_card','bad',2400);flash();}},
  {n:'たかり襲撃',ok:()=>true,go(){const rs=ROUTES.filter(r=>r.open);for(let i=0;i<5;i++){const r=rs[i%Math.max(1,rs.length)]||ROUTES[0];const ri=Math.max(0,ROUTES.indexOf(r));const e=spawn('thief',(r.total||200)*(.12+.14*i),true,ri);if(e)float(e.x,e.y-16,'金！','#ffd36b');}toast('たかり襲撃！財布を守れ（やめちくり〜）','navy_right_face','bad shake',2400);}},
  {n:'増員コール',ok:()=>true,go(){for(let i=0;i<8;i++)spawnQ.push({k:i%3===0?'sprint':'kohai',gap:.35});toast('増員コール！後輩がおかわり（そうだよ）','navy_left_face','bad',2200);}}];
-function stageEvent(){game.stageEv='';if(game.wave<2)return;if(game.wave%5!==0&&Math.random()>.65)return;const pool=STAGE_EV.filter(e=>e.ok());const ev=pool[Math.floor(Math.random()*pool.length)];game.stageEv=ev.n;ev.go();mapCache=null;goro(W/2,H/2,null,true,2);shake(8);big(ev.n,'#ffb03a',1.1);CAM.tintT=.6;CAM.tint='#ffb03a';punch(W/2,H/2,1.08,.5,0,1);snd(330,.3,'square',.05,-120);renderPerks();}
+function stageEvent(){game.stageEv='';if(game.wave<2)return;if(game.wave%5!==0&&Math.random()>.65)return;const pool=STAGE_EV.filter(e=>e.ok());const ev=pool[Math.floor(Math.random()*pool.length)];game.stageEv=ev.n;ev.go();mapCache=null;goro(W/2,H/2,null,true,2);shake(8);big(ev.n,'#ffb03a',1.1);CAM.tintT=.6;CAM.tint='#ffb03a';punch(W/2,H/2,1.08,.5,0,1);snd(330,.3,'square',.05,-120);hudDirty=true;renderPerks();try{updHud();}catch(_){}}
 function stageClear(){const had=game.stageEv;for(const r of ROUTES)r.open=!r.br;rebuildTiles();BLOCK=new Set();PUDDLE=[];game.stageEv='';game.bridgeRush=false;
  if(had==='迫真スポット移動'){}else HOT=new Set((MAP.hot||[]).map(([x,y])=>x+','+y).filter(k=>!pathTiles.has(k)));
  try{if(S()&&S().forceBridge){for(const r of ROUTES)if(r.br)r.open=true;rebuildTiles();}}catch(_){}
@@ -1070,7 +1076,7 @@ function openDraft(){goro(null,null,null,true,2);const pool=PERKS.filter(p=>!(p.
  openCards(`ウェーブ ${game.wave} クリア！`,'ドラフト：カードを1枚選べ（やりますねぇ）',ch,p=>{p.ap(S());game.perks.push(p.t);toast(p.t+'！（いいゾ〜これ）',p.img.split('#')[0],'',1400);snd(700,.12,'triangle',.06,300);},1);}
 function openSitu(){const pool=SITU.slice(),ch=[];while(ch.length<3)ch.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
  openCards('シチュエーションを選べ','今回のラン全体のルールが変わる（迫真）',ch,p=>{p.ap(S());game.situ=p.t;toast(`シチュ：${p.t}（そうだよ）`,p.img.split('#')[0],'combo',2000);big(p.t,'#ffd36b',1.3);setTimeout(()=>playStory('pro'),30);});}
-function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;const ks=Object.keys(m);$('perks').innerHTML=`<span style="color:#ff9a5a">🗺 ${MAP.name}${MAP.fav?'（'+MAP.fav+'）':''}${game.stageEv?'・'+game.stageEv:''}</span><br>`+(MAP.tip?`<span style="color:#c9b894;font-size:11px">${MAP.tip}</span><br>`:'')+(game.situ?`<span style="color:#ffd36b">シチュ：${game.situ}</span><br>`:'')+(ks.length?ks.map(k=>`・${k}${m[k]>1?' x'+m[k]:''}`).join('<br>'):'まだなし');}
+function renderPerks(){const m={};for(const p of game.perks)m[p]=(m[p]||0)+1;const ks=Object.keys(m);const sd=game.situ&&SITU.find(x=>x.t===game.situ);$('perks').innerHTML=`<span style="color:#ff9a5a">🗺 ${MAP.name}${MAP.fav?'（'+MAP.fav+'）':''}${game.stageEv?'・'+game.stageEv:''}</span><br>`+(MAP.tip?`<span style="color:#c9b894;font-size:11px">${MAP.tip}</span><br>`:'')+(game.situ?`<span style="color:#ffd36b">シチュ：${game.situ}${sd&&sd.d?'　<small>'+sd.d+'</small>':''}</span><br>`:'')+(ks.length?ks.map(k=>`・${k}${m[k]>1?' x'+m[k]:''}`).join('<br>'):'まだなし');}
 
 // ---------- end ----------
 function saveBest(){try{const b=+localStorage.getItem('yajuuTD_best')||0;if(game.wave>b)localStorage.setItem('yajuuTD_best',game.wave);}catch(e){}}
@@ -1115,7 +1121,7 @@ function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.da
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;try{if($('gold'))$('gold').textContent=game.gold;if($('lives'))$('lives').textContent=game.lives;if($('wave'))$('wave').textContent=game.wave;const bw=$('bWave');if(bw){bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':(TOUCH?'ウェーブ開始':'ウェーブ開始 (Space)');}
  const nw=game.wave+1;if($('nextinfo'))$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?'次: ボス戦！':'次: ウェーブ '+nw)+(game.inWave||TOUCH?'':'　Spaceで開始');
- const di=$('dailyInfo');if(di){if(game&&game.dailyMod){di.style.display='block';di.textContent=`📅 ${game.dailyMod.n}：${game.dailyMod.d}`;}else di.style.display='none';}
+ const di=$('dailyInfo');if(di){const bits=[];if(game.situ)bits.push('シチュ：'+game.situ);if(game.stageEv)bits.push('⚠ '+game.stageEv);if(game.dailyMod)bits.push('📅 '+game.dailyMod.n+'：'+game.dailyMod.d);if(bits.length){di.style.display='block';di.textContent=bits.join('　');}else di.style.display='none';}
  try{updShop();if(picked&&TOWERS[picked.k])updInfoBtns();}catch(_){}}catch(_){}}
 function statLine(t){const d=TOWERS[t&&t.k];if(!d)return'';const st=tStats(t),s=S();
  if(d.wall)return `HP ${Math.ceil(t.hp)}/${Math.round(st.maxHp)}${s.wallThorn||t.mut===0?'・トゲあり':''}`;
@@ -1154,7 +1160,8 @@ function renderInfo(){const box=$('info');if(!box)return;
   $('selDesc').innerHTML=`${d.desc}<br><span style="color:#ff9a5a">${d.role?`役割：${d.role}`:''}${d.vs?`　${d.vs}`:''}</span><br>覚醒(Lv${S().mutLvl})：${d.muts[0].n}/${d.muts[1].n}　極(Lv${S().maxLvl})：${d.overs[0].n}/${d.overs[1].n}`;}
  else{const pk=game.perks.length?`パーク ${game.perks.length}枚：${[...new Set(game.perks)].join('・')}`:'';
   box.innerHTML=`<div class="wrapI"><div class="row"><img src="${ASSETS.senpai_face}"><div><b>先輩「まずタワー置こうぜ」</b><div class="hint" id="idleHint"></div></div></div></div>`;
-  $('idleHint').textContent=(document.body.classList.contains('portrait')&&pk)?pk:(TOUCH?'タワーをタップ→マップを2回タップで設置。Lv5で極覚醒。':'タワーを選んでマップに設置。覚醒後Lv5で極覚醒A/B。準備ができたら「ウェーブ開始」。');}}
+  const base=(document.body.classList.contains('portrait')&&pk)?pk:(TOUCH?'タワーをタップ→マップを2回タップで設置。Lv5で極覚醒。':'タワーを選んでマップに設置。覚醒後Lv5で極覚醒A/B。準備ができたら「ウェーブ開始」。');
+  $('idleHint').textContent=(game.situ?`シチュ：${game.situ}　`:'')+base;}}
 function updInfoBtns(){if(!picked)return;const c=upCost(picked),mc=mutCost(picked),oc=overCost(picked),mx=S().maxLvl,u=$('bUp'),s=$('bSell');
  if(u){u.textContent=picked.lvl>=mx?'MAX':`強化 ${c}G`;u.disabled=picked.lvl>=mx||game.gold<c;}
  for(const i of [0,1]){const b=$('bM'+i);if(b){b.disabled=game.gold<mc;b.title=`覚醒 ${mc}G`;}}
@@ -1885,7 +1892,7 @@ const V18={
   {h:'外典　新地図三葉',img:'navy_trio_card',t:'十字交差口・汗だくサウナ・下北沢駅前が防衛区域に追加。いずれも汗と泥の気配が濃い。'},
   {h:'外典　v30覚醒革命',img:'senpai_face',t:'21種の塔が8ベース塔へ統合。覚醒で分岐（Mutation／Overwake）。先輩砲台（迫真クリ／サムライブルー／見とけよ狙撃）、部室トリオ（便乗の輪／ホラホラ声援／観葉植物）、胸ぐらスネア（ふっとばし／アイスティー／生ビール）、114514砲（810焦土／円定規／イキスギ電撃）、ほら見ろよ見ろよ塔（晒し上げ／くっさガス／ハエ大群）、810銀行（利息／集金）、迫真バリケード、810地雷（114514爆発／ぬるぬる泥床）。王道を征く。'},
   {h:'外典　デイリー曜日修飾',img:'trio_sepia_face#gold',t:'📅 日替わりデイリーに曜日修飾。日曜：810地雷セール（半額＋威力）、月曜：利息ですねぇ（銀行+50%・利息+3%）、火曜：先輩イキイキ（砲台速度+25%・ダメ+12%）、水曜：撃破報酬ボーナス（+40%・コンボ猶予）、木曜：見とけよ射程（射程+20%・クリ+5%）、金曜：おごりの114514G（+150G・ライフ+2）、土曜：汗だく弱体（敵HP-15%・速度-6%）。曜日ごとに最適戦略が変わる。王道を征く。'},
-  {h:'外典　v47ランの変わり味',img:'navy_trio_card',t:'同じ8塔でもランの顔が変わる。シチュに壁は甘え／素の塔で征け／置き直し道場／近道全開／密着指導。舞台に消灯タイム・たかり襲撃・増員コール。新敵・野獣ステップ後輩は被弾でサッーと加速。アフィックス「ふらふら」は歩幅が揺れる。王道を征く。'},
+  {h:'外典　v47ランの変わり味',img:'navy_trio_card',t:'同じ8塔でもランの顔が変わる。シチュに壁は甘え／素の塔で征け／置き直し道場／近道全開／密着指導／サッー道場。舞台に消灯タイム・たかり襲撃・増員コール。野獣ステップ後輩は被弾で加速、ふらふらは歩幅が揺れる。HUD上段にシチュと舞台名が出る（v48）。王道を征く。'},
  ],
  goroku:[
   ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
@@ -1973,13 +1980,13 @@ const V18={
  const after=$('bSkin')||$('bStory');const b=document.createElement('button');b.id='bCodex';b.style.cssText='margin-top:8px;min-height:44px';b.textContent='📚 下北沢公式資料館';after.after(b);
  const o=document.createElement('div');o.className='ov';o.id='codex';
  const tabs=[['lore','📜 人物録'],['gor','🗣 語録保管庫'],['sei','⛩ 聖地'],['jin','📿 神器'],['mei','🎬 名場面'],['tw','🗼 塔図鑑'],['en','👊 敵図鑑'],['map','🗺 地図'],['sk','🔥 スキル'],['gal','🖼 ギャラリー'],['faq','❓ 公式FAQ']];
- o.innerHTML='<h2>📚 下北沢公式資料館（非公認）</h2><div class="tabs">'+tabs.map(([k,n])=>`<button data-k="${k}">${n}</button>`).join('')+'</div><div class="cdxToc" id="cdxJump"><button type="button" data-go="v30">🗼 v30覚醒</button><button type="button" data-go="daily">📅 曜日デイリー</button></div><div id="cdx"></div><button id="cdxBack" style="margin-top:10px">戻る（おかのした）</button>';
+ o.innerHTML='<h2>📚 下北沢公式資料館（非公認）</h2><div class="tabs">'+tabs.map(([k,n])=>`<button data-k="${k}">${n}</button>`).join('')+'</div><div class="cdxToc" id="cdxJump"><button type="button" data-go="v30">🗼 v30覚醒</button><button type="button" data-go="daily">📅 曜日デイリー</button><button type="button" data-go="v47">🎲 変わり味</button></div><div id="cdx"></div><button id="cdxBack" style="margin-top:10px">戻る（おかのした）</button>';
  document.body.appendChild(o);const big=document.createElement('div');big.id='cdxBig';big.innerHTML='<img><div style="margin-top:8px;font-weight:bold"></div><small style="color:#c9b894">タップで閉じる</small>';big.onclick=()=>big.classList.remove('on');document.body.appendChild(big);
  const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
  const im=n=>ASSETS[n]?`<img src="${ASSETS[n]}" alt="">`:'';
  const ent=(img,h,t,s,id)=>`<div class="ent"${id?` id="${id}"`:''}>${im(img)}<div><h4>${h}</h4><div>${t}</div>${s?`<small>${s}</small>`:''}</div></div>`;
  const R={
-  lore:()=>'<div class="cdxToc">目次　<button type="button" data-jump="cdx-v30">外典 v30覚醒革命</button><button type="button" data-jump="cdx-daily">外典 曜日デイリー</button></div>'+V18.lore.map(l=>ent(l.img,esc(l.h),esc(l.t),'',/v30/.test(l.h)?'cdx-v30':/デイリー|曜日/.test(l.h)?'cdx-daily':'')).join('')+'<div class="stamp">極秘</div>',
+  lore:()=>'<div class="cdxToc">目次　<button type="button" data-jump="cdx-v30">外典 v30覚醒革命</button><button type="button" data-jump="cdx-daily">外典 曜日デイリー</button><button type="button" data-jump="cdx-v47">外典 変わり味</button></div>'+V18.lore.map(l=>ent(l.img,esc(l.h),esc(l.t),'',/v30/.test(l.h)?'cdx-v30':/デイリー|曜日/.test(l.h)?'cdx-daily':/v47|変わり味/.test(l.h)?'cdx-v47':'')).join('')+'<div class="stamp">極秘</div>',
   gor:()=>V18.goroku.map(([g,d,n])=>`<div class="ent" data-say="${esc(g)}" style="cursor:pointer"><div><h4><span class="no">${n}</span>「${esc(g)}」</h4><small>${esc(d)}　🔊タップで再生</small></div></div>`).join(''),
   sei:()=>V18.seichi.map((p,i)=>`<div class="ent"><div style="font-size:32px">⛩</div><div><h4><span class="no">${String(i+1).padStart(2,'0')}</span> ${esc(p.n)}</h4><small>${esc(p.d)}</small></div></div>`).join('')+'<div class="stamp">聖地巡礼は自己責任で（汗）</div>',
   jin:()=>V18.jinki.map((j,i)=>`<div class="ent"><div style="font-size:32px">📿</div><div><h4><span class="no">${String(i+1).padStart(2,'0')}</span> ${esc(j.n)}</h4><small>${esc(j.d)}</small></div></div>`).join('')+'<div class="stamp">複製品も多数出回っています</div>',
@@ -1989,7 +1996,7 @@ const V18={
   map:()=>MAPS.map((m,i)=>ent(['title_senpai','navy_trio_card','trio_sepia_card','locker_right_face','collar_card'][i%5],esc(m.name),esc(m.desc),'攻略：'+esc(m.tip)+'　相性：'+esc(m.fav))).join(''),
   sk:()=>SK.map(s=>`<div class="ent"><div style="font-size:40px">${s.ic}</div><div><h4>${esc(s.n)} <small>(${s.k.toUpperCase()}) 気合${s.cost}／CD${s.cd}s</small></h4><div>${esc(s.d)}</div></div></div>`).join('')+(typeof SKINS!=='undefined'?'<h4 style="color:#ffd36b">塔スキン</h4>'+SKINS.map(s=>'・'+esc(s.n)+'：'+esc(s.d)).join('<br>'):''),
   gal:()=>'<div class="gal">'+Object.keys(ASSETS).filter(n=>!n.startsWith('wiki/')).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
-  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','アイスティー砲（凍結）・泥だまり罠（道の減速床）・ハエ発生器（看破）'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','地雷は一発爆発、泥は何度でも踏める持続減速（汚い）'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）'],['ランが似るのは？','シチュ・舞台イベント・曜日デイリー・野獣ステップ後輩で顔が変わる（v47）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
+  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','アイスティー砲（凍結）・泥だまり罠（道の減速床）・ハエ発生器（看破）'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','地雷は一発爆発、泥は何度でも踏める持続減速（汚い）'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）'],['ランが似るのは？','シチュ・舞台・曜日デイリー・野獣ステップ後輩・ふらふら。上段HUDにシチュ名が出る（v48）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
  };
  const jumpLore=id=>{show('lore');requestAnimationFrame(()=>{const el=$(id);if(el)el.scrollIntoView({block:'start',behavior:'smooth'});});};
  const show=k=>{o.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.k===k));const c=$('cdx');c.innerHTML=R[k]();c.scrollTop=0;
@@ -2037,9 +2044,11 @@ const _hurt19=hurt;hurt=function(e,dmg,srcT,o){const h0=e.hp;_hurt19(e,dmg,srcT,
 let v19T=0;function v19Panel(){const el=$('v19i');if(!el||!game)return;const alive=enemies.filter(e=>!e.dead);const boss=alive.filter(e=>e.d.boss).length,el2=alive.filter(e=>e.aff).length,hunt=alive.filter(e=>e.hunt).length;
  const hurtT=towers.filter(t=>t.thp!=null&&t.thp<t.tmax*.5).length;const rts=ROUTES.filter(r=>r.open!==false).length;
  let h=`<div class="r">🗺 ${MAP.name}${game.act?`（第${game.act+1}幕）`:''}　<small>向き:${MAP.fav||'-'}</small></div>`;
+ if(game.situ)h+=`<div class="r">シチュ：${game.situ}</div>`;
  if(game.stageEv)h+=`<div class="r ev">⚠ ${game.stageEv}</div>`;
  h+=`<div class="r">🛣 進入路 ${rts}本${game.bridgeRush?'・橋ラッシュ':''}　${game.inWave?`残敵 ${alive.length}+${spawnQ.length}`:'準備中'}</div>`;
- const th=[];if(boss)th.push(`👑ボス${boss}`);if(el2)th.push(`✦エリート${el2}`);if(hunt)th.push(`🔨塔狙い${hunt}`);if(hurtT)th.push(`🩹瀕死塔${hurtT}`);if(th.length)h+=`<div class="r th">${th.join('　')}</div>`;
+ const dashN=alive.filter(e=>e.d&&e.d.dash).length,tipsyN=alive.filter(e=>e.aff==='tipsy'||e.aff2==='tipsy').length;
+ const th=[];if(boss)th.push(`👑ボス${boss}`);if(el2)th.push(`✦エリート${el2}`);if(dashN)th.push(`サッー${dashN}`);if(tipsyN)th.push(`ふらふら${tipsyN}`);if(hunt)th.push(`🔨塔狙い${hunt}`);if(hurtT)th.push(`🩹瀕死塔${hurtT}`);if(th.length)h+=`<div class="r th">${th.join('　')}</div>`;
  if(game.ki!=null){const rdy=(typeof SK!=='undefined'?SK:[]).filter(s=>game.ki>=s.cost&&(game.skCd[s.id]||0)<=0).map(s=>s.ic).join('');h+=`<div class="r ki">気合<i><b style="width:${Math.min(100,game.ki)}%"></b></i>${Math.floor(game.ki)}${rdy?' 使える:'+rdy:''}</div>`;}
  el.innerHTML=h;const lg=$('v19log');if(V19.logOn)lg.innerHTML=V19.log.map(t=>`<div>${t.replace(/[<>&]/g,'')}</div>`).join('');}
 // canvas overlay
