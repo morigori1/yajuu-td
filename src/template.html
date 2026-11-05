@@ -1413,6 +1413,124 @@ $('hlPrev').onclick=()=>{hlPlay(false);hlShow(HLi-1);};$('hlNext').onclick=()=>{
 $('hlClose').onclick=()=>{hlPlay(false);$('hl').classList.remove('on');$('end').classList.add('on');};
 {const b=document.createElement('button');b.id='bHL';b.style.display='none';b.textContent='📼 ハイライト';b.onclick=()=>{$('end').classList.remove('on');$('hl').classList.add('on');hlShow(0);hlPlay(true);};document.querySelector('#end .eb').appendChild(b);}
 window.__yajuu12={rbOpen,openExplore,openPact,hlNote,get RB(){return RB}};
+// ===================== v13: 手動スキル・塔つぶし・壊せる地形/炎上 =====================
+const SK=[
+ {id:'katsu',ic:'🔥',n:'迫真の喝',k:'z',cost:35,cd:8,aim:1,R:70,d:'タップ地点を焼き払う＋地面が燃える'},
+ {id:'stop',ic:'✋',n:'暴れんなよ',k:'x',cost:60,cd:20,d:'全敵を2.5秒拘束'},
+ {id:'sweat',ic:'💦',n:'汗だく放水',k:'c',cost:25,cd:6,aim:1,R:95,d:'範囲の火を消し塔を修理・敵を減速'},
+ {id:'rush',ic:'💪',n:'先輩ラッシュ',k:'v',cost:50,cd:15,d:'6秒間 全タワー連射x2'}];
+let skAim=null;const TER={crate:new Map(),fire:new Map(),fuel:new Map(),scorch:new Set()};
+const SKL={katsu:['焼いてかない？','オォン！アォン！','頭にきますよ！'],stop:['暴れんなよ…暴れんなよ…','動くな（迫真）'],sweat:['汗だくで消火（意味深）','ぬわああん熱いもおおん'],rush:['ホラホラホラホラ','見とけよ見とけよ～']};
+function terGen(){TER.crate.clear();TER.fire.clear();TER.fuel.clear();TER.scorch.clear();let n=0,tries=0;const want=9+Math.floor(Math.random()*4);
+ while(n<want&&tries++<400){const x=1+Math.floor(Math.random()*(COLS-2)),y=Math.floor(Math.random()*ROWS),k=x+','+y;if(pathTiles.has(k)||HOT.has(k)||TER.crate.has(k)||towers&&towers.some(t=>t.tx===x&&t.ty===y))continue;
+  let near=false;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])if(pathTiles.has((x+dx)+','+(y+dy)))near=true;if(!near&&Math.random()<.6)continue;
+  const drum=Math.random()<.3;TER.crate.set(k,{x,y,hp:drum?40:70,max:drum?40:70,drum,hit:0});n++;}
+ for(let x=0;x<COLS;x++)for(let y=0;y<ROWS;y++){const k=x+','+y;if(!pathTiles.has(k)&&Math.random()<.22)TER.fuel.set(k,1);}
+ for(const k of TER.crate.keys())TER.fuel.set(k,3);}
+const _setMap13=setMap;setMap=function(i){_setMap13(i);terGen();};terGen();
+function ignite(tx,ty,t=4,force){const k=tx+','+ty;if(tx<0||ty<0||tx>=COLS||ty>=ROWS)return;if(TER.scorch.has(k)&&!force)return;const f=TER.fire.get(k);if(f){f.t=Math.max(f.t,t);return;}
+ if(TER.fire.size>(TOUCH?40:60))return;TER.fire.set(k,{x:tx,y:ty,t:t+(TER.fuel.get(k)||0)*2.5,sp:1.2});}
+function crateHit(k,dmg,quiet){const c=TER.crate.get(k);if(!c)return;c.hp-=dmg;c.hit=.15;const cx=c.x*T+T/2,cy=c.y*T+T/2;if(!quiet)snd(180,.05,'square',.04,-60);
+ if(c.hp<=0){TER.crate.delete(k);BLOCK.delete(k);const g=c.drum?15:10+Math.floor(Math.random()*20);game.gold+=g;hudDirty=true;float(cx,cy-10,`+${g}G`,'#ffd36b',true);
+  siteBurst(cx,cy,c.drum?'#ff5a20':'#c08a50',{n:c.drum?40:24,R:c.drum?110:60,txt:c.drum?'大爆発（迫真）':'ぶっ壊れた！',big:c.drum,sweat:true,sp:300,lw:5,dc:'#4a3420',dr:22});
+  if(c.drum){shake(12);punch(cx,cy,1.15,.4,.25,0,'#ff7a30');snd(70,.4,'sawtooth',.08,-30);for(const e of enemies)if(!e.dead&&(e.x-cx)**2+(e.y-cy)**2<110*110)hurt(e,60*(1+.25*game.wave),null,{noCrit:true});
+   for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++)ignite(c.x+dx,c.y+dy,5);hlNote('ドラム缶大爆発！','#ff7a30',5);}
+  else if(Math.random()<.3){ignite(c.x,c.y,3);}
+  if(Math.random()<.25&&!HOT.has(k)){HOT.add(k);mapCache=null;float(cx,cy+12,'迫真スポット出現！','#ffb03a',true,1.4);}}}
+// tower HP (non-wall)
+function thpMax(t){return Math.round((70+40*t.lvl)*(t.over!=null?1.5:1));}
+function thp(t){if(TOWERS[t.k].wall)return null;if(t.thp==null){t.tmax=thpMax(t);t.thp=t.tmax;}return t.thp;}
+function towerHurt(t,dmg,why){if(TOWERS[t.k].wall){t.hp-=dmg;t.hitT=.15;return;}thp(t);t.thp-=dmg;t.hurtT=.2;if(t.thp<=0){const ox=t.x,oy=t.y;towers=towers.filter(o=>o!==t);statsDirty=true;if(picked===t){picked=null;renderInfo();}
+  const rf=Math.round(t.spent*.3);game.gold+=rf;hudDirty=true;toast(`${TOWERS[t.k].name}が${why||'つぶされた'}！（${rf}G回収）やめろォ！`,'grimace_face','bad shake',1800);shake(12);
+  siteBurst(ox,oy,'#ff3c3c',{n:40,R:90,txt:'タワー崩壊',big:true,sweat:true,sp:300,lw:5,ring3:true,dc:'#3a2a1a',dr:26});snd(90,.4,'sawtooth',.08,-40);hlNote(`${TOWERS[t.k].name}が${why||'敵に潰された'}`,'#ff3c3c',6);updShop();}}
+// skills
+function skOk(s){return game.inWave&&!game.over&&game.ki>=s.cost&&(game.skCd[s.id]||0)<=0;}
+function skUse(s,wx,wy){game.ki-=s.cost;game.skCd[s.id]=s.cd;skAim=null;const sp=S();hudDirty=true;goro(wx||W/2,(wy||H/2)-20,pick(SKL[s.id]),true,3);hlNote(`スキル：${s.n}`,'#ff8a3c',4);game.skUsed=(game.skUsed||0)+1;
+ if(s.id==='katsu'){punch(wx,wy,1.2,.45,.3,.6,'#ff5a20');shake(10);flash();snd(120,.35,'sawtooth',.08,-60);
+  for(const e of enemies)if(!e.dead&&(e.x-wx)**2+(e.y-wy)**2<s.R*s.R){hurt(e,(40+18*game.wave)*(e.d.boss?.6:1),null,{noCrit:true});e.stunT=Math.max(e.stunT,.4);}
+  const tx=Math.floor(wx/T),ty=Math.floor(wy/T);for(let dx=-1;dx<=1;dx++)for(let dy=-1;dy<=1;dy++){ignite(tx+dx,ty+dy,4,true);crateHit((tx+dx)+','+(ty+dy),35,true);}
+  siteBurst(wx,wy,'#ff5a20',{n:46,R:s.R+20,txt:'迫真の喝！',big:true,sweat:true,sp:340,lw:6,ring3:true,dc:'#2a1a10',dr:30});}
+ if(s.id==='stop'){for(const e of enemies)if(!e.dead)e.stunT=Math.max(e.stunT,e.d.boss?1.2:2.5);big('暴れんなよ…','#ffd36b',1.3);punch(W/2,H/2,1.08,.6,.6,1.2,'#ffd36b');flash();snd(220,.5,'triangle',.07,-100);}
+ if(s.id==='sweat'){let n=0;for(const [k,f] of TER.fire){const fx_=f.x*T+T/2,fy=f.y*T+T/2;if((fx_-wx)**2+(fy-wy)**2<s.R*s.R){TER.fire.delete(k);n++;}}
+  for(const t of towers)if((t.x-wx)**2+(t.y-wy)**2<s.R*s.R){if(TOWERS[t.k].wall)t.hp=Math.min(tStats(t).maxHp,t.hp+tStats(t).maxHp*.5);else{thp(t);t.thp=Math.min(t.tmax,t.thp+t.tmax*.6);}t.stunT=0;}
+  for(const e of enemies)if(!e.dead&&(e.x-wx)**2+(e.y-wy)**2<s.R*s.R){e.slow=Math.max(e.slow,.5);e.slowT=Math.max(e.slowT,3);}
+  for(let i=0;i<30;i++)pushFx({x:wx,y:wy,vx:(Math.random()-.5)*360,vy:(Math.random()-.5)*360,t:.6,T:.6,c:'#9ad8ff',r:3+Math.random()*3});float(wx,wy-20,n?`消火${n}マス（汗）`:'びしょびしょ（意味深）','#9ad8ff',true);snd(800,.3,'sine',.05,-500);}
+ if(s.id==='rush'){game.rushT=6;big('先輩ラッシュ！','#ff3c8a',1.2);punch(W/2,H/2,1.1,.5,0,.8,'#ff3c8a');shake(8);snd(500,.3,'square',.06,400);}
+ skRender();}
+function skPress(i){const s=SK[i];if(!s||!game)return;if(!game.inWave){toast('スキルは戦闘中だけ（そうだよ）','collar_face','bad',1000);return;}
+ if(!skOk(s)){toast(game.ki<s.cost?`気合が足りない（${Math.floor(game.ki)}/${s.cost}）`:'クールダウン中（まだだよ）','collar_face','bad',900);return;}
+ if(s.aim){skAim=skAim===s.id?null:s.id;sel=null;picked=null;pending=null;showTapHint(false);updShop();renderInfo();if(skAim)toast(`${s.n}：マップをタップで発動`,'senpai_face','',1100);skRender();return;}skUse(s);}
+function skRender(){const b=$('skbar');if(!b||!game)return;$('kiBar').style.width=Math.min(100,game.ki)+'%';$('kiNum').textContent=Math.floor(game.ki);
+ b.querySelectorAll('button').forEach((el,i)=>{const s=SK[i],cd=game.skCd[s.id]||0;el.classList.toggle('rdy',skOk(s));el.classList.toggle('aim',skAim===s.id);el.querySelector('i').textContent=cd>0?Math.ceil(cd):'';});}
+(function(){const st=$('stage'),b=document.createElement('div');b.id='skbar';b.innerHTML=`<div class="ki"><span>気合</span><div class="kb"><i id="kiBar"></i></div><b id="kiNum">0</b></div>`+SK.map((s,i)=>`<button title="${s.n} (${s.k.toUpperCase()}) ${s.cost}気合：${s.d}"><span>${s.ic}</span><small>${s.n}</small><em>${s.cost}</em><i></i></button>`).join('');st.appendChild(b);
+ b.querySelectorAll('button').forEach((el,i)=>el.addEventListener('click',ev=>{ev.stopPropagation();skPress(i);}));
+ const css=document.createElement('style');css.textContent=`#skbar{position:absolute;left:6px;top:6px;z-index:12;display:flex;flex-direction:column;gap:4px;pointer-events:auto}
+#skbar .ki{display:flex;align-items:center;gap:4px;background:#000a;border-radius:8px;padding:2px 6px;font:900 11px sans-serif;color:#ffb03a}#skbar .kb{width:62px;height:7px;background:#3a2010;border-radius:4px;overflow:hidden}#skbar .kb i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff5a20,#ffd36b);transition:width .15s}
+#skbar button{position:relative;width:96px;min-height:40px;display:flex;align-items:center;gap:4px;padding:3px 6px;border-radius:10px;border:2px solid #5a3a20;background:#1c100acc;color:#bbb;font:800 11px sans-serif;opacity:.6;cursor:pointer;touch-action:manipulation}
+#skbar button span{font-size:18px}#skbar button em{position:absolute;right:4px;bottom:1px;font:900 9px sans-serif;color:#ffb03a;font-style:normal}#skbar button i{position:absolute;right:4px;top:2px;font:900 12px sans-serif;color:#fff;font-style:normal}
+#skbar button.rdy{opacity:1;color:#fff;border-color:#ff8a3c;box-shadow:0 0 10px #ff5a2088;animation:skP 1s infinite}#skbar button.aim{border-color:#fff;background:#ff5a20cc;animation:none}
+@keyframes skP{50%{box-shadow:0 0 18px #ff5a20cc}}
+@media (max-width:700px),(pointer:coarse){#skbar button{width:44px;min-height:44px;justify-content:center;padding:2px}#skbar button small{display:none}#skbar .kb{width:44px}}`;document.head.appendChild(css);})();
+document.addEventListener('keydown',ev=>{if(!game||stQ||RB||$('title').classList.contains('on'))return;const i='zxcv'.indexOf(ev.key.toLowerCase());if(i<0)return;ev.preventDefault();ev.stopImmediatePropagation();skPress(i);},true);
+function evWorld(ev){const r=cv.getBoundingClientRect();const vx=(ev.clientX-r.left)*VW()/r.width,vy=(ev.clientY-r.top)*VH()/r.height;return portrait?{x:vy,y:vx}:{x:vx,y:vy};}
+cv.addEventListener('pointerup',ev=>{if(!game||game.over||ev.button>0)return;const w=evWorld(ev);
+ if(skAim){ev.stopImmediatePropagation();const s=SK.find(x=>x.id===skAim);if(s&&skOk(s))skUse(s,w.x,w.y);else{skAim=null;skRender();}return;}
+ const tx=Math.floor(w.x/T),ty=Math.floor(w.y/T),k=tx+','+ty;if(TER.crate.has(k)&&!sel){ev.stopImmediatePropagation();crateHit(k,25+5*game.wave);shake(2);return;}},true);
+cv.addEventListener('pointermove',ev=>{if(skAim)game.skPt=evWorld(ev);});
+// hunters
+const HUNT_SAY=['その塔、邪魔だよなぁ？','ぶっ壊してやるよ（迫真）','塔から先に潰すゾ','こ↑こ↓が弱点'];
+const _spawn13=spawn;spawn=function(k,d,na,r){const e=_spawn13(k,d,na,r);const w=game.wave;let p=w>=3?Math.min(.35,.08+w*.02):0;if(e.d.boss)p=w>=5?.7:0;if(k==='mini')p*=.3;if(Math.random()<p){e.hunt=1;e.hox=0;e.hoy=0;e.hT=0;if(Math.random()<.4)say(e,pick(HUNT_SAY),2);}return e;};
+const _kill13=kill;kill=function(e,t){if(e.dead)return;_kill13(e,t);game.ki=Math.min(100,game.ki+(e.d.boss?25:e.hunt?4:1.6));if(e.hunt)float(e.x,e.y-18,'塔つぶし撃退！','#8dff6a');};
+function huntTick(dt){for(const e of enemies){if(e.dead||!e.hunt)continue;if(e.hTgt)e.dist=e.hDist;const base=posAt(e.dist,rtOf(e));
+  if(e.hTgt&&(!towers.includes(e.hTgt)||e.hT>7)){e.hTgt=null;e.hCool=4;}
+  if(e.hCool>0)e.hCool-=dt;
+  if(!e.hTgt&&!(e.hCool>0)&&!e.buried){let best=null,bd=(e.d.boss?110:85)**2;for(const t of towers){if(TOWERS[t.k].onPath&&!TOWERS[t.k].wall)continue;const q=(t.x-base.x)**2+(t.y-base.y)**2;if(q<bd){bd=q;best=t;}}if(best){e.hTgt=best;e.hT=0;e.hDist=e.dist;if(Math.random()<.5)say(e,pick(HUNT_SAY),1.6);}}
+  if(e.hTgt){e.hT+=dt;e.dist=e.hDist;const t=e.hTgt,tx=t.x-base.x,ty=t.y-base.y,dx=tx-e.hox,dy=ty-e.hoy,l=Math.hypot(dx,dy);
+   if(l>20){if(e.stunT<=0){const v=Math.min(l-18,(e.d.speed||40)*S().eSpeed*(1-e.slow)*1.1*dt);e.hox+=dx/l*v;e.hoy+=dy/l*v;}}
+   else if(e.stunT<=0){e.hAtk=(e.hAtk||0)-dt;if(e.hAtk<=0){e.hAtk=.7;const dm=(e.d.boss?40:8)*(1+.18*game.wave);towerHurt(t,dm);t.stunT=Math.max(t.stunT||0,.25);pushFx({ring:true,x:t.x,y:t.y,r:4,R:26,t:.3,T:.3,c:'#ff3c3c',lw:3});float(t.x,t.y-14,'ドンッ','#ff6b5c');snd(140,.06,'square',.04,-40);}}}
+  else{const l=Math.hypot(e.hox,e.hoy);if(l>.5){const v=Math.min(l,60*dt);e.hox-=e.hox/l*v;e.hoy-=e.hoy/l*v;}else{e.hox=e.hoy=0;}}
+  if(e.hox||e.hoy){const b=posAt(e.dist,rtOf(e));e.x=b.x+e.hox;e.y=b.y+e.hoy;}}}
+// fire
+function fireTick(dt){const s=S();for(const [k,f] of TER.fire){f.t-=dt;const cx=f.x*T+T/2,cy=f.y*T+T/2;
+  if(f.t<=0){TER.fire.delete(k);TER.fuel.delete(k);TER.scorch.add(k);mapCache=null;continue;}
+  f.sp-=dt;if(f.sp<=0){f.sp=1.3+Math.random();const fu=TER.fuel.get(k)||0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nk=(f.x+dx)+','+(f.y+dy);if((TER.fuel.get(nk)||0)>0&&Math.random()<.35+fu*.1)ignite(f.x+dx,f.y+dy,3);}}
+  if(TER.crate.has(k))crateHit(k,12*dt,true);
+  const dps=(10+5*game.wave);for(const e of enemies)if(!e.dead&&!e.buried&&Math.abs(e.x-cx)<T*.6&&Math.abs(e.y-cy)<T*.6){hurt(e,dps*dt,null,{noCrit:true});if(Math.random()<dt*.5)float(e.x,e.y-14,'あっつ！','#ff7a30');}
+  for(const t of towers)if(Math.abs(t.tx-f.x)<=0&&Math.abs(t.ty-f.y)<=0||(Math.abs(t.tx-f.x)+Math.abs(t.ty-f.y)===1&&Math.random()<.5)){towerHurt(t,(3+game.wave*.6)*dt,'燃えた');t.burnV=.3;}
+  if(!RM&&Math.random()<dt*6)pushFx({x:cx+(Math.random()-.5)*T*.7,y:cy,vx:(Math.random()-.5)*20,vy:-40-Math.random()*40,t:.7,T:.7,c:Math.random()<.5?'#ff7a20':'#ffd36b',r:2+Math.random()*3});}
+ for(const f of fires){if(Math.random()<dt*1.5)ignite(Math.floor(f.x/T),Math.floor(f.y/T),2.5);}}
+const _update13=update;update=function(dt){_update13(dt);if(game.over)return;
+ for(const c of TER.crate.values()){BLOCK.add(c.x+','+c.y);if(c.hit>0)c.hit-=dt;}
+ for(const s of SK)if(game.skCd[s.id]>0)game.skCd[s.id]-=dt;
+ if(game.inWave){game.ki=Math.min(100,game.ki+dt*1.4);if(game.rushT>0){game.rushT-=dt;for(const t of towers)if(t.cd>0&&!(t.stunT>0))t.cd-=dt;}}
+ else{for(const t of towers)if(!TOWERS[t.k].wall&&t.thp!=null){t.tmax=thpMax(t);t.thp=Math.min(t.tmax,t.thp+t.tmax*.25*dt);}}
+ huntTick(dt);fireTick(dt);
+ game.skUi=(game.skUi||0)-dt;if(game.skUi<=0){game.skUi=.2;skRender();}};
+const _startWave13=startWave;startWave=function(){const w0=game.wave;_startWave13();if(game.wave===w0)return;
+ if(game.wave>=4&&Math.random()<.45){const cand=[...TER.fuel.keys()].filter(k=>!TER.scorch.has(k));let n=game.wave>=10?3:game.wave>=7?2:1;for(let i=0;i<n&&cand.length;i++){const k=cand.splice(Math.floor(Math.random()*cand.length),1)[0].split(',').map(Number);ignite(k[0],k[1],5);}
+  setTimeout(()=>toast('炎上発生！🔥 燃え広がるゾ（💦で消火）','grimace_face','bad shake',2200),900);}
+ if(game.wave===3)setTimeout(()=>toast('🔨塔つぶし後輩が出現！ 赤い🔨の敵は塔を狙う。スキル（Z/X/C/V）で守れ！','senpai_face','',3200),1400);};
+const _reset13=reset;reset=function(){_reset13();Object.assign(game,{ki:30,skCd:{},rushT:0,skUsed:0});skAim=null;terGen();skRender();};
+const _waveClear13=waveClear;waveClear=function(){_waveClear13();skAim=null;game.ki=Math.min(100,game.ki+10);};
+// draw
+function drawV13(){const sc=view.k*view.dpr,_z=CAM.z;const [vx,vy]=P(CAM.x,CAM.y);const _cx=vx*sc,_cy=vy*sc;ctx.setTransform(sc*_z,0,0,sc*_z,_cx*(1-_z),_cy*(1-_z));const tt=game.t;
+ ctx.fillStyle='rgba(20,10,5,.45)';for(const k of TER.scorch){if(TER.fire.has(k))continue;const [x,y]=k.split(',').map(Number);const [px,py]=P(x*T,y*T);ctx.fillRect(px+4,py+4,T-8,T-8);}
+ for(const c of TER.crate.values()){const [px,py]=P(c.x*T,c.y*T);const j=c.hit>0?(Math.random()-.5)*4:0;ctx.save();ctx.translate(px+T/2+j,py+T/2);
+  if(c.drum){ctx.fillStyle='#b8321e';ctx.fillRect(-13,-17,26,34);ctx.fillStyle='#ffd36b';ctx.fillRect(-13,-6,26,4);ctx.fillRect(-13,6,26,4);ctx.font=`bold ${fs(10)} sans-serif`;ctx.textAlign='center';ctx.fillStyle='#000';ctx.fillText('危',0,3);}
+  else{ctx.fillStyle='#9a6a38';ctx.fillRect(-17,-15,34,30);ctx.strokeStyle='#5a3a1a';ctx.lineWidth=2;ctx.strokeRect(-17,-15,34,30);ctx.beginPath();ctx.moveTo(-17,-15);ctx.lineTo(17,15);ctx.stroke();}
+  if(c.hp<c.max){ctx.fillStyle='#000a';ctx.fillRect(-16,19,32,4);ctx.fillStyle='#ffb03a';ctx.fillRect(-16,19,32*c.hp/c.max,4);}ctx.restore();}
+ for(const f of TER.fire.values()){const [px,py]=P(f.x*T,f.y*T);const a=Math.min(1,f.t);ctx.fillStyle=`rgba(255,80,20,${.25*a})`;ctx.fillRect(px,py,T,T);
+  for(let i=0;i<3;i++){const fx_=px+10+i*14,h=14+Math.sin(tt*12+i*2+f.x)*6;ctx.fillStyle=`rgba(255,${120+i*40},30,${.85*a})`;ctx.beginPath();ctx.moveTo(fx_-6,py+T-6);ctx.quadraticCurveTo(fx_,py+T-6-h*2,fx_+6,py+T-6);ctx.fill();}}
+ for(const t of towers){const m=TOWERS[t.k].wall?null:t.thp;if(m!=null&&t.thp<t.tmax){const [x,y]=P(t.x,t.y);ctx.fillStyle='#000b';ctx.fillRect(x-18,y+19,36,5);ctx.fillStyle=t.thp/t.tmax<.35?'#ff3c3c':'#8dff6a';ctx.fillRect(x-18,y+19,36*t.thp/t.tmax,5);}
+  if(t.hurtT>0){t.hurtT-=1/60;const [x,y]=P(t.x,t.y);ctx.strokeStyle='#ff3c3c';ctx.lineWidth=3;ctx.strokeRect(x-20,y-20,40,40);}
+  if(game.rushT>0){const [x,y]=P(t.x,t.y);ctx.strokeStyle=`rgba(255,60,138,${.5+.5*Math.sin(tt*20)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,22,0,7);ctx.stroke();}}
+ for(const e of enemies){if(e.dead||!e.hunt)continue;const [x,y]=P(e.x,e.y);ctx.font=`${fs(13)} sans-serif`;ctx.textAlign='center';ctx.fillText('🔨',x+e.d.r,y-e.d.r);
+  if(e.hTgt){const [a,b]=P(e.hTgt.x,e.hTgt.y);ctx.strokeStyle='rgba(255,60,60,.8)';ctx.setLineDash([5,5]);ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(a,b);ctx.stroke();ctx.setLineDash([]);}}
+ if(skAim&&game.skPt){const s=SK.find(x=>x.id===skAim);const [x,y]=P(game.skPt.x,game.skPt.y);ctx.strokeStyle=s.id==='sweat'?'#9ad8ff':'#ff5a20';ctx.lineWidth=3;ctx.setLineDash([8,6]);ctx.beginPath();ctx.arc(x,y,s.R,0,7);ctx.stroke();ctx.setLineDash([]);}
+ if(game.rushT>0){ctx.setTransform(sc,0,0,sc,0,0);ctx.font=`900 ${fs(22)} sans-serif`;ctx.textAlign='center';ctx.fillStyle=`rgba(255,60,138,${.6+.4*Math.sin(tt*15)})`;ctx.fillText(`先輩ラッシュ ${game.rushT.toFixed(1)}s`,VW()/2,VH()-20);}}
+window.__v13={SK,TER,skUse,ignite,crateHit,get game(){return game},get towers(){return towers},get enemies(){return enemies},canPlace,place,startWave,TKEYS,pathTiles,setStory(v){storyOn=v},unpause(){paused=false},W,H,ROWS,COLS};
+const _draw13=draw;draw=function(){_draw13();try{drawV13();}catch(err){}};
+
 const _loopRB=()=>{};let rbLast=performance.now();(function rbLoop(n){const dt=Math.min(.05,(n-rbLast)/1000);rbLast=n;if(game&&!game.over&&(!paused||RB)&&!$('title').classList.contains('on'))rbTick(dt);requestAnimationFrame(rbLoop);})(rbLast);
 
 let last=performance.now();
