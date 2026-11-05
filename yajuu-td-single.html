@@ -531,6 +531,14 @@ function reset(){game={gold:300,lives:20,wave:0,maxWave:15,inWave:false,over:fal
 const S=()=>game.stats;
 function shake(v){game.shake=Math.min(14,Math.max(game.shake,RM?v*.3:v));}
 function big(txt,c='#ffd36b',t=1.1){game.big={txt,c,t,T:t};}
+/* v10 cinematic */
+const CAM={z:1,tz:1,x:W/2,y:H/2,t:0,slow:0,bars:0,barT:0,tint:null,tintT:0};
+function punch(x,y,z=1.25,dur=.5,slow=0,bars=0,tint){if(RM){z=1+(z-1)*.3;slow=0;}CAM.tz=Math.max(CAM.tz>1&&CAM.t>0?CAM.tz:1,z);CAM.x=x;CAM.y=y;CAM.t=Math.max(CAM.t,dur);if(slow)CAM.slow=Math.max(CAM.slow,slow);if(bars)CAM.barT=Math.max(CAM.barT,bars);if(tint){CAM.tint=tint;CAM.tintT=.5;}}
+function camTick(dt){if(CAM.t>0){CAM.t-=dt;}else CAM.tz=1;CAM.z+=(CAM.tz-CAM.z)*Math.min(1,dt*(CAM.tz>CAM.z?18:5));if(CAM.slow>0)CAM.slow-=dt;if(CAM.barT>0)CAM.barT-=dt;CAM.bars+=((CAM.barT>0?1:0)-CAM.bars)*Math.min(1,dt*6);if(CAM.tintT>0)CAM.tintT-=dt;
+ if(game&&game.card)game.card.t-=dt;if(game&&game.tele>0)game.tele-=dt;if(game&&game.streak)game.streak.t-=dt;}
+const STREAK=[[10,'いいゾ～これ','#ffd36b'],[25,'ホラホラホラホラ','#ff8a5c'],[50,'暴れんなよ…暴れんなよ…','#ff3c8a'],[100,'イキスギィ！イクイクイク','#c98aff'],[200,'迫真空手部、極','#fff']];
+function streakCheck(c,x,y){for(const [n,txt,col] of STREAK)if(c===n){game.streak={n,txt,col,t:2,T:2};big(`${n} STREAK`,col,1.2);punch(x,y,1.12+n/1000,.6,n>=50?.5:0,n>=50?1.2:0,col);shake(6+n/20);flash();snd(440+n*2,.25,'square',.05,300);goro(x,y,null,true,n>=50?3:2);}}
+function waveCard(){const bossW=game.wave%5===0;game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:game.stageEv?'⚠ '+game.stageEv:'',c:bossW?'#ff3c8a':'#ffd36b'};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
 const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を往く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
 function goro(x,y,txt,force,lv=1){const n=performance.now();if(!force&&n-goroT<(TOUCH?1500:900))return;goroT=n;txt=txt||GORO[Math.floor(Math.random()*GORO.length)];const c=GOROC[Math.floor(Math.random()*GOROC.length)];
@@ -582,7 +590,7 @@ function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math
  for(let i=L2.length-1;i>0;i--){if(ENEMIES[L2[i].k].boss)continue;const j=Math.floor(Math.random()*(i+1));if(ENEMIES[L2[j].k].boss)continue;[L2[i],L2[j]]=[L2[j],L2[i]];}
  return L2;}
 function hpScale(w){return Math.pow(1+.32*(w-1),1.5);}
-function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.wave+1);if(STORY[bk]&&!(game.seen&&game.seen[bk])&&storyOn){playStory(bk,startWave);return;}}game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;stageEvent();
+function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.wave+1);if(STORY[bk]&&!(game.seen&&game.seen[bk])&&storyOn){playStory(bk,startWave);return;}}game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;stageEvent();waveCard();
  if(game.wave%5===0)toast(`迫真ボス襲来！ウェーブ ${game.wave}（逃げるんだよォ！）（逃げない）`,'collar_card','boss shake',3200);else toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);
  snd(220,.25,'sawtooth',.05,220);updHud();}
 function spawn(k,dist=0,noAff,rIdx){const d=ENEMIES[k];let aff=null;const rI=rIdx!=null?rIdx:pickRoute();
@@ -639,7 +647,7 @@ function place(k,tx,ty){if(!canPlace(k,tx,ty))return false;const c=cost(k);setTi
  if(game.free>0){game.free--;toast(`二人羽織でタダ！（残り${game.free}）`,'trio_sepia_card','',1200);}
  game.gold-=c;const t={k,tx,ty,x:tx*T+T/2,y:ty*T+T/2,lvl:1,cd:0,spent:c,ang:0,pulseT:0,kills:0,critB:0,mut:null,over:null,stunT:0,sipG:0,armed:1};
  if(TOWERS[k].onPath){t.pds=pdsOf(t.x,t.y);t.pd=t.pds[0]!=null?t.pds[0]:-999;}
- towers.push(t);statsDirty=true;if(TOWERS[k].wall)t.hp=tStats(t).maxHp;picked=null;snd(660,.08,'triangle',.06,200);
+ towers.push(t);statsDirty=true;if(HOT.has(tx+','+ty))punch(t.x,t.y,1.18,.45,.3,.6,'#ffb03a');else punch(t.x,t.y,1.05,.2);if(TOWERS[k].wall)t.hp=tStats(t).maxHp;picked=null;snd(660,.08,'triangle',.06,200);
  {const d=TOWERS[k],col=d.ring;const special=!!(d.wall||d.mine||d.hype);
   siteBurst(t.x,t.y,col,{n:special?40:32,R:special?78:58,shake:special?7:4.5,txt:Math.random()<.7?pick(L.site):null,big:true,sweat:true,sp:special?240:200,lw:5,ring3:true,dr:special?24:18});
   if(d.wall){decal(t.x,t.y,26,'#6b5232');for(let i=0;i<10&&fx.length<FX_CAP;i++)pushFx({x:t.x,y:t.y,vx:(Math.random()-.5)*160,vy:-40-Math.random()*120,t:.55,c:'#8a6a40',drop:true,sz:3});}
@@ -702,7 +710,7 @@ function stunTowers(x,y,R,dur){let n=0;for(const t of towers){if(TOWERS[t.k].onP
 function dot(e,dmg,srcT){if(e.dead)return;e.hp-=dmg;if(e.hp<=0)kill(e,srcT);}
 function poisonE(e,dps,dur,srcT){if(e.pois<dps)e.pois=dps;e.poisT=Math.max(e.poisT,dur);e.poisSrc=srcT;}
 function kill(e,srcT){if(e.dead)return;e.dead=true;const s=S();if(e.d.boss)goro(e.x,e.y,'イキスギィ！',true,3);else if(e.aff||Math.random()<.12)goro(e.x,e.y,null,false,e.aff?2:1);
- game.combo=game.comboT>0?game.combo+1:1;game.comboT=s.comboT;game.maxCombo=Math.max(game.maxCombo,game.combo);
+ game.combo=game.comboT>0?game.combo+1:1;streakCheck(game.combo,e.x,e.y);if(e.d.boss){punch(e.x,e.y,1.45,1.1,1,1.6,'#ffffff');}else if(e.aff2)punch(e.x,e.y,1.12,.3,.25,0);game.comboT=s.comboT;game.maxCombo=Math.max(game.maxCombo,game.combo);
  let b=Math.round(e.d.bounty*Math.max(.2,1+s.bounty)*(e.aff?(s.eliteHunt?3.2:1.6):1)*(e.aff2?(s.dualHunt?1.5:1.25):1))+(e.d.cheer&&s.noCheer?8:0);
  if(e.mark>0&&towers.some(t=>t.k==='gaze'&&t.mut===1))b+=4;if(game.combo>=10)b+=Math.round(1*s.comboMul*(game.combo>=50?3:game.combo>=25?2:1)*(towers.some(t=>t.k==='hype'&&t.mut===1)?2:1));
  for(const t of towers){if(t.k==='bank'){const r=tStats(t).range;if((t.x-e.x)**2+(t.y-e.y)**2<=r*r)b+=t.lvl;}
@@ -745,7 +753,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
   if(d.cheer&&!s.noCheer){for(const o of enemies){if(o.dead||o===e||o.d.boss)continue;if((o.x-e.x)**2+(o.y-e.y)**2<d.cheer*d.cheer)o.cheerT=Math.max(o.cheerT||0,.3);}}
   if(d.jump&&e.stunT<=0){e.jumpT-=dt;if(e.jumpT<=0){e.jumpT=2.5;e.dist=Math.min(rtOf(e).total-1,e.dist+d.jump);float(e.x,e.y-20,'ぴょん（迫真）','#ff7a50');pushFx({ring:true,x:e.x,y:e.y,r:4,R:34,t:.4,T:.4,c:'#ff7a50',lw:3});}}
   if(d.phases&&e.phase<2&&e.hp<e.maxHp*(e.phase?.33:.66)){e.phase++;e.dist=Math.max(0,e.dist-120);for(let i=0;i<3;i++)spawn('sprint',Math.max(0,e.dist-10-i*12),true);
-   toast(e.phase===1?'迫真の淫獣「ンアッー！ まだ、まだ（まだ）」（後退）':'迫真の淫獣「最終形態だ（最初から）」','grimace_face','boss shake',2200);big(e.phase===1?'ンアッー！':'イキスギ','#ffd36b',1.2);shake(14);flash();for(let i=0;i<6;i++)splat('#ffe08a');siteBurst(e.x,e.y,'#ffd36b',{n:40,R:110,shake:0,txt:null,sweat:true,sp:300,lw:6,ring3:true,alt:'#ff5c8a'});}
+   toast(e.phase===1?'迫真の淫獣「ンアッー！ まだ、まだ（まだ）」（後退）':'迫真の淫獣「最終形態だ（最初から）」','grimace_face','boss shake',2200);big(e.phase===1?'ンアッー！':'イキスギ','#ffd36b',1.2);punch(e.x,e.y,1.4,1,.9,1.8,'#ffd36b');shake(14);flash();for(let i=0;i<6;i++)splat('#ffe08a');siteBurst(e.x,e.y,'#ffd36b',{n:40,R:110,shake:0,txt:null,sweat:true,sp:300,lw:6,ring3:true,alt:'#ff5c8a'});}
   if(d.phaseEnr&&!e.enr&&e.hp<e.maxHp*.5){e.enr=true;toast('迫真ボス「ファッ！？ は？（激おこ）」','grimace_face','boss shake',2000);big('激おこ','#ff3c3c',1.1);shake(11);siteBurst(e.x,e.y,'#ff3c3c',{n:28,R:80,shake:0,sweat:true,sp:240,lw:4,ring3:true});}
   if(d.phaseSum&&e.phase<1&&e.hp<e.maxHp*.4){e.phase=1;goro(e.x,e.y,'オォン！アォン！',true,3);for(let j=0;j<5;j++)spawn('kohai',Math.max(0,e.dist-15-j*10),true,e.r);toast('部室の主・真「後輩、おかわり（そうだよ）」','locker_left_face','boss shake',2000);big('おかわり','#ff7a50',1.1);shake(12);siteBurst(e.x,e.y,'#ff7a50',{n:30,R:90,shake:0,sweat:true,sp:250,lw:4,ring3:true});}
   if(d.phaseGaze&&e.phase<1&&e.hp<e.maxHp*.45){e.phase=1;game.gazeNight=4;toast('野獣の眼光「見とけよ（真っ暗）」','grimace_face','boss shake',2200);big('消灯','#c98aff',1.2);shake(12);flash();siteBurst(e.x,e.y,'#c98aff',{n:32,R:100,shake:0,sweat:true,sp:260,lw:5,ring3:true});}
@@ -846,7 +854,7 @@ function stageBurst(x,y,c,n=10){pushFx({ring:true,x,y,r:4,R:60,t:.6,T:.6,c,lw:5}
 function newRunMap(){mapOrder=MAPS.map((_,i)=>i).sort(()=>Math.random()-.5);setMap(mapOrder[0]);game.act=0;game.stageEv='';setTimeout(()=>toast(`ステージ：${MAP.name}　${MAP.desc}`,'navy_trio_card','',2600),300);}
 function fixTowers(note){let n=0,g=0;for(const t of towers.slice()){const onP=pathTiles.has(t.tx+','+t.ty);const bad=TOWERS[t.k].onPath?!onP:onP;if(bad){g+=t.spent;towers=towers.filter(o=>o!==t);n++;stageBurst(t.x,t.y,'#ffd36b',6);}else if(TOWERS[t.k].onPath){t.pds=pdsOf(t.x,t.y);t.pd=t.pds[0]!=null?t.pds[0]:-999;}}
  if(n){game.gold+=g;toast(`${note}：${n}基を全額返金 +${g}G（ゆるして）`,'navy_left_face','',2200);}statsDirty=true;}
-function shiftAct(){game.act=(game.act||0)+1;const ni=mapOrder[game.act%mapOrder.length];setMap(ni);fixTowers('区画整理');shake(12);big('ステージ変化','#ff9a5a',1.3);
+function shiftAct(){game.act=(game.act||0)+1;const ni=mapOrder[game.act%mapOrder.length];setMap(ni);fixTowers('区画整理');shake(12);punch(W/2,H/2,.88,.9,.6,2,'#ff9a5a');big('ステージ変化','#ff9a5a',1.3);
  toast(`第${game.act+1}幕：${MAP.name}へ移動！　${MAP.desc}`,'collar_card','boss shake',3200);snd(160,.5,'sawtooth',.07,300);for(const r of ROUTES)if(!r.br)for(let i=0;i<r.wp.length;i++)stageBurst(r.wp[i].x,r.wp[i].y,'#ff9a5a',4);}
 const STAGE_EV=[
  {n:'仮設橋',ok:()=>ROUTES.some(r=>r.br),go(){const bs=ROUTES.filter(r=>r.br);const b=bs[Math.floor(Math.random()*bs.length)];b.open=true;rebuildTiles();
@@ -855,7 +863,7 @@ const STAGE_EV=[
  {n:'工事中',ok:()=>true,go(){let n=0,tries=0;while(n<4&&tries++<200){const x=1+Math.floor(Math.random()*(COLS-2)),y=Math.floor(Math.random()*ROWS),k=x+','+y;if(pathTiles.has(k)||BLOCK.has(k)||towers.some(t=>t.tx===x&&t.ty===y))continue;BLOCK.add(k);n++;stageBurst(x*T+T/2,y*T+T/2,'#ffb03a',5);}toast('工事中！一部の土地に置けない（やめてくれよ…）','navy_left_face','',2200);}},
  {n:'汗だまり',ok:()=>true,go(){PUDDLE=[];const r=ROUTES[0];for(let i=0;i<3;i++){const p=posAt(r.total*(.2+.25*i+Math.random()*.1),r);PUDDLE.push({x:p.x,y:p.y,r:40});stageBurst(p.x,p.y,'#8ad0ff',12);}toast('道に汗だまり！後輩が滑って加速する','senpai_face','bad',2200);}},
  {n:'迫真スポット移動',ok:()=>true,go(){HOT=new Set();let tries=0;while(HOT.size<4&&tries++<300){const x=Math.floor(Math.random()*COLS),y=Math.floor(Math.random()*ROWS),k=x+','+y;if(pathTiles.has(k)||BLOCK.has(k))continue;if(![[0,1],[1,0],[0,-1],[-1,0]].some(([a,b])=>pathTiles.has((x+a)+','+(y+b))))continue;HOT.add(k);stageBurst(x*T+T/2,y*T+T/2,'#ff7a3a',8);}statsDirty=true;toast('迫真スポットが移動！そこに置いたタワーは火力+25%','collar_card','',2200);}}];
-function stageEvent(){game.stageEv='';if(game.wave<2)return;if(game.wave%5!==0&&Math.random()>.65)return;const pool=STAGE_EV.filter(e=>e.ok());const ev=pool[Math.floor(Math.random()*pool.length)];game.stageEv=ev.n;ev.go();mapCache=null;goro(W/2,H/2,null,true,2);shake(8);big(ev.n,'#ffb03a',1.1);snd(330,.3,'square',.05,-120);renderPerks();}
+function stageEvent(){game.stageEv='';if(game.wave<2)return;if(game.wave%5!==0&&Math.random()>.65)return;const pool=STAGE_EV.filter(e=>e.ok());const ev=pool[Math.floor(Math.random()*pool.length)];game.stageEv=ev.n;ev.go();mapCache=null;goro(W/2,H/2,null,true,2);shake(8);big(ev.n,'#ffb03a',1.1);CAM.tintT=.6;CAM.tint='#ffb03a';punch(W/2,H/2,1.08,.5,0,1);snd(330,.3,'square',.05,-120);renderPerks();}
 function stageClear(){const had=game.stageEv;for(const r of ROUTES)r.open=!r.br;rebuildTiles();BLOCK=new Set();PUDDLE=[];game.stageEv='';
  if(had==='迫真スポット移動'){}else HOT=new Set((MAP.hot||[]).map(([x,y])=>x+','+y).filter(k=>!pathTiles.has(k)));
  if(game.wave%5===0&&game.wave<game.maxWave)shiftAct();else fixTowers('撤去');mapCache=null;statsDirty=true;}
@@ -1108,10 +1116,11 @@ function buildMapCache(){const c=document.createElement('canvas');c.width=cv.wid
  mapCache=c;}
 function ring(wx,wy,r,fill,stroke,dash){const [x,y]=P(wx,wy);ctx.beginPath();ctx.arc(x,y,r,0,7);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=2;if(dash)ctx.setLineDash(dash);ctx.stroke();ctx.setLineDash([]);}}
 function text(t,wx,wy,col,size,stroke){const [x,y]=P(wx,wy);ctx.font=`bold ${fs(size)} sans-serif`;ctx.textAlign='center';if(stroke){ctx.strokeStyle='#000';ctx.lineWidth=3;ctx.strokeText(t,x,y);}ctx.fillStyle=col;ctx.fillText(t,x,y);}
-function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);
+function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const _z=CAM.z;let _cx=0,_cy=0;{const [vx,vy]=P(CAM.x,CAM.y);const s0=view.k*view.dpr;_cx=vx*s0;_cy=vy*s0;}
+ const ST=(a,b,c,d,e,f)=>ctx.setTransform(a*_z,b*_z,c*_z,d*_z,e*_z+_cx*(1-_z),f*_z+_cy*(1-_z));if(Math.abs(_z-1)>.003){ctx.fillStyle='#000';ctx.fillRect(0,0,cv.width,cv.height);}ST(1,0,0,1,0,0);
  const sh=game.shake,ox=sh?(Math.random()-.5)*sh*2:0,oy=sh?(Math.random()-.5)*sh*2:0;
  if(sh){ctx.fillStyle='#000';ctx.fillRect(0,0,cv.width,cv.height);}
- ctx.drawImage(mapCache,ox*view.k*view.dpr,oy*view.k*view.dpr);const sc=view.k*view.dpr;ctx.setTransform(sc,0,0,sc,ox*sc,oy*sc);const s=S();
+ ctx.drawImage(mapCache,ox*view.k*view.dpr,oy*view.k*view.dpr);const sc=view.k*view.dpr;ST(sc,0,0,sc,ox*sc,oy*sc);const s=S();
  stageDraw();for(const d of decals){const [x,y]=P(d.x,d.y);ctx.globalAlpha=Math.min(.45,d.t/4);ctx.fillStyle=d.c;ctx.beginPath();ctx.ellipse(x,y,d.r,d.r*d.rx,0,0,7);ctx.fill();}ctx.globalAlpha=1;
  for(const f of fires){const a=Math.min(1,f.t)*(.25+.1*Math.sin(game.t*20+f.x));ring(f.x,f.y,f.r,`rgba(255,110,40,${a})`);if(Math.random()<.3&&fx.length<220)fx.push({x:f.x+(Math.random()-.5)*f.r,y:f.y+(Math.random()-.5)*f.r,vx:0,vy:-40,t:.4,c:'#ffb040'});}
  if(hover&&sel&&!game.over){const ok=canPlace(sel,hover.tx,hover.ty);const cx=hover.tx*T+T/2,cy=hover.ty*T+T/2;const pul=.55+.45*Math.sin(game.t*7);
@@ -1121,6 +1130,11 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);
   ctx.globalAlpha=pending?.9:.55+.2*pul;face(TOWERS[sel].img,cx,cy,19,ok?TOWERS[sel].ring:'#f33');ctx.globalAlpha=1;
   if(pending){const [x,y]=P(cx-T/2,cy-T/2);ctx.strokeStyle='#ffd36b';ctx.lineWidth=3+pul;ctx.setLineDash([4,4]);ctx.strokeRect(x,y,T,T);ctx.setLineDash([]);}}
  if(picked&&!TOWERS[picked.k].wall&&!TOWERS[picked.k].hype)ring(picked.x,picked.y,tStats(picked).range,null,'#ffd36bcc',[5,5]);
+ if(game.tele>0){const a=Math.min(1,game.tele);ROUTES.forEach((r,ri)=>{const col=['#ff3c8a','#ffd36b','#6ab8ff','#8dff6a'][ri%4];ctx.globalAlpha=a*.8;ctx.strokeStyle=col;ctx.lineWidth=5;ctx.setLineDash([14,12]);ctx.lineDashOffset=-game.t*90;ctx.beginPath();r.wp.forEach((w,i)=>{const [x,y]=P(w.x,w.y);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();ctx.setLineDash([]);ctx.lineDashOffset=0;
+  const k=((2.4-game.tele)*.6+ri*.13)%1,tot=r.wp.length-1,f=k*tot,i0=Math.min(tot-1,Math.floor(f)),u=f-i0,w0=r.wp[i0],w1=r.wp[i0+1];if(w1){const px=w0.x+(w1.x-w0.x)*u,py=w0.y+(w1.y-w0.y)*u;ring(px,py,9+4*Math.sin(game.t*12),col);text('▶',px,py-14,col,12,true);}
+  const w=r.wp[0];text(ROUTES.length>1?`進入路${ri+1}${r.br?'（橋）':''}`:'進入路',w.x,w.y-18,col,13,true);});ctx.globalAlpha=1;}
+ if(picked){const [px,py]=P(picked.x,picked.y);const rr=Math.max(60,(TOWERS[picked.k].range?tStats(picked).range:40)+20);const g=ctx.createRadialGradient(px,py,rr*.6,px,py,rr*2.4);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,.5)');ctx.fillStyle=g;ctx.fillRect(-50,-50,VW()+100,VH()+100);
+  ctx.globalAlpha=.25+.15*Math.sin(game.t*6);ctx.fillStyle='#fff6c0';ctx.beginPath();ctx.moveTo(px-8,-40);ctx.lineTo(px+8,-40);ctx.lineTo(px+30,py);ctx.lineTo(px-30,py);ctx.fill();ctx.globalAlpha=1;}
  for(const t of towers){const d=TOWERS[t.k];const [bx,by]=P(t.tx*T,t.ty*T);const st=tStats(t);
   {/* site aura / ground stain */
    const [sx,sy]=P(t.x,t.y);const pul=.5+.5*Math.sin(game.t*3.2+t.tx*1.7+t.ty);const glow=t.over!=null?.14:t.mut!=null?.08:0;
@@ -1177,6 +1191,14 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);
  for(const g of gibs){const [x,y]=P(g.x,g.y);ctx.save();ctx.globalAlpha=Math.min(1,g.t*2);ctx.translate(x,y);ctx.rotate(g.a);ctx.translate(-x,-y);face(g.img,g.x,g.y,g.r*.8,'#fff',{lw:1.5});ctx.restore();}
  for(const f of floats){ctx.globalAlpha=Math.min(1,f.t*2);text(f.txt,f.x,f.y,f.c,f.big?15:12,true);ctx.globalAlpha=1;}
  ctx.setTransform(sc,0,0,sc,0,0);
+ if(CAM.tintT>0&&CAM.tint){ctx.globalAlpha=CAM.tintT*.5;ctx.fillStyle=CAM.tint;ctx.fillRect(0,0,VW(),VH());ctx.globalAlpha=1;}
+ {const low=game.lives<=5&&!game.over?(.35+.2*Math.sin(game.t*7)):0,hot=Math.min(.35,game.combo/150);if(low||hot>.05||CAM.slow>0){const g=ctx.createRadialGradient(VW()/2,VH()/2,Math.min(VW(),VH())*.35,VW()/2,VH()/2,Math.max(VW(),VH())*.75);g.addColorStop(0,'rgba(0,0,0,0)');g.addColorStop(1,low?`rgba(200,0,30,${low})`:CAM.slow>0?'rgba(0,0,0,.55)':`rgba(255,90,40,${hot})`);ctx.fillStyle=g;ctx.fillRect(0,0,VW(),VH());}
+  if(low&&!RM&&Math.random()<.3&&fx.length<FX_CAP-20)pushFx({x:Math.random()*W,y:-5,vx:0,vy:260,t:2.2,c:'#9fd8ff',drop:true,sz:2});}
+ if(CAM.bars>.01){const bh=VH()*.09*CAM.bars;ctx.fillStyle='#000';ctx.fillRect(0,0,VW(),bh);ctx.fillRect(0,VH()-bh,VW(),bh);}
+ if(game.card&&game.card.t>0){const c=game.card,k=1-c.t/c.T,a=Math.min(1,c.t*2,k*6),sl=k<.15?(1-k/.15)*VW():0;ctx.save();ctx.globalAlpha=a;ctx.fillStyle='rgba(0,0,0,.6)';ctx.fillRect(0,VH()*.36,VW(),VH()*.26);ctx.fillStyle=c.c;ctx.fillRect(0,VH()*.36,VW(),4);ctx.fillRect(0,VH()*.62-4,VW(),4);
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${fs(44)} sans-serif`;ctx.lineWidth=7;ctx.strokeStyle='#000';ctx.strokeText(c.title,VW()/2+sl,VH()*.44);ctx.fillStyle=c.c;ctx.fillText(c.title,VW()/2+sl,VH()*.44);
+  ctx.font=`bold ${fs(18)} sans-serif`;ctx.fillStyle='#fff';ctx.fillText(c.sub,VW()/2-sl,VH()*.515);if(c.ev){ctx.fillStyle=Math.sin(game.t*14)>0?'#ffb03a':'#ff3c3c';ctx.fillText(c.ev,VW()/2+sl*.5,VH()*.575);}ctx.restore();ctx.textBaseline='alphabetic';}
+ if(game.streak&&game.streak.t>0){const st=game.streak,k=st.t/st.T;ctx.save();ctx.globalAlpha=Math.min(1,st.t*2);ctx.translate(VW()-12,VH()*.2);ctx.rotate(-.08);ctx.scale(1+(k>.85?(k-.85)*3:0),1+(k>.85?(k-.85)*3:0));ctx.textAlign='right';ctx.font=`900 ${fs(24)} sans-serif`;ctx.lineWidth=6;ctx.strokeStyle='#000';ctx.strokeText(st.txt,0,0);ctx.fillStyle=st.col;ctx.fillText(st.txt,0,0);ctx.restore();}
  for(const p of splats){const k=p.t/p.T,x=p.x*VW(),y=p.y*VH();ctx.globalAlpha=Math.min(.55,k*.8);ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(x,y,p.r,p.r*.75,p.s,0,7);ctx.fill();
   for(let i=0;i<p.n;i++){const a=p.s+i*2.1,dx=Math.cos(a)*p.r*1.1,dy=Math.sin(a)*p.r*.9;ctx.beginPath();ctx.arc(x+dx,y+dy,p.r*.22,0,7);ctx.fill();ctx.fillRect(x+dx*.6-2,y+dy*.6,4,(1-k)*p.r*1.4);}}
  ctx.globalAlpha=1;
@@ -1187,7 +1209,7 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);
 
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
- if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){for(let i=0;i<speed;i++)update(raw);}
+ if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
  if(game&&hudDirty)updHud();
  if(game&&!$('title').classList.contains('on'))draw();
  requestAnimationFrame(loop);}
