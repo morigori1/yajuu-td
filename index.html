@@ -453,12 +453,12 @@ const ENEMIES={
  healer:{name:'看病する先輩',img:'trio_sepia_face',hp:85,speed:45,bounty:15,r:17,col:'#8dff6a',heal:.06,healR:95,wd:8},
  splitter:{name:'分身後輩',img:'navy_left_face#purple',hp:90,speed:46,bounty:10,r:18,col:'#c98aff',split:'mini',wd:10},
  mini:{name:'ちび後輩',img:'navy_left_face',hp:22,speed:85,bounty:3,r:10,col:'#c98aff',wd:4},
- thief:{name:'たかり後輩',img:'navy_right_face#gold',hp:45,speed:92,bounty:16,r:14,col:'#ffd36b',steal:.15,wd:4},
+ thief:{name:'たかり後輩',img:'navy_right_face#gold',hp:45,speed:92,bounty:16,r:14,col:'#ffd36b',steal:.10,wd:4},
  ghost:{name:'覗き見学者',img:'locker_right_face#gray',hp:60,speed:58,bounty:14,r:15,col:'#bbbbbb',stealth:true,wd:8},
  boss:{name:'迫真ボス',img:'grimace_face',hp:1700,speed:30,bounty:150,r:34,col:'#c46bff',armor:3,boss:true,phaseEnr:1,wd:60,
   intro:['迫真ボス「ファッ！？ お前ら何してんの」','迫真ボス襲来！（顔がうるさい）'],
   ban:['迫真ボス「顔がうるさいって言うな（言って）」','迫真ボス「お前らのタワー、そうだよ（何が）」','迫真ボス「大丈夫か大丈夫か（大丈夫）」','迫真ボス「効いてねぇぞ（効いてる）」']},
- boss2:{name:'部室の主・真',img:'locker_left_face#red',hp:1800,speed:26,bounty:250,r:36,col:'#ff5c3c',armor:5,boss:true,summon:3,phaseSum:1,wd:90,
+ boss2:{name:'部室の主・真',img:'locker_left_face#red',hp:1650,speed:26,bounty:250,r:36,col:'#ff5c3c',armor:5,boss:true,summon:3,phaseSum:1,wd:90,
   intro:['部室の主・真「ぬわああん、後輩呼ぶぞ」','部室の主・真 降臨（部屋が汗臭い）'],
   ban:['部室の主・真「ロッカー、あるんだけど…（ない）」','部室の主・真「まずうちさぁ…部室あんだけど…」','部室の主・真「疲れたもおおん（3秒）」','部室の主・真「24歳、部室です」']},
  boss3:{name:'野獣の眼光',img:'grimace_face#purple',hp:2600,speed:32,bounty:400,r:38,col:'#ff3c8a',armor:4,boss:true,shield:.35,shieldRegen:.03,enrage:true,phaseGaze:1,wd:120,
@@ -649,7 +649,7 @@ function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math
  if(w%5===0){L2.push({k:BOSSES[(w/5-1)%4],gap:3.5});add('kohai',4+w,.4);if(w>15)L2.push({k:BOSSES[(w/5)%4],gap:3});}
  for(let i=L2.length-1;i>0;i--){if(ENEMIES[L2[i].k].boss)continue;const j=Math.floor(Math.random()*(i+1));if(ENEMIES[L2[j].k].boss)continue;[L2[i],L2[j]]=[L2[j],L2[i]];}
  return L2;}
-function hpScale(w){return Math.pow(1+.32*(w-1),1.5);}
+function hpScale(w){return Math.pow(1+.30*(w-1),1.5)*(w<=3?.9:1);}
 function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.wave+1);if(STORY[bk]&&!(game.seen&&game.seen[bk])&&storyOn){playStory(bk,startWave);return;}}game.wave++;game.inWave=true;spawnQ=waveList(game.wave);game.spawnT=.5;stageEvent();waveCard();
  if(game.wave%5===0)toast(`迫真ボス襲来！ウェーブ ${game.wave}（逃げるんだよォ！）（逃げない）`,'collar_card','boss shake',3200);else toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);
  snd(220,.25,'sawtooth',.05,220);updHud();}
@@ -904,7 +904,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
  if(game.gold!==g0||game.lives!==l0)hudDirty=true;}
 function waveClear(){const s=S();game.inWave=false;let inc=20+game.wave*5,lifeUp=0,nb0=0;
  for(const t of towers){if(t.k==='bank'){inc+=bankIncome(t);if(t.mut===0)nb0++;if(t.mut===1)lifeUp++;}t.critB=0;t.sipG=0;t.stunT=0;if(t.k==='mine')t.armed=1;if(t.k==='wall')t.hp=tStats(t).maxHp;}
- const rate=s.interest+.04*nb0+(s.setEco&&tagN('経済')>=2?.03:0)+(nb0&&s.ecoBond?.01:0);const intr=rate>0?Math.min(150+120*nb0+(towers.some(t=>t.k==='bank'&&t.over===0)?120:0),Math.floor(game.gold*rate)):0;
+ const rate=s.interest+.04*nb0+(s.setEco&&tagN('経済')>=2?.03:0)+(nb0&&s.ecoBond?.01:0);const intr=(rate>0&&game.chal!=='poor')?Math.min(120+100*nb0+(towers.some(t=>t.k==='bank'&&t.over===0)?120:0),Math.floor(game.gold*rate)):0;
  game.gold+=inc+intr;game.lives+=lifeUp+s.lifeRegen;fires=[];stageClear();
  if(s.debt){if(game.gold>=s.debt){game.gold-=s.debt;toast(`借金返済 -${s.debt}G（やめてくれよ…）`,'navy_left_face','bad',1600);}else{game.lives-=1;toast('借金払えずライフ-1（取り立て汁まみれ）','navy_left_face','bad shake',1600);if(game.lives<=0){game.lives=0;gameOver();return;}}}
  toast(`ウェーブ ${game.wave} クリア！ +${inc}G${intr?`・利息+${intr}G`:''}${lifeUp?`・おごりライフ+${lifeUp}`:''}　${pick(L.waveClear)}`,'senpai_face','',2200);
@@ -1424,9 +1424,9 @@ window.__yajuu12={rbOpen,openExplore,openPact,hlNote,get RB(){return RB}};
 // ===================== v14: 音声語録・v13: 手動スキル・塔つぶし・壊せる地形/炎上 =====================
 const SK=[
  {id:'katsu',ic:'🔥',n:'迫真の喝',k:'z',cost:35,cd:8,aim:1,R:70,d:'タップ地点を焼き払う＋地面が燃える'},
- {id:'stop',ic:'✋',n:'暴れんなよ',k:'x',cost:60,cd:20,d:'全敵を2.5秒足止め'},
+ {id:'stop',ic:'✋',n:'暴れんなよ',k:'x',cost:50,cd:18,d:'全敵を2.5秒足止め（ボスは半分）'},
  {id:'sweat',ic:'💦',n:'汗だく放水',k:'c',cost:25,cd:6,aim:1,R:95,d:'範囲の火を消し塔を修理・敵を減速'},
- {id:'rush',ic:'💪',n:'先輩ラッシュ',k:'v',cost:50,cd:15,d:'6秒間 全タワー連射x2'}];
+ {id:'rush',ic:'💪',n:'先輩ラッシュ',k:'v',cost:45,cd:15,d:'6秒間 全タワー連射x2'}];
 let skAim=null;const TER={crate:new Map(),fire:new Map(),fuel:new Map(),scorch:new Set()};
 const SKL={katsu:['焼いてかない？','オォン！アォン！','頭にきますよ！'],stop:['暴れんなよ…暴れんなよ…','動くな（迫真）'],sweat:['汗だくで消火（意味深）','ぬわああん熱いもおおん'],rush:['ホラホラホラホラ','見とけよ見とけよ～']};
 function terGen(){TER.crate.clear();TER.fire.clear();TER.fuel.clear();TER.scorch.clear();let n=0,tries=0;const want=9+Math.floor(Math.random()*4);
@@ -1472,7 +1472,7 @@ function skRender(){const b=$('skbar');if(!b||!game)return;$('kiBar').style.widt
  b.querySelectorAll('button').forEach((el,i)=>{const s=SK[i],cd=game.skCd[s.id]||0;el.classList.toggle('rdy',skOk(s));el.classList.toggle('aim',skAim===s.id);el.querySelector('i').textContent=cd>0?Math.ceil(cd):'';});}
 (function(){const st=$('stage'),b=document.createElement('div');b.id='skbar';b.innerHTML=`<div class="ki"><span>気合</span><div class="kb"><i id="kiBar"></i></div><b id="kiNum">0</b></div>`+SK.map((s,i)=>`<button title="${s.n} (${s.k.toUpperCase()}) ${s.cost}気合：${s.d}"><span>${s.ic}</span><small>${s.n}</small><em>${s.cost}</em><i></i></button>`).join('');st.appendChild(b);
  b.querySelectorAll('button').forEach((el,i)=>el.addEventListener('click',ev=>{ev.stopPropagation();skPress(i);}));
- const css=document.createElement('style');css.textContent=`#skbar{position:absolute;left:6px;top:6px;z-index:12;display:flex;flex-direction:column;gap:4px;pointer-events:auto}
+ const css=document.createElement('style');css.textContent=`#skbar{position:absolute;left:50%;transform:translateX(-50%);bottom:6px;z-index:12;display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:center;gap:4px;pointer-events:auto;max-width:98%;opacity:.92}@media(max-width:700px){#skbar button{width:58px!important;min-height:34px!important}#skbar small{display:none}#skbar .kb{width:40px!important}}
 #skbar .ki{display:flex;align-items:center;gap:4px;background:#000a;border-radius:8px;padding:2px 6px;font:900 11px sans-serif;color:#ffb03a}#skbar .kb{width:62px;height:7px;background:#3a2010;border-radius:4px;overflow:hidden}#skbar .kb i{display:block;height:100%;width:0;background:linear-gradient(90deg,#ff5a20,#ffd36b);transition:width .15s}
 #skbar button{position:relative;width:96px;min-height:40px;display:flex;align-items:center;gap:4px;padding:3px 6px;border-radius:10px;border:2px solid #5a3a20;background:#1c100acc;color:#bbb;font:800 11px sans-serif;opacity:.6;cursor:pointer;touch-action:manipulation}
 #skbar button span{font-size:18px}#skbar button em{position:absolute;right:4px;bottom:1px;font:900 9px sans-serif;color:#ffb03a;font-style:normal}#skbar button i{position:absolute;right:4px;top:2px;font:900 12px sans-serif;color:#fff;font-style:normal}
@@ -1529,7 +1529,7 @@ function drawV13(){const sc=view.k*view.dpr,_z=CAM.z;const [vx,vy]=P(CAM.x,CAM.y
   if(c.hp<c.max){ctx.fillStyle='#000a';ctx.fillRect(-16,19,32,4);ctx.fillStyle='#ffb03a';ctx.fillRect(-16,19,32*c.hp/c.max,4);}ctx.restore();}
  for(const f of TER.fire.values()){const [px,py]=P(f.x*T,f.y*T);const a=Math.min(1,f.t);ctx.fillStyle=`rgba(255,80,20,${.25*a})`;ctx.fillRect(px,py,T,T);
   for(let i=0;i<3;i++){const fx_=px+10+i*14,h=14+Math.sin(tt*12+i*2+f.x)*6;ctx.fillStyle=`rgba(255,${120+i*40},30,${.85*a})`;ctx.beginPath();ctx.moveTo(fx_-6,py+T-6);ctx.quadraticCurveTo(fx_,py+T-6-h*2,fx_+6,py+T-6);ctx.fill();}}
- for(const t of towers){const m=TOWERS[t.k].wall?null:t.thp;if(m!=null&&t.thp<t.tmax){const [x,y]=P(t.x,t.y);ctx.fillStyle='#000b';ctx.fillRect(x-18,y+19,36,5);ctx.fillStyle=t.thp/t.tmax<.35?'#ff3c3c':'#8dff6a';ctx.fillRect(x-18,y+19,36*t.thp/t.tmax,5);}
+ for(const t of towers){
   if(t.hurtT>0){t.hurtT-=1/60;const [x,y]=P(t.x,t.y);ctx.strokeStyle='#ff3c3c';ctx.lineWidth=3;ctx.strokeRect(x-20,y-20,40,40);}
   if(game.rushT>0){const [x,y]=P(t.x,t.y);ctx.strokeStyle=`rgba(255,60,138,${.5+.5*Math.sin(tt*20)})`;ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,22,0,7);ctx.stroke();}}
  for(const e of enemies){if(e.dead||!e.hunt)continue;const [x,y]=P(e.x,e.y);ctx.font=`${fs(13)} sans-serif`;ctx.textAlign='center';ctx.fillText('🔨',x+e.d.r,y-e.d.r);
@@ -1590,16 +1590,16 @@ const _kill16=kill;kill=function(e,t){const was=e&&e.dead;_kill16(e,t);if(was||!
 const CHALS=[
  {id:'ta',n:'⏱ タイムアタック',d:'15WAVEを最速クリア。連鎖1回ごとに-0.3秒。ウェーブ間待機も時間に入る。'},
  {id:'life1',n:'💀 ライフ1（無慈悲）',d:'1体漏れたら終わり。撃破報酬+30%。'},
- {id:'poor',n:'💸 114G縛り',d:'初期資金114G、利子なし。貧乏汗だく。'},
+ {id:'poor',n:'💸 114G縛り',d:'初期資金114G、利息なし（カードの利息も無効）。貧乏汗だく。'},
  {id:'five',n:'🗼 塔5本まで',d:'設置は5本まで。合体で枠を空けろ。'},
- {id:'hard',n:'🔥 汗だくハード',d:'敵HP×1.6・速度×1.15。覚悟しろよ？'}];
+ {id:'hard',n:'🔥 汗だくハード',d:'敵HP×1.45・速度×1.1。覚悟しろよ？'}];
 function chalBest(id){try{return JSON.parse(localStorage.getItem('yajuuTD_chal')||'{}')[id];}catch(_){return null;}}
 function chalSave(id,v,lower){try{const o=JSON.parse(localStorage.getItem('yajuuTD_chal')||'{}');if(o[id]==null||(lower?v<o[id]:v>o[id])){o[id]=v;localStorage.setItem('yajuuTD_chal',JSON.stringify(o));return true;}}catch(_){}return false;}
 const fmtT=s=>`${Math.floor(s/60)}:${(s%60).toFixed(1).padStart(4,'0')}`;
 const _reset16=reset;reset=function(){_reset16();V16.chain=0;V16.chainT=0;V16.best=0;const c=V16.pend;game.chal=c;game.ta=c==='ta';game.taT=0;game.taBonus=0;
  if(c==='life1')game.lives=1;if(c==='poor')game.gold=114;if(c)toast(`チャレンジ：${CHALS.find(x=>x.id===c).n}`,'collar_face','',2000);updHud();};
 const _cp16=canPlace;canPlace=function(k,tx,ty){if(game&&game.chal==='five'&&towers.length>=5)return false;return _cp16(k,tx,ty);};
-const _sp16=spawn;spawn=function(...a){const r=_sp16(...a);try{const e=r||enemies[enemies.length-1];if(e&&!e._v16){e._v16=1;if(game.chal==='hard'){e.hp*=1.6;if(e.maxHp)e.maxHp*=1.6;if(e.spd)e.spd*=1.15;}}}catch(_){}return r;};
+const _sp16=spawn;spawn=function(...a){const r=_sp16(...a);try{const e=r||enemies[enemies.length-1];if(e&&!e._v16){e._v16=1;if(game.chal==='hard'){e.hp*=1.45;if(e.maxHp)e.maxHp*=1.45;if(e.spd)e.spd*=1.1;}}}catch(_){}return r;};
 const _k16b=kill;kill=function(e,t){const g0=game.gold,was=e&&e.dead;_k16b(e,t);if(!was&&game.chal==='life1'){game.gold+=Math.round(Math.max(0,game.gold-g0)*.3);}};
 const _win16=win;win=function(){_win16();try{if(!game.chal)return;let msg;if(game.ta){const s=Math.max(0,game.taT-game.taBonus);const nb=chalSave('ta',+s.toFixed(1),true);msg=`⏱ タイム ${fmtT(s)}${nb?'（自己ベスト更新！やりますねぇ）':''}`;}else{chalSave(game.chal,1);msg=`チャレンジ「${CHALS.find(x=>x.id===game.chal).n}」達成！`;}
  $('eText').innerHTML=`<b style="color:#c9b08a">${msg}</b><br>最大連鎖 ${V16.best}<br>`+$('eText').innerHTML;}catch(_){}};
@@ -1822,6 +1822,19 @@ function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
 layout();reset();requestAnimationFrame(loop);
 window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,SKINS,TITLES,recordRun,runScore,meta};
 })();
+
+// ---------- v20: balance + bugfix ----------
+(function(){try{
+ // situ modal clarity: show subtitle hint
+ const _oc=openCards;openCards=function(title,sub,...a){if(/シチュ/.test(title))sub='ラン全体に効くルールを1つ選ぶ（後から変更不可）。効果説明をよく読め';return _oc(title,sub,...a);};
+ // ki cap & NaN guards
+ const _u=updHud;updHud=function(){if(game){if(!isFinite(game.gold))game.gold=0;game.gold=Math.max(0,Math.floor(game.gold));if(game.ki!=null)game.ki=Math.max(0,Math.min(100,game.ki||0));}return _u.apply(this,arguments);};
+ // prevent double-tap zoom / context menu on mobile
+ document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});
+ const cv=document.querySelector('canvas');if(cv){cv.style.touchAction='none';cv.addEventListener('contextmenu',e=>e.preventDefault());}
+ // pause speech when hidden
+ document.addEventListener('visibilitychange',()=>{try{if(document.hidden&&window.speechSynthesis)speechSynthesis.cancel();}catch(_){}});
+}catch(err){console.warn('v20',err);}})();
 </script>
 </body>
 </html>
