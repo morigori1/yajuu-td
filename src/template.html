@@ -304,7 +304,7 @@ body.tut-lock #draft,body.tut-lock #story,body.tut-lock #explore,body.tut-lock #
   <div class="imgs"><img class="hero" id="tHero" alt=""><img class="side" id="tSide" alt=""></div>
   <div class="logo">野獣先輩<br class="pbr">タワーディフェンス</div>
   <div class="sub">～ 迫真TD部・下北沢防衛の裏技 ～</div>
-  <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！<b>8種のベース塔は覚醒で分岐</b>：<b>火力</b>（クリ／連射／処刑）・<b>オーラ／応援ハブ</b>（便乗／観葉植物）・<b>CC</b>（パルス／凍結／酔わせ）・<b>範囲</b>（焦土／円定規／電撃）・<b>デバフ</b>（視線／毒／ハエ）・<b>経済</b>（利息／集金）・<b>壁チョーク</b>・<b>罠</b>（爆発／泥床）。覚醒で機能が変わる。マップ8種（十字・サウナ・駅前ほか）。ウェーブ中の<b>橋ラッシュ・一本道・工事・汗だまり</b>で配置のやり直し。覚醒後Lv5で<b>極覚醒</b>。15突破でクリア。<b>演出は汁と汗と泥とハエで汚い</b>（PG）。<br><span id="ctlHelp"></span></div>
+  <div class="help">汗臭い後輩軍団から<b>下北沢</b>を守れ！<b>8種のベース塔は覚醒で分岐</b>：<b>先輩砲台</b>（迫真クリ／サムライブルー／見とけよ狙撃）・<b>部室トリオ</b>（便乗の輪／ホラホラ声援／観葉植物くん）・<b>胸ぐらスネア</b>（ふっとばし／アイスティー砲／生ビール砲）・<b>114514砲</b>（810焦土／円定規コンパス／イキスギ電撃）・<b>ほら見ろよ見ろよ塔</b>（晒し上げ／くっさガス／ハエ大群）・<b>810銀行</b>（利息／集金後輩）・<b>迫真バリケード</b>・<b>810地雷</b>（114514爆発／ぬるぬる泥床）。覚醒で機能が変わる。マップ8種（十字・サウナ・駅前ほか）。ウェーブ中の<b>橋ラッシュ・一本道・工事・汗だまり</b>で配置のやり直し。覚醒後Lv5で<b>極覚醒</b>。15突破でクリア。<b>演出は汁と汗と泥とハエで汚い</b>（PG）。<br><span id="ctlHelp"></span></div>
   <button class="go" id="bStart">はじめる（いいよ！こいよ！）</button>
   <button id="bTut" style="margin-top:8px;min-height:44px">📘 チュートリアル（初回練習）</button>
   <button id="bCamp" style="margin-top:8px;min-height:48px;background:#7a2b12;color:#ffe9b0">📖 キャンペーン（章選択）</button>
@@ -353,7 +353,7 @@ const $=id=>document.getElementById(id);
 const TOUCH=matchMedia('(pointer:coarse)').matches||('ontouchstart' in window);
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const LITE=TOUCH||innerWidth<820||(navigator.hardwareConcurrency||8)<=4; // v25 mobile FX lite
-$('ctlHelp').textContent=TOUCH?'操作：タワーを選んでマップを2回タップで設置（バリケード／罠は道に）／タワーをタップで強化・覚醒・売却／タワー列は横スクロール':'操作：クリックで設置（バリケード／罠は道に）／1-8 選択 / U 強化 / Space 開始 / Esc 解除';
+$('ctlHelp').textContent=TOUCH?'操作：タワーを選んでマップを2回タップで設置（バリケード／810地雷は道に）／タワーをタップで強化・覚醒・売却／タワー列は横スクロール':'操作：クリックで設置（バリケード／810地雷は道に）／1-8 選択 / U 強化 / Space 開始 / Esc 解除';
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 
 // ---------- images & sprite cache ----------
@@ -439,30 +439,30 @@ const COMBO_MS={10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、�
 
 // ---------- defs ----------
 const TOWERS={
- senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',role:'火力',vs:'クリ／連射／狙撃の3モード。覚醒で分岐',desc:'【火力】クリ単体／高速連射／超射程処刑を覚醒で選択',crit:.15,proj:'#ffd36b',
-  muts:[{n:'迫真狙い撃ち',d:'クリ率+25%・クリは装甲無視'},{n:'連射モード',d:'高速連射・dmg低・雑魚掃除'}],
-  overs:[{n:'処刑狙撃',d:'超射程・装甲無視・HP20%以下即死'},{n:'貫通跳ね弾',d:'連射時は弾が2回跳ねる'}]},
- trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',role:'オーラ',vs:'中央ハブ向き。らせんで真価',desc:'【オーラ】範囲内の攻撃+25%・速度+15%。ハブ役（攻撃枠トレード）',aura:true,
-  muts:[{n:'便乗の輪',d:'オーラ範囲+40%・効果+15%'},{n:'応援モード',d:'全体攻撃+8%/基（上限あり）'}],
-  overs:[{n:'クリ便乗',d:'オーラ内タワーのクリ+8%'},{n:'観葉植物',d:'範囲内HP回復+速度+12%（癒し）'}]},
- collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',role:'減速',vs:'俊足・跳躍・自爆・汗だまり対策',desc:'【減速】範囲パルス指導。チョークの相棒',pulse:true,slow:.45,slowT:1.2,proj:'#b8ecff',freeze:.7,
-  muts:[{n:'ふっとばし指導',d:'パルスで敵を押し戻す'},{n:'アイスティーモード',d:'凍結で硬直＋減速・結露演出'}],
-  overs:[{n:'二重締め',d:'ノックバック強化＋0.5秒スタン'},{n:'生ビールモード',d:'泡で減速＋混乱（酔わせ）'}]},
- cannon:{name:'範囲火力',short:'範囲火力',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',role:'範囲',vs:'爆風／円定規／電撃の3モード',desc:'【範囲】爆発焦土／同心円／電撃連鎖を覚醒で選択',splash:62,crit:.1,proj:'#ff8a5c',
-  muts:[{n:'焦土モード',d:'着弾地点が3秒燃える（焦土）'},{n:'円定規モード',d:'周囲同心円攻撃・数学的'}],
-  overs:[{n:'焦土延長',d:'焦土6秒・炎ダメ+40%'},{n:'電撃モード',d:'4体連鎖・盾に2倍【対盾】'}]},
- bank:{name:'810銀行',short:'810銀行',img:'trio_sepia_face#gold',cost:175,range:110,dmg:0,rate:0,ring:'#ffd36b',role:'経済',vs:'攻撃枠を食う。序盤投資・後半は火力に換金せよ',desc:'【経済】攻撃しない。毎ウェーブ収入＋範囲撃破G（火力とトレード）',bank:true,proj:'#ffe08a',
-  muts:[{n:'利息',d:'毎ウェーブ所持金の4%（上限120）'},{n:'集金モード',d:'攻撃開始・命中毎+1G（上限100G）'}],
-  overs:[{n:'大利息',d:'利息上限+120'},{n:'高利貸し',d:'集金が命中毎+2G・上限200G'}]},
+ senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',role:'火力',vs:'クリ／連射／狙撃の3本柱。覚醒で特化',desc:'【火力】迫真クリ／サムライブルー連射／見とけよ狙撃を覚醒で選択',crit:.15,proj:'#ffd36b',
+  muts:[{n:'迫真狙い撃ち',d:'クリ率+25%・クリは装甲無視'},{n:'サムライブルー',d:'高速連射・dmg低・雑魚掃除'}],
+  overs:[{n:'見とけよ狙撃',d:'超射程・装甲無視・HP20%以下即死'},{n:'貫通サムライ',d:'連射時は弾が2回跳ねる'}]},
+ trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',role:'オーラ',vs:'中央ハブ向き。らせんで真価',desc:'【オーラ】便乗の輪／ホラホラ声援／観葉植物を覚醒で選択',aura:true,
+  muts:[{n:'便乗の輪',d:'オーラ範囲+40%・効果+15%'},{n:'ホラホラ声援',d:'全体攻撃+8%/基（上限あり）'}],
+  overs:[{n:'そうだよ（便乗）',d:'オーラ内タワーのクリ+8%'},{n:'観葉植物くん',d:'範囲内HP回復+速度+12%（癒し）'}]},
+ collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',role:'減速',vs:'俊足・跳躍・自爆・汗だまり対策',desc:'【減速】ふっとばし指導／アイスティー／生ビールを覚醒で選択',pulse:true,slow:.45,slowT:1.2,proj:'#b8ecff',freeze:.7,
+  muts:[{n:'ふっとばし指導',d:'パルスで敵を押し戻す'},{n:'アイスティー砲',d:'凍結で硬直＋減速・結露演出'}],
+  overs:[{n:'二重締め',d:'ノックバック強化＋0.5秒スタン'},{n:'生ビール砲',d:'泡で減速＋混乱（酔わせ）'}]},
+ cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',role:'範囲',vs:'810焦土／円定規／電撃の3本柱',desc:'【範囲】810焦土／円定規コンパス／イキスギ電撃を覚醒で選択',splash:62,crit:.1,proj:'#ff8a5c',
+  muts:[{n:'810焦土',d:'着弾地点が3秒燃える（焦土）'},{n:'円定規コンパス',d:'周囲同心円攻撃・数学的'}],
+  overs:[{n:'焦土延長',d:'焦土6秒・炎ダメ+40%'},{n:'イキスギ電撃',d:'4体連鎖・盾に2倍【対盾】'}]},
+ bank:{name:'810銀行',short:'810銀行',img:'trio_sepia_face#gold',cost:175,range:110,dmg:0,rate:0,ring:'#ffd36b',role:'経済',vs:'攻撃枠を食う。序盤投資・後半は火力に換金せよ',desc:'【経済】利息／集金後輩を覚醒で選択。火力とトレード',bank:true,proj:'#ffe08a',
+  muts:[{n:'利息ですねぇ',d:'毎ウェーブ所持金の4%（上限120）'},{n:'集金後輩',d:'攻撃開始・命中毎+1G（上限100G）'}],
+  overs:[{n:'810万円',d:'利息上限+120'},{n:'高利貸し',d:'集金が命中毎+2G・上限200G'}]},
  wall:{name:'迫真バリケード',short:'バリケード',img:'collar_face#gray',cost:90,range:0,dmg:0,rate:0,ring:'#b0b0b0',role:'壁',vs:'ヘアピン/迷路のチョーク。跳躍は飛び越える',desc:'【壁】道に置くチョーク。跳躍は飛び越え注意',wall:true,hp:260,
   muts:[{n:'トゲトゲ',d:'接触中の敵に毎秒反撃ダメ'},{n:'迫真復活',d:'毎秒HP5%回復'}],
   overs:[{n:'爆ぜる壁',d:'破壊時に周囲ダメ'},{n:'連結壁',d:'隣接壁とHPを分け合う'}]},
- mine:{name:'罠',short:'罠',img:'senpai_face#gray',cost:70,range:58,dmg:90,rate:5,ring:'#ff3c3c',role:'罠',vs:'道に置く。爆発／減速床の2モード',desc:'【罠】道に置く。爆発地雷／持続減速床を覚醒で選択',onPath:true,mine:true,
-  muts:[{n:'爆発モード',d:'踏むと爆発・再装填（威力大）'},{n:'泥床モード',d:'持続減速床・何度でも踏める'}],
-  overs:[{n:'114514連鎖',d:'爆発時の爆風+50%・威力+30%'},{n:'底なし沼',d:'泥床時ボス以外を時々掴む'}]},
- gaze:{name:'デバフハブ',short:'デバフハブ',img:'collar_card#blue',cost:180,range:130,dmg:4,rate:.9,ring:'#6ab8ff',role:'デバフ',vs:'視線／毒DoT／ハエ看破の3モード',desc:'【デバフ】視線マーク／装甲無視毒／ステルス看破を覚醒で選択',gaze:true,
-  muts:[{n:'視線モード',d:'被ダメ+40%マーク（晒し上げ）'},{n:'毒ガスモード',d:'装甲無視の継続ダメ'}],
-  overs:[{n:'アクエリアス水',d:'視線時バフ解除＋減速'},{n:'ハエモード',d:'ステルス看破・群れ演出'}]},
+ mine:{name:'810地雷',short:'810地雷',img:'senpai_face#gray',cost:70,range:58,dmg:90,rate:5,ring:'#ff3c3c',role:'罠',vs:'道に置く。爆発／減速床の2本柱',desc:'【罠】道に置く。114514爆発／ぬるぬる泥床を覚醒で選択',onPath:true,mine:true,
+  muts:[{n:'114514爆発',d:'踏むと爆発・再装填（威力大）'},{n:'ぬるぬる泥床',d:'持続減速床・何度でも踏める'}],
+  overs:[{n:'連鎖爆風',d:'爆発時の爆風+50%・威力+30%'},{n:'底なし沼',d:'泥床時ボス以外を時々掴む'}]},
+ gaze:{name:'ほら見ろよ見ろよ塔',short:'視線塔',img:'collar_card#blue',cost:180,range:130,dmg:4,rate:.9,ring:'#6ab8ff',role:'デバフ',vs:'晒し上げ／くっさガス／ハエの3本柱',desc:'【デバフ】晒し上げ視線／くっさガス／ハエ大群を覚醒で選択',gaze:true,
+  muts:[{n:'晒し上げ',d:'被ダメ+40%マーク（視線）'},{n:'くっさガス',d:'装甲無視の継続ダメ'}],
+  overs:[{n:'アクエリアス砲',d:'晒し上げ時バフ解除＋減速'},{n:'ハエ大群',d:'ステルス看破・群れ演出'}]},
 };
 const TKEYS=Object.keys(TOWERS);
 const HOTKEYS=['1','2','3','4','5','6','7','8'];
