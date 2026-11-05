@@ -98,7 +98,7 @@ body.compact #bWave.go:not(:disabled),body.portrait #bWave.go:not(:disabled){min
 body.portrait #tapHint,body.compact #tapHint{font-size:12px;top:6px}
 body.portrait #toasts,body.compact #toasts{max-width:min(68vw,280px)}
 body.portrait #v24hud,body.compact #v24hud{bottom:auto!important;top:48px!important;left:6px!important;max-width:min(52vw,240px);font-size:10px!important}
-body.portrait #bossbar,body.compact #bossbar{bottom:58px;width:min(420px,78%)}
+body.portrait #bossbar,body.compact #bossbar{bottom:100px;width:min(420px,78%)}
 
 /* ---- compact landscape (phones sideways) ---- */
 body.compact #hud{padding:2px 8px;gap:8px}
@@ -1604,7 +1604,7 @@ const _startWave=startWave;startWave=function(){const w0=game.wave;_startWave();
  if(game.exElite){const n=game.exElite;game.exElite=0;for(let i=0;i<n;i++)setTimeout(()=>{if(!game.inWave)return;const ks=['normal','fast','tank'].filter(k=>ENEMIES[k]);const e=spawn(pick(ks.length?ks:Object.keys(ENEMIES).filter(k=>!ENEMIES[k].boss)),0);if(!e.aff){e.aff=pick(AFK);e.hp*=1.6;e.maxHp*=1.6;game.elites++;}say(e,'先輩の命令だ！',2.5);},900+i*1400);}};
 const _waveClear=waveClear;waveClear=function(){pactRevert();if(game.pactExtra){S().eHp/=game.pactExtra;game.pactExtra=0;}if(RB)rbAnswer(false,true);
  if(game.lives>0&&game.livesLow&&game.lives>=8)hlNote('ピンチから立て直した','#8dff6a',4);_waveClear();};
-const _spawn=spawn;spawn=function(k,d,na,r){const e=_spawn(k,d,na,r);if(e.d.boss){say(e,pick(SAY.boss),3);if(game.wave>=2)setTimeout(()=>{if(!e.dead&&game.inWave&&!RB)rbOpen(e);},2500);}else if(e.aff&&Math.random()<.5)say(e,pick(SAY.elite));return e;};
+const _spawn=spawn;spawn=function(k,d,na,r){const e=_spawn(k,d,na,r);if(!e)return e;if(e.d.boss){say(e,pick(SAY.boss),3);if(game.wave>=2)setTimeout(()=>{if(!e.dead&&game.inWave&&!RB)rbOpen(e);},2500);}else if(e.aff&&Math.random()<.5)say(e,pick(SAY.elite));return e;};
 const _kill=kill;kill=function(e,t){if(e.dead)return;const c0=game.combo;_kill(e,t);
  if(e.d.boss){hlNote(`${e.d.name||'ボス'} 撃破！`,'#ffd36b',10,true);shake(12);big('ボス撃破！','#c46bff',1.3);}else if(e.aff2)hlNote(`二重エリート撃破（${AFFIX[e.aff]?.n||''}+${AFFIX[e.aff2]?.n||''}）`,'#ff9be0',4);
  if([25,50,100,200].includes(game.combo))hlNote(`${game.combo} COMBO！`,'#ff5c8a',game.combo>=50?7:5,true);
@@ -1694,7 +1694,7 @@ cv.addEventListener('pointerup',ev=>{if(!game||game.over||ev.button>0)return;con
 cv.addEventListener('pointermove',ev=>{if(skAim)game.skPt=evWorld(ev);});
 // hunters
 const HUNT_SAY=['その塔、邪魔だよなぁ？','ぶっ壊してやるよ（迫真）','塔から先に潰すゾ','こ↑こ↓が弱点'];
-const _spawn13=spawn;spawn=function(k,d,na,r){const e=_spawn13(k,d,na,r);const w=game.wave;let p=w>=3?Math.min(.35,.08+w*.02):0;if(e.d.boss)p=w>=5?.7:0;if(k==='mini')p*=.3;if(Math.random()<p){e.hunt=1;e.hox=0;e.hoy=0;e.hT=0;if(Math.random()<.4)say(e,pick(HUNT_SAY),2);}return e;};
+const _spawn13=spawn;spawn=function(k,d,na,r){const e=_spawn13(k,d,na,r);if(!e)return e;const w=game.wave;let p=w>=3?Math.min(.35,.08+w*.02):0;if(e.d.boss)p=w>=5?.7:0;if(k==='mini')p*=.3;if(Math.random()<p){e.hunt=1;e.hox=0;e.hoy=0;e.hT=0;if(Math.random()<.4)say(e,pick(HUNT_SAY),2);}return e;};
 const _kill13=kill;kill=function(e,t){if(e.dead)return;_kill13(e,t);game.ki=Math.min(100,game.ki+(e.d.boss?25:e.hunt?4:1.6));if(e.hunt)float(e.x,e.y-18,'塔つぶし撃退！','#8dff6a');};
 function huntTick(dt){for(const e of enemies){if(e.dead||!e.hunt)continue;if(e.hTgt)e.dist=e.hDist;const base=posAt(e.dist,rtOf(e));
   if(e.hTgt&&(!towers.includes(e.hTgt)||e.hT>7)){e.hTgt=null;e.hCool=4;}
@@ -2270,7 +2270,7 @@ const V24={ver:'v24',enemies:['sweaty','stinker','mudcoat','leech'],boss:'boss5'
   if(w>=12)add('stinker',Math.floor((w-9)/3),1.3);
   if(w===10||(w>=20&&w%10===0))L.push({k:'boss5',gap:3});
   return L;};
- const _sp24=spawn;spawn=function(k,...a){const e=_sp24(k,...a);try{if(e.d.mudHits)e.mudH=e.d.mudHits;e.trT=0;e.jT=4;
+ const _sp24=spawn;spawn=function(k,...a){const e=_sp24(k,...a);try{if(!e)return e;if(e.d.mudHits)e.mudH=e.d.mudHits;e.trT=0;e.jT=4;
   if(V24.enemies.includes(k)&&!seen[k]){seen[k]=1;toast('新敵出現：'+e.d.name.replace('【新】','')+' ─ '+e.d.desc,e.d.img.split('#')[0],'',3000);}}catch(_){}return e;};
  const _h24=hurt;hurt=function(e,dmg,t,o={}){if(e&&!e.dead&&e.mudH>0){e.mudH--;dmg*=.5;if(Math.random()<.6)pushFx({x:e.x,y:e.y,vx:(Math.random()-.5)*120,vy:-60-Math.random()*60,t:.6,c:'#6b5232',drop:true,sz:3});if(e.mudH===0){decal(e.x,e.y,22,'#5a403066');siteBurst(e.x,e.y,'#8a6a40',{n:14,R:40,txt:'泥剥がれ！',sweat:true,sp:150});}}
   const was=e&&!e.dead;const r=_h24(e,dmg,t,o);
