@@ -1044,7 +1044,7 @@ function buildName(){const c={};for(const t of towers)c[t.k]=(c[t.k]||0)+t.lvl;c
 function gameOver(){if(game.over)return;game.over=true;game.inWave=false;saveBest();$('eTitle').textContent=pick(L.lose);$('eImg').src=ASSETS.grimace_face;
  $('eText').innerHTML=`ウェーブ ${game.wave} で力尽きた（${pick(L.loseSub)}）<br>${endStats()}<br><small>${pick(L.loseTip)}</small>`;for(let i=0;i<6;i++)splat(i%2?'#c9b08a':'#e8f4ff');$('bEndless').style.display='none';const ls=pick(LOSE_STORY);setTimeout(()=>playScene('BAD END「床上浸水」',ls,()=>$('end').classList.add('on')),900);snd(110,.8,'sawtooth',.08,-60);shake(14);}
 function win(){game.over=true;game.won=true;saveBest();$('eTitle').textContent=pick(L.win);$('eImg').src=ASSETS.senpai_face;
- $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}<br>${endStats()}`;for(let i=0;i<8;i++)splat(i%2?'#ffffff':'#ffd36b');$('bEndless').style.display='';const ek=epiKey(),ep=EPI[ek];$('eText').innerHTML+=`<br><b style="color:#ffd36b">${ep.t}</b>`;if(game.chap!=null){const ci=game.chap,c=CHAPS[ci];campUnlock(ci+1);$('eTitle').textContent=`第${ci+1}章「${c.t}」制覇！`;$('bEndless').style.display='none';$('bNextCh').style.display=ci+1<CHAPS.length?'':'none';$('bChSel').style.display='';$('eText').innerHTML+=ci+1<CHAPS.length?`<br><b style="color:#ff9a5a">🔓 第${ci+2}章「${CHAPS[ci+1].t}」解禁（じゃけん次行きましょうね）</b>`:'<br><b style="color:#ff9a5a">🏆 全章制覇！下北沢は救われた（湿度は救われない）</b>';playScene(`第${ci+1}章 完`,c.out,()=>$('end').classList.add('on'));return;}playScene(ep.t,ep.L.concat(EPI_END),()=>$('end').classList.add('on'));}
+ $('eText').innerHTML=`全${game.maxWave}ウェーブ突破！${pick(L.winSub)}<br>ライフ残り ${game.lives}<br>${endStats()}`;for(let i=0;i<8;i++)splat(i%2?'#ffffff':'#ffd36b');$('bEndless').style.display='';const ek=epiKey(),ep=EPI[ek];$('eText').innerHTML+=`<br><b style="color:#ffd36b">${ep.t}</b>`;if(game.chap!=null){const ci=game.chap,c=CHAPS[ci];campUnlock(ci+1);$('eTitle').textContent=`第${ci+1}章「${c.t}」制覇！`;$('bEndless').style.display='none';$('bNextCh').style.display=ci+1<CHAPS.length?'':'none';$('bChSel').style.display='';if(ci+1<CHAPS.length){$('eText').innerHTML+=`<br><b style="color:#ff9a5a">🔓 第${ci+2}章「${CHAPS[ci+1].t}」解禁（じゃけん次行きましょうね）</b>`;big(`第${ci+2}章 解禁！`,'#ff9a5a',1.3);shake(9);toast(`🔓 次章：${CHAPS[ci+1].t}　${CHAPS[ci+1].w}ウェーブ（やりますねぇ！）`,'grimace_face','boss',3500);}else{$('eText').innerHTML+=`<br><b style="color:#ff9a5a">🏆 全章制覇！下北沢は救われた（湿度は救われない）</b>`;big('全章制覇！','#ffd36b',1.5);shake(14);}playScene(`第${ci+1}章 完`,c.out,()=>$('end').classList.add('on'));return;}playScene(ep.t,ep.L.concat(EPI_END),()=>$('end').classList.add('on'));}
 $('bRetry').onclick=()=>{$('end').classList.remove('on');const ch=game.chap;if(ch!=null){startChap(ch);return;}reset();openSitu();};
 const CHAPS=[
  {t:'迫真部活編',map:0,w:8,g:340,lv:22,in:[['narr','真夏の放課後。部室のエアコンは今日も死んでいる（迫真）'],['senpai','おっ、後輩ども来てんじゃん。今日は坂の防衛練習だゾ',1],['kohai','先輩、もう汗でシャツが透けてます…'],['senpai','いいよ！こいよ！汗は部の誇りだルォ！',2]],out:[['senpai','ま、多少はね？（部活は勝った）'],['kohai','先輩の背中、湯気出てます…'],['narr','部室の窓が曇った。外から見えないのは好都合だ（何が）']]},
@@ -1072,7 +1072,7 @@ function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.da
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;$('gold').textContent=game.gold;$('lives').textContent=game.lives;$('wave').textContent=game.wave;const bw=$('bWave');bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':'ウェーブ開始';
  const nw=game.wave+1;$('nextinfo').textContent=game.inWave?(game.combo>=3?`${game.combo}連撃！ 残り ${spawnQ.length+enemies.length}`:`残り ${spawnQ.length+enemies.length}`):(nw%5===0?`次: ボス戦！`:`次: ウェーブ ${nw}`);
- if(game.dailyMod){$('dailyInfo').style.display='block';$('dailyInfo').textContent=`📅 ${game.dailyMod.n}：${game.dailyMod.d}`;}else{$('dailyInfo').style.display='none';}
+ if(game&&game.dailyMod){$('dailyInfo').style.display='block';$('dailyInfo').textContent=`📅 ${game.dailyMod.n}：${game.dailyMod.d}`;}else{$('dailyInfo').style.display='none';}
  updShop();if(picked)updInfoBtns();}
 function statLine(t){const d=TOWERS[t.k],st=tStats(t),s=S();
  if(d.wall)return `HP ${Math.ceil(t.hp)}/${Math.round(st.maxHp)}${s.wallThorn||t.mut===0?'・トゲあり':''}`;
@@ -1827,6 +1827,7 @@ const V18={
   {h:'外典　泥とハエの生態系',img:'grimace_face',t:'道に溜まる泥だまりと、それを好むハエの群れ。資料館は「汚いが戦術的」と評価した。ステルス看破に有効。'},
   {h:'外典　新地図三葉',img:'navy_trio_card',t:'十字交差口・汗だくサウナ・下北沢駅前が防衛区域に追加。いずれも汗と泥の気配が濃い。'},
   {h:'外典　v30覚醒革命',img:'senpai_face',t:'21種の塔が8ベース塔へ統合。覚醒で分岐（Mutation／Overwake）。先輩砲台（迫真クリ／サムライブルー／見とけよ狙撃）、部室トリオ（便乗の輪／ホラホラ声援／観葉植物）、胸ぐらスネア（ふっとばし／アイスティー／生ビール）、114514砲（810焦土／円定規／イキスギ電撃）、ほら見ろよ見ろよ塔（晒し上げ／くっさガス／ハエ大群）、810銀行（利息／集金）、迫真バリケード、810地雷（114514爆発／ぬるぬる泥床）。王道を征く。'},
+  {h:'外典　デイリー曜日修飾',img:'trio_sepia_face#gold',t:'📅 日替わりデイリーに曜日修飾が実装。日曜：810地雷セール（半額！やったぜ）、月曜：利息ですねぇ（銀行+50%）、火曜：先輩イキイキ（砲台速度+25%）、水曜：撃破報酬ボーナス（+30%もらうぜ）、木曜：見とけよ射程（全射程+20%）、金曜：おごりの114514G（初期+100G）、土曜：汗だく弱体（敵HP-15%）。曜日ごとに最適戦略が変わり、リプレイ価値が向上（やりますねぇ！）。全員同じシード・同じ修飾で公平勝負。下北沢は毎日汗だく。'},
  ],
  goroku:[
   ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
