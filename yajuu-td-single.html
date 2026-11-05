@@ -1813,6 +1813,57 @@ function drawV19(){if(!game)return;const sc=view.k*view.dpr,_z=CAM.z;const [vx,v
   ctx.fillStyle='rgba(15,10,5,.9)';ctx.strokeStyle='#ffd36b';ctx.lineWidth=2;ctx.fillRect(bx,by,w,h);ctx.strokeRect(bx,by,w,h);ctx.textAlign='left';ln.forEach((s,i)=>{ctx.fillStyle=i?'#e8dcc0':'#ffd36b';ctx.fillText(s,bx+7,by+11+i*14);});}
  ctx.restore();}
 const _draw19=draw;draw=function(){_draw19();try{drawV19();}catch(_){}const n=performance.now();if(n-v19T>250){v19T=n;try{v19Panel();}catch(_){}}};
+/* ===== v21: RAID BOSS + META CHAOS ===== */
+const V21={pendRaid:false,pendChaos:false,rule:null,ruleT:0,raidBoss:null,banner:0};
+const RULES=[
+ {id:'fast',n:'🏃 全員イキスギ加速',d:'敵速度+40%・賞金×1.5',bm:1.5},
+ {id:'fat',n:'🍖 敵デブ化',d:'敵HP×1.8・賞金×2',hp:1.8,bm:2},
+ {id:'tiny',n:'🐜 ちっちゃい後輩祭り',d:'敵HP×0.55・数が倍',hp:.55,dup:1},
+ {id:'rich',n:'💰 114514バブル',d:'開始時+250G・敵HP×1.3',hp:1.3,gold:250},
+ {id:'dark',n:'🌑 停電部室',d:'ずっと暗い・賞金×1.6',bm:1.6,dark:1},
+ {id:'heal',n:'🩹 汗で回復',d:'15キルごとにライフ+1',heal:1},
+ {id:'tax',n:'🧾 先輩税',d:'キル賞金0・ウェーブ後に+400G',bm:0,after:400},
+ {id:'glass',n:'🥛 ガラスの城',d:'敵HP×0.7・漏れるとダメ×2',hp:.7,leak:2},
+ {id:'reverse',n:'🔄 鏡写しルール',d:'敵が逆走気味（遅い）・賞金×0.8',bm:.8,slow:1},
+ {id:'frenzy',n:'🔥 暴走フィーバー',d:'敵HP×1.25・速度+20%・賞金×2.5',hp:1.25,bm:2.5,fast:.2}];
+function chaosOn(){return game&&(game.chaos||game.raid);}
+function rollRule(){const prev=V21.rule&&V21.rule.id;let r;do{r=RULES[Math.floor(Math.random()*RULES.length)];}while(r.id===prev&&RULES.length>1);V21.rule=r;V21.ruleT=3.2;game._kc21=0;
+ if(r.gold)game.gold+=r.gold;toast(`🌀 ルール改変：${r.n}<br><small>${r.d}</small>`.replace(/<br><small>.*<\/small>/,'')+'　'+r.d,'title_senpai','boss shake',3000);try{voice('ルール改変、'+r.n.replace(/[^\u3040-\u30ff\u4e00-\u9fff0-9ー]/g,''),1.2);}catch(_){}shake(8);snd(110,.4,'sawtooth',.06,440);}
+const _reset21=reset;reset=function(){_reset21();game.raid=V21.pendRaid;game.chaos=V21.pendChaos||V21.pendRaid;V21.rule=null;V21.raidBoss=null;
+ if(game.raid){game.maxWave=10;$('wmax').textContent='10';}else{$('wmax').textContent=game.maxWave;}if(game.raid){game.gold+=250;game.lives+=10;toast('👑 RAID：毎ウェーブ巨大ボス襲来（10戦）','collar_card','boss shake',2600);}
+ else if(game.chaos)toast('🌀 メタ暴走：毎ウェーブ ルールが変わる','title_senpai','',2400);updHud();};
+const _wl21=waveList;waveList=function(w){let L=_wl21(w);if(game.raid){L=L.filter(x=>!ENEMIES[x.k].boss).slice(0,Math.ceil(L.length*.5));L.splice(Math.min(3,L.length),0,{k:w>=6?'boss4':w>=3?'boss3':'boss',gap:1.5,raid:1});}
+ if(chaosOn()&&V21.rule&&V21.rule.dup){const D=[];for(const x of L){D.push(x);if(!ENEMIES[x.k].boss)D.push({k:x.k,gap:x.gap*.4});}L=D;}return L;};
+const _sw21=startWave;startWave=function(){const w0=game.wave;if(chaosOn()&&!game.inWave&&!game.over&&!stQ)rollRule();_sw21();if(game.wave===w0&&chaosOn()){}if(game.raid&&game.wave>w0){V21.raidPending=1;}};
+const _sp21=spawn;spawn=function(...a){const r=_sp21(...a);try{const e=r||enemies[enemies.length-1];if(e&&!e._v21){e._v21=1;
+ if(game.raid&&e.d.boss&&V21.raidPending){V21.raidPending=0;e.raid=1;const m=4+game.wave*.9;e.hp*=m;e.maxHp*=m;e.shield*=m;e.maxSh*=m;e.rphase=0;V21.raidBoss=e;toast(`👑 巨大ボス「${e.d.name}」出現！HP ${Math.round(e.hp)}`,e.d.img,'boss shake',2800);try{voice('でかすぎィ！',1.3);}catch(_){}shake(14);}
+ const R=chaosOn()&&V21.rule;if(R&&R.hp&&!(e.raid&&R.hp<1)){e.hp*=R.hp;e.maxHp*=R.hp;e.shield*=R.hp;e.maxSh*=R.hp;}}}catch(_){}return r;};
+const _k21=kill;kill=function(e,t){const g0=game.gold,was=e&&e.dead;_k21(e,t);if(was||!e)return;const R=chaosOn()&&V21.rule;
+ if(R&&R.bm!=null){const dg=game.gold-g0;game.gold=Math.max(0,Math.round(g0+dg*R.bm));}
+ if(R&&R.heal){game._kc21=(game._kc21||0)+1;if(game._kc21%15===0){game.lives++;goro(e.x,e.y,'汗で回復！',true,1);}}
+ if(e.raid){V21.raidBoss=null;game.gold+=200+game.wave*40;toast('👑 巨大ボス撃破！イキスギィ！！ 💰ボーナス','senpai_face','boss shake',2600);shake(14);for(let i=0;i<3;i++)try{goro(e.x+(Math.random()-.5)*80,e.y+(Math.random()-.5)*80,'イキスギィ！',true,3);}catch(_){}}};
+const _up21=update;update=function(dt){const l0=game.lives,w0=game.inWave;_up21(dt);try{const R=chaosOn()&&V21.rule;
+ if(R&&game.lives<l0&&R.leak)game.lives=Math.max(0,game.lives-(l0-game.lives)*(R.leak-1));
+ if(R&&(R.id==='fast'||R.fast))for(const e of enemies)if(!e.dead)e.haste=Math.max(e.haste||0,R.fast||.4);
+ if(R&&R.slow)for(const e of enemies)if(!e.dead){e.slowT=Math.max(e.slowT,.2);e.slow=Math.max(e.slow,.25);}
+ if(R&&R.dark&&game.inWave)game.gazeNight=Math.max(game.gazeNight||0,.5);
+ if(w0&&!game.inWave&&R&&R.after){game.gold+=R.after;toast(`🧾 先輩税還付 +${R.after}G`,'senpai_face','',1600);}
+ const B=V21.raidBoss;if(B&&!B.dead){const f=B.hp/B.maxHp;const ph=f<.33?2:f<.66?1:0;if(ph>B.rphase){B.rphase=ph;B.haste=.5;shake(12);toast(ph===1?'👑 ボス第二形態：子分召喚！':'👑 最終形態：暴走（迫真）','grimace_face#red','boss shake',2200);try{voice(ph===1?'まだまだァ！':'ぬわああん！',1.3);}catch(_){}
+   for(let i=0;i<3+ph*3;i++)try{const m=_sp21(i%2?'mini':Object.keys(ENEMIES).find(k=>!ENEMIES[k].boss)||'mini',Math.max(0,B.dist-20-i*12),true,B.r);}catch(_){}}}
+ if(V21.ruleT>0)V21.ruleT-=dt;}catch(_){}};
+function drawV21(){if(!game||!chaosOn())return;const c=ctx;c.save();c.setTransform(1,0,0,1,0,0);const d=view.dpr,W=c.canvas.width,tt=performance.now()/1000;
+ const B=V21.raidBoss;if(B&&!B.dead){const w=Math.min(W*.7,520*d),x=(W-w)/2,y=54*d,h=14*d;c.fillStyle='rgba(0,0,0,.7)';c.fillRect(x-3*d,y-3*d,w+6*d,h+6*d);const f=Math.max(0,B.hp/B.maxHp);
+  c.fillStyle=B.rphase===2?`hsl(${(tt*200)%360},90%,55%)`:B.rphase===1?'#ff5c3c':'#c46bff';c.fillRect(x,y,w*f,h);c.fillStyle='#fff';for(const q of[1/3,2/3])c.fillRect(x+w*q,y,2*d,h);
+  c.font=`bold ${12*d}px sans-serif`;c.textAlign='center';c.lineWidth=3*d;c.strokeStyle='#000';const s=`👑 RAID ${B.d.name}  ${Math.ceil(B.hp)} / ${Math.round(B.maxHp)}`;c.strokeText(s,W/2,y-6*d);c.fillStyle='#ffd36b';c.fillText(s,W/2,y-6*d);}
+ const R=V21.rule;if(R){c.font=`bold ${13*d}px sans-serif`;c.textAlign='center';const s=`🌀 ${R.n}：${R.d}`;const y2=(B&&!B.dead?86:58)*d;c.lineWidth=3*d;c.strokeStyle='#000';c.strokeText(s,W/2,y2);c.fillStyle=`hsl(${(tt*90)%360},100%,70%)`;c.fillText(s,W/2,y2);
+  if(V21.ruleT>0){const a=Math.min(1,V21.ruleT/1.2);c.globalAlpha=a*.85;c.fillStyle='#000';c.fillRect(0,c.canvas.height*.38,W,c.canvas.height*.16);c.globalAlpha=a;c.font=`900 ${Math.min(42,W/d/14)*d*(1+.08*Math.sin(tt*30))}px sans-serif`;c.fillStyle='#ff3c8a';c.strokeStyle='#fff';c.lineWidth=2*d;c.strokeText('ルール改変！ '+R.n,W/2,c.canvas.height*.47);c.fillText('ルール改変！ '+R.n,W/2,c.canvas.height*.47);}}
+ c.restore();}
+window.__v21=V21;const _draw21=draw;draw=function(){_draw21();try{drawV21();}catch(_){}};
+(function(){const tb=$('bChal')||$('bStory');const mk=(id,t,raid,ch)=>{const b=document.createElement('button');b.id=id;b.textContent=t;b.style.cssText='margin-top:8px;min-height:44px';b.onclick=()=>{V16.pend=null;V21.pendRaid=raid;V21.pendChaos=ch;$('title').classList.remove('on');reset();snd(330,.2,'sawtooth',.06,660);try{openSitu();}catch(_){}};return b;};
+ const r=mk('bRaid','👑 巨大ボスRAID（10戦）',true,true),m=mk('bChaos','🌀 メタ暴走モード（毎回ルール改変）',false,true);tb.after(r);r.after(m);
+ const bs=$('bStart'),o=bs.onclick;bs.onclick=()=>{V21.pendRaid=false;V21.pendChaos=false;o();};
+ const bc=$('bChal');if(bc){const oc=bc.onclick;bc.onclick=()=>{V21.pendRaid=false;V21.pendChaos=false;oc();};}})();
+
 let last=performance.now();
 function loop(now){const raw=Math.min(.05,(now-last)/1000);last=now;
  if(game&&!paused&&!game.over&&!$('title').classList.contains('on')){const sm=CAM.slow>0?.35:1;for(let i=0;i<speed;i++)update(raw*sm);}camTick(raw);
