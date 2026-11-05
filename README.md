@@ -1,9 +1,21 @@
-# 野獣先輩タワーディフェンス ～迫真TD部～ (v27)
+# 野獣先輩タワーディフェンス ～迫真TD部～ (v29)
 
 - index.html + assets/ : multi-file build (relative paths, works offline)
 - yajuu-td-single.html : one-file build, all images embedded as data URLs
 - src/template.html + build.py : source; `python3 build.py` regenerates both
 - crop.py : makes the crops in assets/ from assets/src/ (the original attachments)
+
+## v29: Wiki資料館拡張＋新コンテンツ＋グラフィック強化
+- 📚 下北沢公式資料館：Wiki提供データで大幅拡充
+  - 語録保管庫：100件以上の新規語録（No.001～118）、タップで読み上げ
+  - ⛩ 聖地：12箇所の伝説の舞台（下北沢駅、世田谷公園、赤坂プリンスホテル等）
+  - 📿 神器：12種の重要アイテム（アイスティー、ゴローズ、観葉植物くん等）
+  - 🎬 名場面：18枚のWikiスチル（見返り美人、こ↑こ↓、野獣の眼光等）ギャラリー表示
+- 🗼 新塔5種（Wiki神器由来）：観葉植物くん（植物オーラ）、円定規コンパス（円範囲）、生ビール砲（酔わせ）、アクエリアス砲（バフ解除）
+- 👊 新敵4種（Wiki名場面由来）：屈託のない笑顔、ンギモッヂイイ！、こ↑こ↓、MURさん
+- 🗺 新マップ4種（聖地由来）：北沢公園、あずま寿し、コインランドリー森、世田谷公園
+- 🎬 グラフィック強化：Wiki名場面カットイン、リッチ演出、マップ差別化、派手エフェクト
+- ⚔️ ゲーム本体強化：GORO戦闘バナー65種以上、ボス台詞追加、「王道を征く」表記統一
 
 ## v27: 初回インタラクティブ・チュートリアル
 - 初回起動（localStorage `yajuuTD_tut` 未設定）で練習モード：①塔を置く → ②ウェーブ開始 → ③スキル発動 → ④売却
