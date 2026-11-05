@@ -394,8 +394,8 @@ const MAPS=[
  {id:'sauna',name:'汗だくサウナ',desc:'長いクネクネ。床がぬるぬるで足止め向き',tip:'減速・凍結・泥床で時間を稼げ。毒も刺さる',fav:'減速・凍結・泥床',buff:{slowAdd:.1},routes:[[[-1,1],[15,1],[15,5],[4,5],[4,9],[17,9],[17,6],[20.5,6]]],bridges:[[[-1,1],[15,1],[15,9],[17,9],[17,6],[20.5,6]]],hot:[[9,3],[9,7],[13,7],[16,4]],eSp:1.05},
  {id:'station',name:'下北沢駅前',desc:'三方向から広場へ。短いが入口が多い',tip:'入口ごとに役割分担。狙撃で奥を刈り、前線は範囲／泥',fav:'狙撃・範囲・泥床',buff:{gRange:.08,splashMul:.08,mineDmg:.08},routes:[[[-1,2],[5,2],[5,7],[12,7],[12,5],[20.5,5]],[[-1,10],[5,10],[5,7],[12,7],[12,5],[20.5,5]],[[-1,5],[12,5],[20.5,5]]],bridges:[[[-1,7],[12,7],[12,5],[20.5,5]]],hot:[[6,5],[10,4],[10,8],[15,5]],eSp:.92},
  {id:'kitazawa',name:'北沢公園',desc:'中央広場から放射状。短いが同時攻撃が必要',tip:'中央にオーラ／範囲。外周に狙撃で奥を狩れ',fav:'オーラ・範囲・狙撃',buff:{auraRange:.15,splashMul:.12,gRange:.08},routes:[[[-1,6],[8,6],[8,1],[14,1],[14,6],[20.5,6]],[[-1,6],[8,6],[8,11],[14,11],[14,6],[20.5,6]],[[-1,1],[8,1],[8,6],[20.5,6]],[[-1,11],[8,11],[8,6],[20.5,6]]],bridges:[[[-1,6],[14,6],[20.5,6]]],hot:[[8,4],[8,8],[11,6],[16,3],[16,9]],eSp:.88},
- {id:'azuma',name:'あずま寿し',desc:'カウンター型。敵が並んで来る狭い道',tip:'連射と毒で処理。泥床で時間稼ぎ',fav:'連射・毒・泥床',buff:{tRate:{navy:.15},poisonMul:.15,slowAdd:.08},routes:[[[-1,6],[18,6],[18,3],[20.5,3]],[[-1,6],[18,6],[18,9],[20.5,9]]],bridges:[[[-1,6],[10,6],[10,3],[20.5,3]]],hot:[[8,6],[12,5],[12,7],[16,4],[16,8]],eSp:.95},
- {id:'laundry',name:'コインランドリー森',desc:'ぐるぐる回る洗濯機ルート。目が回る',tip:'中央ハブに集中砲火。回転を止めろ（無理）',fav:'オーラ・視線・電撃',buff:{auraRange:.18,markAdd:.08,chainAdd:1},routes:[[[-1,6],[3,6],[3,2],[9,2],[9,10],[15,10],[15,4],[20.5,4]]],bridges:[[[-1,6],[9,6],[15,6],[15,4],[20.5,4]]],hot:[[6,6],[12,6],[17,7]],eSp:1.08},
+ {id:'azuma',name:'あずま寿し',desc:'カウンター型。敵が並んで来る狭い道',tip:'連射と毒で処理。泥床で時間稼ぎ',fav:'連射・毒・泥床',buff:{tRate:{senpai:.15},poisonMul:.15,slowAdd:.08},routes:[[[-1,6],[18,6],[18,3],[20.5,3]],[[-1,6],[18,6],[18,9],[20.5,9]]],bridges:[[[-1,6],[10,6],[10,3],[20.5,3]]],hot:[[8,6],[12,5],[12,7],[16,4],[16,8]],eSp:.95},
+ {id:'laundry',name:'コインランドリー森',desc:'ぐるぐる回る洗濯機ルート。目が回る',tip:'中央ハブに集中砲火。回転を止めろ（無理）',fav:'オーラ・視線・電撃',buff:{auraRange:.18,markAdd:.08,splashMul:.12},routes:[[[-1,6],[3,6],[3,2],[9,2],[9,10],[15,10],[15,4],[20.5,4]]],bridges:[[[-1,6],[9,6],[15,6],[15,4],[20.5,4]]],hot:[[6,6],[12,6],[17,7]],eSp:1.08},
  {id:'setagaya',name:'世田谷公園',desc:'広々とした芝生。敵が散らばる',tip:'射程と範囲で広域をカバー。狙撃で奥を狩れ',fav:'範囲・狙撃・視線',buff:{gRange:.12,splashMul:.15,markAdd:.06},routes:[[[-1,2],[6,2],[6,6],[14,6],[14,2],[20.5,2]],[[-1,10],[6,10],[6,6],[14,6],[14,10],[20.5,10]],[[-1,6],[14,6],[20.5,6]]],bridges:[[[-1,6],[6,6],[14,6],[20.5,6]]],hot:[[10,4],[10,8],[17,4],[17,8]],eSp:.9}];
 function mkRoute(pts,br){const wp=pts.map(([x,y])=>({x:x*T+T/2,y:y*T+T/2}));const seg=[];let total=0;for(let i=0;i<wp.length-1;i++){const l=Math.hypot(wp[i+1].x-wp[i].x,wp[i+1].y-wp[i].y);seg.push(l);total+=l;}return{wp,seg,total,open:!br,br:!!br};}
 function routeTiles(r,set){const WP=r.wp;for(let i=0;i<WP.length-1;i++){const a=WP[i],b=WP[i+1];const ax=Math.floor(a.x/T),ay=Math.floor(a.y/T),bx=Math.floor(b.x/T),by=Math.floor(b.y/T);for(let x=Math.min(ax,bx);x<=Math.max(ax,bx);x++)for(let y=Math.min(ay,by);y<=Math.max(ay,by);y++)set.add(x+','+y);}return set;}
@@ -439,18 +439,18 @@ const COMBO_MS={10:'10コンボ！いいゾ〜これ',15:'15コンボ！ま、�
 
 // ---------- defs ----------
 const TOWERS={
- senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',role:'火力',vs:'クリ／連射／狙撃の3本柱。覚醒で特化',desc:'【火力】迫真クリ／サムライブルー連射／見とけよ狙撃を覚醒で選択',crit:.15,proj:'#ffd36b',
-  muts:[{n:'迫真狙い撃ち',d:'クリ率+25%・クリは装甲無視'},{n:'サムライブルー',d:'高速連射・dmg低・雑魚掃除'}],
-  overs:[{n:'見とけよ狙撃',d:'超射程・装甲無視・HP20%以下即死'},{n:'貫通サムライ',d:'連射時は弾が2回跳ねる'}]},
- trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',role:'オーラ',vs:'中央ハブ向き。らせんで真価',desc:'【オーラ】便乗の輪／ホラホラ声援／観葉植物を覚醒で選択',aura:true,
-  muts:[{n:'便乗の輪',d:'オーラ範囲+40%・効果+15%'},{n:'ホラホラ声援',d:'全体攻撃+8%/基（上限あり）'}],
-  overs:[{n:'そうだよ（便乗）',d:'オーラ内タワーのクリ+8%'},{n:'観葉植物くん',d:'範囲内HP回復+速度+12%（癒し）'}]},
- collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',role:'減速',vs:'俊足・跳躍・自爆・汗だまり対策',desc:'【減速】ふっとばし指導／アイスティー／生ビールを覚醒で選択',pulse:true,slow:.45,slowT:1.2,proj:'#b8ecff',freeze:.7,
-  muts:[{n:'ふっとばし指導',d:'パルスで敵を押し戻す'},{n:'アイスティー砲',d:'凍結で硬直＋減速・結露演出'}],
-  overs:[{n:'二重締め',d:'ノックバック強化＋0.5秒スタン'},{n:'生ビール砲',d:'泡で減速＋混乱（酔わせ）'}]},
- cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',role:'範囲',vs:'810焦土／円定規／電撃の3本柱',desc:'【範囲】810焦土／円定規コンパス／イキスギ電撃を覚醒で選択',splash:62,crit:.1,proj:'#ff8a5c',
-  muts:[{n:'810焦土',d:'着弾地点が3秒燃える（焦土）'},{n:'円定規コンパス',d:'周囲同心円攻撃・数学的'}],
-  overs:[{n:'焦土延長',d:'焦土6秒・炎ダメ+40%'},{n:'イキスギ電撃',d:'4体連鎖・盾に2倍【対盾】'}]},
+ senpai:{name:'先輩砲台',short:'先輩砲台',img:'senpai_face',cost:100,range:135,dmg:20,rate:.8,ring:'#ffd36b',role:'火力',vs:'クリ／連射／狙撃の3本柱。覚醒で特化',desc:'【火力】迫真クリ／サムライブルー連射／見とけよ狙撃を覚醒で選択。序盤から終盤まで使える（王道を征く）',crit:.15,proj:'#ffd36b',
+  muts:[{n:'迫真狙い撃ち',d:'クリ率+25%・クリは装甲無視（ファッ！？）'},{n:'サムライブルー',d:'高速連射・雑魚掃除（やりますねぇ！）'}],
+  overs:[{n:'見とけよ狙撃',d:'超射程・装甲無視・HP20%以下即死（処刑）'},{n:'貫通サムライ',d:'連射時は弾が2回跳ねる（貫通！）'}]},
+ trio:{name:'部室トリオ',short:'部室トリオ',img:'trio_sepia_face',cost:200,range:120,dmg:0,rate:0,ring:'#d9b36a',role:'オーラ',vs:'中央ハブ向き。らせんで真価',desc:'【オーラ】便乗の輪／ホラホラ声援／観葉植物を覚醒で選択。攻撃枠を食うが周囲を強化（そうだよ）',aura:true,
+  muts:[{n:'便乗の輪',d:'オーラ範囲+40%・効果+15%（便乗！）'},{n:'ホラホラ声援',d:'全体攻撃+8%/基・上限あり（声援！）'}],
+  overs:[{n:'そうだよ（便乗）',d:'オーラ内タワーのクリ+8%（便乗）'},{n:'観葉植物くん',d:'範囲内HP回復+速度+12%（水やり！）'}]},
+ collar:{name:'胸ぐらスネア',short:'胸ぐら',img:'collar_face',cost:175,range:100,dmg:6,rate:1.0,ring:'#5cd6a8',role:'減速',vs:'俊足・跳躍・自爆・汗だまり対策',desc:'【減速】ふっとばし指導／アイスティー／生ビールを覚醒で選択。範囲パルスで敵を止める（やめてくださいよ本当に）',pulse:true,slow:.45,slowT:1.2,proj:'#b8ecff',freeze:.7,
+  muts:[{n:'ふっとばし指導',d:'パルスで敵を押し戻す（指導！）'},{n:'アイスティー砲',d:'凍結で硬直＋減速・結露つき（冷たい）'}],
+  overs:[{n:'二重締め',d:'ノックバック強化＋0.5秒スタン（締め！）'},{n:'生ビール砲',d:'泡で減速＋混乱・酔わせ（ゴクゴク）'}]},
+ cannon:{name:'114514砲',short:'114514砲',img:'senpai_face#red',cost:300,range:155,dmg:48,rate:1.7,ring:'#ff5c3c',role:'範囲',vs:'810焦土／円定規／電撃の3本柱',desc:'【範囲】810焦土／円定規コンパス／イキスギ電撃を覚醒で選択。爆風で密集を処理（114514！）',splash:62,crit:.1,proj:'#ff8a5c',
+  muts:[{n:'810焦土',d:'着弾地点が3秒燃える（810！）'},{n:'円定規コンパス',d:'周囲同心円攻撃・数学的な美しさ（汚い）'}],
+  overs:[{n:'焦土延長',d:'焦土6秒・炎ダメ+40%（焦土！）'},{n:'イキスギ電撃',d:'4体連鎖・盾に2倍【対盾】（ビクンビクン）'}]},
  bank:{name:'810銀行',short:'810銀行',img:'trio_sepia_face#gold',cost:175,range:110,dmg:0,rate:0,ring:'#ffd36b',role:'経済',vs:'攻撃枠を食う。序盤投資・後半は火力に換金せよ',desc:'【経済】利息／集金後輩を覚醒で選択。火力とトレード',bank:true,proj:'#ffe08a',
   muts:[{n:'利息ですねぇ',d:'毎ウェーブ所持金の4%（上限120）'},{n:'集金後輩',d:'攻撃開始・命中毎+1G（上限100G）'}],
   overs:[{n:'810万円',d:'利息上限+120'},{n:'高利貸し',d:'集金が命中毎+2G・上限200G'}]},
@@ -460,9 +460,9 @@ const TOWERS={
  mine:{name:'810地雷',short:'810地雷',img:'senpai_face#gray',cost:70,range:58,dmg:90,rate:5,ring:'#ff3c3c',role:'罠',vs:'道に置く。爆発／減速床の2本柱',desc:'【罠】道に置く。114514爆発／ぬるぬる泥床を覚醒で選択',onPath:true,mine:true,
   muts:[{n:'114514爆発',d:'踏むと爆発・再装填（威力大）'},{n:'ぬるぬる泥床',d:'持続減速床・何度でも踏める'}],
   overs:[{n:'連鎖爆風',d:'爆発時の爆風+50%・威力+30%'},{n:'底なし沼',d:'泥床時ボス以外を時々掴む'}]},
- gaze:{name:'ほら見ろよ見ろよ塔',short:'視線塔',img:'collar_card#blue',cost:180,range:130,dmg:4,rate:.9,ring:'#6ab8ff',role:'デバフ',vs:'晒し上げ／くっさガス／ハエの3本柱',desc:'【デバフ】晒し上げ視線／くっさガス／ハエ大群を覚醒で選択',gaze:true,
-  muts:[{n:'晒し上げ',d:'被ダメ+40%マーク（視線）'},{n:'くっさガス',d:'装甲無視の継続ダメ'}],
-  overs:[{n:'アクエリアス砲',d:'晒し上げ時バフ解除＋減速'},{n:'ハエ大群',d:'ステルス看破・群れ演出'}]},
+ gaze:{name:'ほら見ろよ見ろよ塔',short:'視線塔',img:'collar_card#blue',cost:180,range:130,dmg:4,rate:.9,ring:'#6ab8ff',role:'デバフ',vs:'晒し上げ／くっさガス／ハエの3本柱',desc:'【デバフ】晒し上げ視線／くっさガス／ハエ大群を覚醒で選択。敵を弱体化（見とけよ見とけよ～）',gaze:true,
+  muts:[{n:'晒し上げ',d:'被ダメ+40%マーク（晒し！）'},{n:'くっさガス',d:'装甲無視の継続ダメ（くっさ！）'}],
+  overs:[{n:'アクエリアス砲',d:'晒し上げ時バフ解除＋減速（水分補給）'},{n:'ハエ大群',d:'ステルス看破・群れ演出（ハエ！）'}]},
 };
 const TKEYS=Object.keys(TOWERS);
 const HOTKEYS=['1','2','3','4','5','6','7','8'];
@@ -509,7 +509,7 @@ const PERKS=[
  {t:'ファッ！？',d:'全タワーのクリ率 +8%、クリ倍率 +0.5',img:'grimace_face',ap:s=>{s.gCrit+=.08;s.critMul+=.5}},
  {t:'やりますねぇ',d:'先輩砲台の攻撃速度 +25%',img:'title_senpai',ap:s=>s.tRate.senpai+=.25},
  {t:'そうだよ（便乗）',d:'部室トリオのオーラ効果 +50%・範囲 +25%',img:'trio_sepia_card',ap:s=>{s.auraMul+=.5;s.auraRange+=.25}},
- {t:'サムライブルー魂',d:'連射塔のダメージ +40%',img:'navy_trio_card',ap:s=>s.tDmg.navy+=.4},
+ {t:'サムライブルー魂',d:'先輩砲台（連射）のダメージ +40%',img:'navy_trio_card',ap:s=>s.tDmg.senpai+=.4},
  {t:'胸ぐら指導',d:'胸ぐらの減速 +15%・効果時間 +0.6秒',img:'collar_card',ap:s=>{s.slowAdd+=.15;s.slowT+=.6}},
  {t:'114514',d:'114514砲の爆風範囲 +30%・ダメージ +20%',img:'senpai_face',ap:s=>{s.splashMul+=.3;s.tDmg.cannon+=.2}},
  {t:'おまたせ（セール）',d:'タワー設置・強化コスト -12%',img:'navy_trio_card',ap:s=>s.costMul*=.88},
@@ -526,15 +526,15 @@ const PERKS=[
  {t:'コンボ中毒',d:'10コンボ以上の撃破ボーナス2倍・コンボ猶予+1秒',img:'senpai_face',tag:'経済',ap:s=>{s.comboMul*=2;s.comboT+=1}},
  {t:'くさいの伝染',d:'毒状態の敵が死ぬと周りに毒がうつる',img:'locker_right_face',tag:'毒',max:1,ap:s=>s.poisonSpread=1},
  {t:'くっさ！',d:'毒ダメージ +50%',img:'locker_left_face',tag:'毒',ap:s=>s.poisonMul+=.5},
- {t:'電撃結婚',d:'電撃塔の連鎖 +2体',img:'navy_center_face',tag:'電撃',ap:s=>s.chainAdd+=2},
+ {t:'電撃結婚',d:'114514砲（電撃）の連鎖 +2体',img:'navy_center_face',tag:'電撃',ap:s=>s.chainAdd+=2},
  {t:'壁ドン（物理）',d:'バリケードHP +60%・接触した敵に毎秒反撃',img:'collar_face',tag:'壁',ap:s=>{s.wallHp+=.6;s.wallThorn+=10}},
  {t:'先輩の嗅覚',d:'覗き見学者が常に見える・全射程 +5%',img:'senpai_face',tag:'索敵',max:1,ap:s=>{s.reveal=1;s.gRange+=.05}},
  {t:'迫真空手部（押忍）',d:'先輩砲台のクリで敵をノックバック',img:'title_senpai',tag:'クリ',max:1,ap:s=>s.critKB=1},
- {t:'スコープで見とけよ',d:'狙撃手のダメージ +35%・攻撃速度 +15%',img:'collar_card',tag:'狙撃',ap:s=>{s.tDmg.sniper+=.35;s.tRate.sniper+=.15}},
+ {t:'スコープで見とけよ',d:'先輩砲台（狙撃）のダメージ +35%・攻撃速度 +15%',img:'collar_card',tag:'狙撃',ap:s=>{s.tDmg.senpai+=.35;s.tRate.senpai+=.15}},
  {t:'810万円',d:'810銀行の収入 +60%',img:'trio_sepia_card',tag:'経済',ap:s=>s.bankMul+=.6},
  {t:'24歳、学生です',d:'全タワーの攻撃速度 +10%',img:'senpai_face',ap:s=>s.gRate+=.1},
  {t:'やめてくださいよ本当に',d:'たかり後輩にお金を盗まれない・ライフ +3',img:'navy_left_face',tag:'防御',max:1,ap:s=>{s.noSteal=1;game.lives+=3}},
- {t:'ホラホラホラホラ',d:'連射塔・電撃塔の攻撃速度 +20%',img:'navy_trio_card',ap:s=>{s.tRate.navy+=.2;s.tRate.chain+=.2}},
+ {t:'ホラホラホラホラ',d:'先輩砲台・114514砲の攻撃速度 +20%',img:'navy_trio_card',ap:s=>{s.tRate.senpai+=.2;s.tRate.cannon+=.2}},
  // v4 synergies / build-definers
  {t:'感電くさい',d:'【毒×電撃】毒状態の敵への電撃ダメ +60%',img:'navy_center_face',tag:'シナジー',max:1,ap:s=>s.chainPois=.6},
  {t:'壁ドンガス',d:'【壁×毒】バリケードに詰まった敵が毒まみれに',img:'locker_right_face',tag:'シナジー',max:1,ap:s=>s.wallPois=1},
@@ -621,7 +621,10 @@ function camTick(dt){if(CAM.t>0){CAM.t-=dt;}else CAM.tz=1;CAM.z+=(CAM.tz-CAM.z)*
  if(game&&game.card)game.card.t-=dt;if(game&&game.tele>0)game.tele-=dt;if(game&&game.streak)game.streak.t-=dt;}
 const STREAK=[[10,'いいゾ～これ','#ffd36b'],[25,'ホラホラホラホラ','#ff8a5c'],[50,'暴れんなよ…暴れんなよ…','#ff3c8a'],[100,'イキスギィ！イクイクイク','#c98aff'],[200,'迫真空手部、極','#fff']];
 function streakCheck(c,x,y){for(const [n,txt,col] of STREAK)if(c===n){game.streak={n,txt,col,t:2,T:2};big(`${n} STREAK`,col,1.2);punch(x,y,1.12+n/1000,.6,n>=50?.5:0,n>=50?1.2:0,col);shake(6+n/20);flash();snd(440+n*2,.25,'square',.05,300);goro(x,y,null,true,n>=50?3:2);}}
-function waveCard(){const bossW=game.wave%5===0;game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:game.stageEv?'⚠ '+game.stageEv:'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
+function waveCard(){const bossW=game.wave%5===0;let hint='';
+ if(game.wave===1&&game.mode!=='camp')hint='💡 タワーを置いて後輩を止めろ（やめてくださいよ本当に）';
+ else if(game.wave===2&&towers.length>0&&!towers.some(t=>t.mut!=null))hint='💡 Lv3で覚醒できる（もっと強く…なりたい）';
+ game.card={t:2.4,T:2.4,title:bossW?`WAVE ${game.wave} ─ BOSS`:`WAVE ${game.wave}`,sub:`${MAP.name}${MAP.fav?'・'+MAP.fav:''}${game.act?'（第'+(game.act+1)+'幕）':''}`,ev:hint||game.stageEv?'⚠ '+(hint||game.stageEv):'',c:bossW?'#ff3c8a':'#ffd36b',img:bossW&&typeof V18!=='undefined'&&V18.meibamen?V18.meibamen[game.wave%V18.meibamen.length].k:null};game.tele=2.4;CAM.barT=Math.max(CAM.barT,bossW?2.2:1.2);}
 const GORO=['ﾝｱｯｰ!','おっ、大丈夫か大丈夫か','ま、多少はね？','いいゾ～これ','やりますねぇ！','ファッ！？','そうだよ（便乗）','あっ（察し）','暴れんなよ…暴れんな','ぬわああああん疲れたもおおおん','24歳、学生です','見とけよ見とけよ～','いいよ！こいよ！','オォン！アォン！','じゃけん夜行きましょうね','お前のことが好きだったんだよ！','もう許さねぇからなぁ？','あーいいっすね～','頭にきますよ！','ホラホラホラホラ','王道を征く…','まずうちさぁ…屋上あんだけど','焼いてかない？','114514','810','キタ！','イキスギィ！','なんで見る必要なんかあるんですか','しょうがねぇなぁ','おまたせ','ｱｰｲｷｿ','ありますあります','いいねぇー','行きませんか？行きましょうよ','痛いですね…これは痛い','おかのした','こ↑こ↓','これもうわかんねぇな','じゃけん夜行きましょうね～','だいぶ溜まってんじゃんアゼルバイジャン','ダメみたいですね','で、出ますよ…','ないです','ヌッ！','喉渇いた…喉渇かない？','白菜かけますね','はっきりわかんだね','バッチェ冷えてますよ','ビール！ビール！','Foo↑気持ちいい～','ブッチッパ！','ほらいくどー','やんほぬ','わかるわかる（タメ口）','ありがとナス！','ウッソだろお前ｗｗｗ','かしこまり！','悲しいなぁ','最後の一発くれてやるよオラ！','もう許せるぞオイ！','知らねーよ、そんなの','いつもの','汚汚汚～～～～～～～～～','オッスオッス！','勝手にたまげてろ','がんばれ！','くさい（確信）','ここすき','すき','誰？','もっとやれ'];
 const GOROC=['#ff7a50','#ffd36b','#ff3c8a','#8dff6a','#6ab8ff'];let goroT=0;
 function goro(x,y,txt,force,lv=1){const n=performance.now();if(!force&&n-goroT<(TOUCH?1500:900))return;goroT=n;txt=txt||GORO[Math.floor(Math.random()*GORO.length)];const c=GOROC[Math.floor(Math.random()*GOROC.length)];voice(txt,lv);
@@ -778,20 +781,23 @@ function sweat(e,n){const cols=['#9fd8ff','#e8f4ff','#c9b08a','#bfe4ff','#ffb8a0
 function decal(x,y,r,c){decals.push({x:x+(Math.random()-.5)*12,y:y+(Math.random()-.5)*12,r:r*(.9+Math.random()*.35),c,t:22+Math.random()*8,rx:.55+Math.random()*.7});if(decals.length>90)decals.shift();}
 function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const st=srcT?tStats(srcT):null;
  if(!o.noCrit&&st&&st.crit){if(Math.random()<st.crit+(srcT.critB||0)){dmg*=s.critMul;crit=true;if(s.critStack)srcT.critB=Math.min(.3,(srcT.critB||0)+.02);}}
- if(srcT&&srcT.k==='sniper'&&srcT.mut===1&&e.d.boss)dmg*=2.5;
+ if(srcT&&srcT.k==='senpai'&&srcT.over===0&&e.d.boss)dmg*=2.5;
  {let v=1;if(e.mark>0)v+=e.markV;if(s.slowVuln&&e.slowT>0)v+=s.slowVuln;if(s.lowHp&&e.hp<e.maxHp*.3)v+=s.lowHp;if(s.eliteHunt&&e.aff)v+=.3;if(s.dualHunt&&e.aff&&e.aff2)v+=.4;
-  if(s.antiJump&&(e.d.jump||e.d.burrow))v+=.45;if(s.chainPois&&srcT&&srcT.k==='chain'&&e.poisT>0)v+=s.chainPois;
+  if(s.antiJump&&(e.d.jump||e.d.burrow))v+=.45;if(s.chainPois&&srcT&&srcT.k==='cannon'&&srcT.over===1&&e.poisT>0)v+=s.chainPois;
   if(s.antiBridge&&ROUTES[e.r]&&ROUTES[e.r].br)v+=.3;
-  if(srcT){const k=srcT.k,dd=e.d;if(dd.armor&&(k==='poison'||k==='sniper'))v+=.12;if(dd.shield&&(k==='chain'||k==='gaze'))v+=.12;if((dd.jump||dd.burrow)&&(k==='collar'||k==='gaze'||k==='mine'||k==='iced'||k==='mud'))v+=.22;if(dd.stealth&&(k==='flies'||k==='gaze'))v+=.25;if((dd.speed||0)>=90&&(k==='iced'||k==='mud'||k==='collar'))v+=.18;if(dd.cheer&&(k==='sniper'||k==='senpai'||k==='gaze'))v+=.28;if(dd.bomb&&(k==='collar'||k==='sniper'))v+=.22;if(dd.jam&&k==='gaze')v+=.15;if(dd.heal&&(k==='sniper'||k==='senpai'))v+=.2;}
+  if(srcT){const k=srcT.k,dd=e.d;if(dd.armor&&(k==='gaze'||k==='senpai'))v+=.12;if(dd.shield&&(k==='cannon'||k==='gaze'))v+=.12;if((dd.jump||dd.burrow)&&(k==='collar'||k==='gaze'||k==='mine'))v+=.22;if(dd.stealth&&(k==='gaze'))v+=.25;if((dd.speed||0)>=90&&(k==='collar'||k==='mine'))v+=.18;if(dd.cheer&&(k==='senpai'||k==='gaze'))v+=.28;if(dd.bomb&&(k==='collar'||k==='senpai'))v+=.22;if(dd.jam&&k==='gaze')v+=.15;if(dd.heal&&(k==='senpai'))v+=.2;}
   dmg*=v;}
  const pierce=o.pierce||(crit&&srcT&&srcT.k==='senpai'&&srcT.mut===0);
  if(!pierce)dmg=Math.max(1,dmg-(e.d.armor||0)-((e.aff==='hard'||e.aff2==='hard')?6:0));
  if(e.shield>0){const sx=o.shieldX||1,a=dmg*sx;if(a<e.shield){e.shield-=a;dmg=0;}else{dmg=(a-e.shield)/sx;e.shield=0;float(e.x,e.y-e.d.r-14,'ガード崩壊！','#6ab8ff',true);snd(1200,.08,'square',.04,-800);}}
- e.hp-=dmg;e.hitT=.12;if(Math.random()<.55)sweat(e,RM?2:4+Math.floor(Math.random()*3));if(Math.random()<.12&&!crit)float(e.x,e.y-e.d.r-4,pick(L.hitFx),Math.random()<.5?'#cfe6ff':'#c9b08a',false,.5);if(!RM&&Math.random()<.08)decal(e.x,e.y,6,'#8a6a4088');
+ e.hp-=dmg;e.hitT=.12;if(Math.random()<.55)sweat(e,RM?2:4+Math.floor(Math.random()*3));
+ if(dmg>=25&&Math.random()<(crit?.8:.3))float(e.x,e.y-e.d.r-4,Math.round(dmg),crit?'#ffe08a':'#e0e0e0',crit,.5);
+ else if(Math.random()<.12&&!crit)float(e.x,e.y-e.d.r-4,pick(L.hitFx),Math.random()<.5?'#cfe6ff':'#c9b08a',false,.5);
+ if(!RM&&Math.random()<.08)decal(e.x,e.y,6,'#8a6a4088');
  if((e.aff==='haste'||e.aff2==='haste')&&!e.d.boss){e.haste=Math.min(.6,(e.haste||0)+.08);e.slow=0;e.slowT=0;}
  if((e.aff==='reflect'||e.aff2==='reflect')&&srcT&&!TOWERS[srcT.k].onPath&&Math.random()<.18){srcT.stunT=Math.max(srcT.stunT,.7);float(srcT.x,srcT.y-16,'跳ね返し！','#ff9a6a');}
  if((e.aff==='link'||e.aff2==='link')&&e.linkId&&!s.noLink&&dmg>0){const o=enemies.find(x=>!x.dead&&x.id===e.linkId);if(o){o.hp-=dmg*.45;o.hitT=.12;if(o.hp<=0)kill(o,srcT);}}
- if(srcT){if(s.critPois&&crit)poisonE(e,dmg*.25,3,srcT);if(srcT.k==='senpai'&&srcT.over===0&&crit)poisonE(e,dmg*.2,2.5,srcT);
+ if(srcT){if(s.critPois&&crit)poisonE(e,dmg*.25,3,srcT);if(srcT.k==='senpai'&&srcT.mut===0&&srcT.over===0&&crit)poisonE(e,dmg*.2,2.5,srcT);
   if(srcT.k==='senpai'&&srcT.over===1&&crit){for(const o of enemies)if(!o.dead&&o!==e&&(o.x-e.x)**2+(o.y-e.y)**2<70*70)dot(o,dmg*.25,srcT);}
   if(srcT.k==='navy'&&srcT.over===1&&Math.random()<.1)e.stunT=Math.max(e.stunT,.25);
   if(srcT.k==='chain'&&srcT.over===1){e.mark=3;e.markV=Math.max(e.markV,.2+s.markAdd);}
@@ -804,8 +810,8 @@ function hurt(e,dmg,srcT,o={}){if(e.dead)return;const s=S();let crit=false;const
   siteBurst(e.x,e.y,'#ff5c8a',{n:14,R:36,shake:0,txt:null,sweat:true,sp:160,lw:3,decal:false,ring2:true,rt:.4});
   if(s.critKB&&srcT.k==='senpai'&&!e.d.boss){e.dist=Math.max(0,e.dist-22);}
   if(game.t-game.lastCritToast>6){game.lastCritToast=game.t;goro(e.x,e.y,null,true,2);toast(pick(L.critToast),'grimace_face','',1100);}}
- if(srcT&&srcT.k==='sniper'&&srcT.mut===0&&!e.d.boss&&e.hp>0&&e.hp<e.maxHp*(srcT.over===0?.35:.2)){e.hp=0;float(e.x,e.y-e.d.r-6,'処刑（は？）','#7ab8ff',true);}
- if(e.hp<=0)kill(e,srcT);}
+ if(srcT&&srcT.k==='senpai'&&srcT.over===0&&!e.d.boss&&e.hp>0&&e.hp<e.maxHp*.2){e.hp=0;float(e.x,e.y-e.d.r-6,'処刑（は？）','#7ab8ff',true);}
+ if(e.hp<=0){kill(e,srcT);if(Math.random()<.18)float(e.x,e.y-e.d.r-8,pick(['あっ、そっかぁ','やりますねぇ','ファッ！？','ンアッー！','いいゾ〜これ']),'#ffd36b',false,.9);}}
 function splat(c){if(splats.length>=(RM?8:LITE?14:32))splats.shift();const dirt=['#c9b08a','#8a6a40','#6b5232','#4a3a1c','#7a7a2a','#5a2a1a','#3b3020'];splats.push({x:Math.random(),y:Math.random(),r:22+Math.random()*48,c:c||dirt[Math.floor(Math.random()*dirt.length)],t:3.6,T:3.6,n:4+Math.floor(Math.random()*5),s:Math.random()*9});}
 function gib(e){if(gibs.length>=(RM?5:LITE?7:16))return;gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*260,vy:-180-Math.random()*160,a:0,va:(Math.random()-.5)*16,r:e.d.r,t:1.15});if(!RM&&!LITE&&Math.random()<.6)gibs.push({img:e.d.img,x:e.x,y:e.y,vx:(Math.random()-.5)*180,vy:-100-Math.random()*100,a:0,va:(Math.random()-.5)*10,r:e.d.r*.55,t:.8});}
 function stunTowers(x,y,R,dur){let n=0;for(const t of towers){if(TOWERS[t.k].onPath)continue;if((t.x-x)**2+(t.y-y)**2<R*R){t.stunT=Math.max(t.stunT,dur);n++;}}
@@ -1801,7 +1807,7 @@ const V18={
   ['冷えてるゾ','アイスティー砲の命中音。結露で床がぬるい','No.016'],
   ['ぬるッ！','泥だまり設置時。靴が取れます','No.017'],
   ['ブーン…','ハエ発生器の稼働音。ステルスがバレる','No.018'],
-  ['ｱｰｲｷｿ','Wiki収録語録','No.019'],['ありますあります','Wiki収録語録','No.020'],['いいねぇー','伸ばす語録（余韻）','No.021'],['いいよ、来いよ！胸にかけて！胸に！','強調語録（威圧）','No.022'],['いきますよーいくいく','伸ばす語録（余韻）','No.023'],['行きませんか？行きましょうよ','疑問形語録','No.024'],['痛いですね…これは痛い','沈黙語録（意味深）','No.025'],['王道を征く','確信の語録','No.026'],['オッスお願いしまーす！','強調語録（威圧）','No.027'],['おっ大丈夫か大丈夫か？','疑問形語録','No.028'],['お前どう？','疑問形語録','No.029'],['お前のことが好きだったんだよ！','強調語録（威圧）','No.030'],['俺もやったんだからさ','Wiki収録語録','No.031'],['菅野美穂','固有名詞語録','No.032'],['今日タァイムはどう？伸びた？伸びない？','疑問形語録','No.033'],['†悔い改めて†','厨二語録','No.034'],['ｸｩｰﾝ...','沈黙語録（意味深）','No.035'],['クチアケーナ・ホラ','伸ばす語録（余韻）','No.036'],['こ、去年ですね','時系列語録','No.037'],['こ↑こ↓','イントネ語録','No.038'],['この辺にぃ、うまいラーメン屋の屋台、来てるらしいっすよ','勧誘語録','No.039'],['これもうわかんねぇな','混乱語録','No.040'],['しかし、修行やってます。いつの日か世界を救うと信じて。','覚悟語録（迫真）','No.041'],['じゃけん夜行きましょうね～','誘導語録','No.042'],['しょうがねぇなぁ（悟空）','諦観語録','No.043'],['そして天は鳴き、大地は震えるだろうね','壮大語録','No.044'],['大会近いからね、しょうがないね','言い訳語録','No.045'],['だいぶ溜まってんじゃんアゼルバイジャン','謎語録','No.046'],['多少はね？','疑問形語録','No.047'],['出そうと思えば','可能性語録','No.048'],['ダメみたいですね','諦観語録','No.049'],['ちょっと歯ぁ当たんよ～（指摘）','指摘語録','No.050'],['であることを意味していますよねぇ','論理語録','No.051'],['で、出ますよ…','沈黙語録（意味深）','No.052'],['ないです','否定語録','No.053'],['ヌッ！','強調語録（威圧）','No.054'],['喉渇いた…喉渇かない？','疑問形語録','No.055'],['伸びた？伸びない？','疑問形語録','No.056'],['入って、どうぞ！','歓迎語録','No.057'],['白菜かけますね','料理語録','No.058'],['はっきりわかんだね','確信語録','No.059'],['バッチェ冷えてますよ','冷却語録','No.060'],['He didn't…he begin…','英語語録','No.061'],['ビール！ビール！','強調語録（威圧）','No.062'],['ピトン…ポチョン…（明鏡止水）','沈黙語録（意味深）','No.063'],['Foo↑気持ちいい～','快感語録','No.064'],['ふたいたい','謎語録','No.065'],['ブッチッパ！','強調語録（威圧）','No.066'],['ほらいくどー','開始語録','No.067'],['MURさん夜中腹減んないすか？','疑問形語録','No.068'],['見とけよ見とけよ～','注目語録','No.069'],['焼く時は！','強調語録（威圧）','No.070'],['やめたくなりますよなんか部っ活ぅ～','弱音語録','No.071'],['やんほぬ','謎語録','No.072'],['You have a 夜中腹減んないすか？','英語語録','No.073'],['わかるわかる（タメ口）','同意語録','No.074'],['あーっ！おぅううっす！おーっ！うーっす！','挨拶語録','No.075'],['ありがとナス！','感謝語録','No.076'],['ウッソだろお前ｗｗｗ','驚愕語録','No.077'],['お金タダでいいから','提案語録','No.078'],['かしこまり！','承諾語録','No.079'],['悲しいなぁ','感傷語録','No.080'],['キメてるんだろ？くれよ…','疑問形語録','No.081'],['殺されてぇかお前','脅迫語録','No.082'],['髪なんか必要ねぇんだよ！','強調語録（威圧）','No.083'],['最後の一発くれてやるよオラ！','強調語録（威圧）','No.084'],['縛らなきゃ（使命感）','使命語録','No.085'],['総理大臣の誕生か？','疑問形語録','No.086'],['つべこべ言わずに来いホイ','命令語録','No.087'],['とか何とかわけわかんねーこと叫びながらコイツ目がイっちゃてる','長文語録','No.088'],['ドジョウと俺のさ、子供ができたらどうする？','疑問形語録','No.089'],['20人以上、30人以下？','疑問形語録','No.090'],['卍解～','厨二語録','No.091'],['ムラムラジェラシーを感じる','感情語録','No.092'],['もう許せるぞオイ！','強調語録（威圧）','No.093'],['知らねーよ、そんなの','否定語録','No.094'],['いつしか雨はやみ、そこには虹がかかるんだよなぁ・・・','詩的語録','No.095'],['いつもの','定番語録','No.096'],['淫夢要素はありません','否定語録','No.097'],['汚汚汚～～～～～～～～～','擬音語録','No.098'],['オッスオッス！','挨拶語録','No.099'],['親の顔より見た光景','慣用語録','No.100'],['俺達の雑音に負けるな','応援語録','No.101'],['勝手にたまげてろ','命令語録','No.102'],['関係ないだろ！いい加減にしろ！','怒り語録','No.103'],['がんばれ！','応援語録','No.104'],['きたない','評価語録','No.105'],['くさい（確信）','評価語録','No.106'],['くさそう','評価語録','No.107'],['ケツかな？','疑問形語録','No.108'],['こいついつも疲れてんな','観察語録','No.109'],['ここすき','評価語録','No.110'],['実家のような安心感','比喩語録','No.111'],['すき','評価語録','No.112'],['世界一やお前！','称賛語録','No.113'],['誰？','疑問形語録','No.114'],['ひでたるとまひろじゅんぺい','固有名詞語録','No.115'],['二人は幸せなキスをして終了','締め語録','No.116'],['もっとやれ','命令語録','No.117'],['桃かな？','疑問形語録','No.118'],
+  ['ｱｰｲｷｿ','Wiki収録語録','No.019'],['ありますあります','Wiki収録語録','No.020'],['いいねぇー','伸ばす語録（余韻）','No.021'],['いいよ、来いよ！胸にかけて！胸に！','強調語録（威圧）','No.022'],['いきますよーいくいく','伸ばす語録（余韻）','No.023'],['行きませんか？行きましょうよ','疑問形語録','No.024'],['痛いですね…これは痛い','沈黙語録（意味深）','No.025'],['王道を征く','確信の語録','No.026'],['オッスお願いしまーす！','強調語録（威圧）','No.027'],['おっ大丈夫か大丈夫か？','疑問形語録','No.028'],['お前どう？','疑問形語録','No.029'],['お前のことが好きだったんだよ！','強調語録（威圧）','No.030'],['俺もやったんだからさ','Wiki収録語録','No.031'],['菅野美穂','固有名詞語録','No.032'],['今日タァイムはどう？伸びた？伸びない？','疑問形語録','No.033'],['†悔い改めて†','厨二語録','No.034'],['ｸｩｰﾝ...','沈黙語録（意味深）','No.035'],['クチアケーナ・ホラ','伸ばす語録（余韻）','No.036'],['こ、去年ですね','時系列語録','No.037'],['こ↑こ↓','イントネ語録','No.038'],['この辺にぃ、うまいラーメン屋の屋台、来てるらしいっすよ','勧誘語録','No.039'],['これもうわかんねぇな','混乱語録','No.040'],['しかし、修行やってます。いつの日か世界を救うと信じて。','覚悟語録（迫真）','No.041'],['じゃけん夜行きましょうね～','誘導語録','No.042'],['しょうがねぇなぁ（悟空）','諦観語録','No.043'],['そして天は鳴き、大地は震えるだろうね','壮大語録','No.044'],['大会近いからね、しょうがないね','言い訳語録','No.045'],['だいぶ溜まってんじゃんアゼルバイジャン','謎語録','No.046'],['多少はね？','疑問形語録','No.047'],['出そうと思えば','可能性語録','No.048'],['ダメみたいですね','諦観語録','No.049'],['ちょっと歯ぁ当たんよ～（指摘）','指摘語録','No.050'],['であることを意味していますよねぇ','論理語録','No.051'],['で、出ますよ…','沈黙語録（意味深）','No.052'],['ないです','否定語録','No.053'],['ヌッ！','強調語録（威圧）','No.054'],['喉渇いた…喉渇かない？','疑問形語録','No.055'],['伸びた？伸びない？','疑問形語録','No.056'],['入って、どうぞ！','歓迎語録','No.057'],['白菜かけますね','料理語録','No.058'],['はっきりわかんだね','確信語録','No.059'],['バッチェ冷えてますよ','冷却語録','No.060'],["He didn't…he begin…",'英語語録','No.061'],['ビール！ビール！','強調語録（威圧）','No.062'],['ピトン…ポチョン…（明鏡止水）','沈黙語録（意味深）','No.063'],['Foo↑気持ちいい～','快感語録','No.064'],['ふたいたい','謎語録','No.065'],['ブッチッパ！','強調語録（威圧）','No.066'],['ほらいくどー','開始語録','No.067'],['MURさん夜中腹減んないすか？','疑問形語録','No.068'],['見とけよ見とけよ～','注目語録','No.069'],['焼く時は！','強調語録（威圧）','No.070'],['やめたくなりますよなんか部っ活ぅ～','弱音語録','No.071'],['やんほぬ','謎語録','No.072'],['You have a 夜中腹減んないすか？','英語語録','No.073'],['わかるわかる（タメ口）','同意語録','No.074'],['あーっ！おぅううっす！おーっ！うーっす！','挨拶語録','No.075'],['ありがとナス！','感謝語録','No.076'],['ウッソだろお前ｗｗｗ','驚愕語録','No.077'],['お金タダでいいから','提案語録','No.078'],['かしこまり！','承諾語録','No.079'],['悲しいなぁ','感傷語録','No.080'],['キメてるんだろ？くれよ…','疑問形語録','No.081'],['殺されてぇかお前','脅迫語録','No.082'],['髪なんか必要ねぇんだよ！','強調語録（威圧）','No.083'],['最後の一発くれてやるよオラ！','強調語録（威圧）','No.084'],['縛らなきゃ（使命感）','使命語録','No.085'],['総理大臣の誕生か？','疑問形語録','No.086'],['つべこべ言わずに来いホイ','命令語録','No.087'],['とか何とかわけわかんねーこと叫びながらコイツ目がイっちゃてる','長文語録','No.088'],['ドジョウと俺のさ、子供ができたらどうする？','疑問形語録','No.089'],['20人以上、30人以下？','疑問形語録','No.090'],['卍解～','厨二語録','No.091'],['ムラムラジェラシーを感じる','感情語録','No.092'],['もう許せるぞオイ！','強調語録（威圧）','No.093'],['知らねーよ、そんなの','否定語録','No.094'],['いつしか雨はやみ、そこには虹がかかるんだよなぁ・・・','詩的語録','No.095'],['いつもの','定番語録','No.096'],['淫夢要素はありません','否定語録','No.097'],['汚汚汚～～～～～～～～～','擬音語録','No.098'],['オッスオッス！','挨拶語録','No.099'],['親の顔より見た光景','慣用語録','No.100'],['俺達の雑音に負けるな','応援語録','No.101'],['勝手にたまげてろ','命令語録','No.102'],['関係ないだろ！いい加減にしろ！','怒り語録','No.103'],['がんばれ！','応援語録','No.104'],['きたない','評価語録','No.105'],['くさい（確信）','評価語録','No.106'],['くさそう','評価語録','No.107'],['ケツかな？','疑問形語録','No.108'],['こいついつも疲れてんな','観察語録','No.109'],['ここすき','評価語録','No.110'],['実家のような安心感','比喩語録','No.111'],['すき','評価語録','No.112'],['世界一やお前！','称賛語録','No.113'],['誰？','疑問形語録','No.114'],['ひでたるとまひろじゅんぺい','固有名詞語録','No.115'],['二人は幸せなキスをして終了','締め語録','No.116'],['もっとやれ','命令語録','No.117'],['桃かな？','疑問形語録','No.118'],
  ],
  seichi:[
   {n:'下北沢駅',d:'伝説の起点。当館の名を冠する聖地（非公認）'},
