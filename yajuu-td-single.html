@@ -52,6 +52,7 @@ body.compact #bWave.go:not(:disabled),body.portrait #bWave.go:not(:disabled){min
 #info .row{display:flex;gap:8px;align-items:center}
 #info img{width:48px;height:48px;border-radius:50%;object-fit:cover;border:3px solid #ffd36b;flex:none}
 #info .st{line-height:1.5;margin-top:4px}
+#info .job{color:#ffd36b;font-weight:800}
 #info .btns{display:flex;gap:6px;margin-top:8px}
 #info .btns button{flex:1;font-size:14px;padding:5px}
 #info .hint{color:#a8977b;margin-top:4px}
@@ -130,7 +131,7 @@ body.portrait #hud{padding:4px 8px;gap:6px}
 body.portrait #hud .stats{flex-basis:100%;gap:10px}
 body.portrait #hud .avatar{width:34px;height:34px}
 body.portrait #hud .stat{font-size:16px}
-body.portrait #nextinfo{flex:1;text-align:right;min-width:0}
+body.portrait #nextinfo{flex:1;text-align:right;min-width:0;white-space:normal;line-height:1.15;max-height:2.4em;overflow:hidden;text-overflow:clip}
 body.portrait #dailyInfo,body.compact #dailyInfo{max-height:3.9em}
 body.portrait #hud .ctl{flex-basis:100%}
 body.portrait #bWave{flex:1;font-size:16px}
@@ -199,7 +200,7 @@ body.compact #shop{flex:1 1 auto;min-height:100px;overflow-y:auto;grid-auto-rows
 body.compact #info{flex-shrink:0;overflow:hidden}
 body.compact #info .st,body.portrait #info .st{overflow:hidden;max-height:2.8em;line-height:1.3}
 body.portrait #info .btns{width:100%;flex-wrap:nowrap}
-body.portrait #info .btns button.mut{flex:1 1 0;min-width:0;max-width:none}
+body.portrait #info .btns button.mut{flex:1 1 0;min-width:0;max-width:none;white-space:normal;overflow-wrap:anywhere;line-height:1.2}
 body.portrait #info .btns #bSell{flex:0 0 auto;min-width:72px;max-width:90px;font-size:11px;white-space:normal;line-height:1.15;overflow:hidden}
 #story{background:radial-gradient(ellipse at center,rgba(60,20,10,.88),rgba(8,4,2,.96));z-index:22}
 .stChap{font-weight:900;font-size:clamp(20px,5.5vw,34px);color:#ffd36b;text-shadow:0 0 12px #ff5c3c,0 3px 0 #000;margin-bottom:14px;letter-spacing:.04em}
@@ -702,7 +703,7 @@ function siteDrip(t,d){if(!d||RM||fx.length>220)return;if(Math.random()>.55)retu
  if(d.flies&&Math.random()<.5){const a=Math.random()*6.28;pushFx({x:t.x+Math.cos(a)*12,y:t.y+Math.sin(a)*10,vx:Math.cos(a)*35,vy:Math.sin(a)*35,t:.4,c:'#9ac84a',spark:true,sz:2});}
  if(t.over!=null&&Math.random()<.4)pushFx({x:t.x+(Math.random()-.5)*16,y:t.y-8,vx:(Math.random()-.5)*40,vy:-60-Math.random()*40,t:.45,c:Math.random()<.5?'#ffd36b':'#c98aff',spark:true,sz:3});
 }
-function flavor(text,img,cls,ms,gap=3.5){if(game.t-game.lastFlavor<gap)return;game.lastFlavor=game.t;toast(text,img,cls,ms);}
+function flavor(text,img,cls,ms,gap=3.5){if(game.inWave&&!/boss|bad/.test(cls||''))return;if(game.t-game.lastFlavor<gap)return;game.lastFlavor=game.t;toast(text,img,cls,ms);}
 
 // ---------- waves ----------
 function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math.round(n*m);for(let i=0;i<n;i++)L2.push({k,gap:gap/Math.sqrt(m)});};
@@ -728,8 +729,7 @@ function waveList(w){const L2=[];const m=S().eCount;const add=(k,n,gap)=>{n=Math
 function hpScale(w){return Math.pow(1+.30*(w-1),1.5)*(w<=3?.9:1);}
 function startWave(){if(game.inWave||game.over||stQ)return;{const bk='b'+(game.wave+1);if(STORY[bk]&&!(game.seen&&game.seen[bk])&&storyOn){playStory(bk,startWave);return;}}game.wave++;game.inWave=true;game._bp50=0;game._bp25=0;spawnQ=waveList(game.wave);game.spawnT=.5;stageEvent();waveCard();
  try{for(const t of towers){if(t.k==='mud'&&t.over===1){const R=tStats(t).range*1.4;siteBurst(t.x,t.y,'#8a6a40',{n:28,R,shake:5,txt:'汚泥噴出！',big:true,sweat:true,sp:220,lw:4,dc:'#5a4030',dr:R*.5,alt:'#6b5232'});for(const e of enemies){if(!e.dead&&(e.x-t.x)**2+(e.y-t.y)**2<=R*R)hurt(e,35+8*t.lvl,t,{noCrit:true});}splat('#6b5232');snd(100,.2,'sawtooth',.05,-40);}}}catch(_){}
- if(game.wave%5===0){const fire=()=>{game._bossToastAt=performance.now();toast(`迫真ボス襲来！ウェーブ ${game.wave}（逃げるんだよォ！）（逃げない）`,'collar_card','boss shake',3200);};
-  if(game._leakNow&&performance.now()-game._leakNow<2800)setTimeout(fire,1800);else fire();shake(8);}else{toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);shake(3);}
+ if(game.wave%5===0){game._bossToastAt=performance.now();shake(8);}else{toast(`ウェーブ ${game.wave}　${pick(L.waveStart)}`,'navy_trio_card','',1600);shake(3);}
  snd(220,.25,'sawtooth',.05,220);updHud();}
 function spawn(k,dist=0,noAff,rIdx){const d=ENEMIES[k];if(!d)return null;let aff=null;const rI=rIdx!=null?rIdx:pickRoute();
  let aff2=null;if(!noAff&&!d.boss&&k!=='mini'&&game.wave>=6&&Math.random()<Math.min(.5,(game.wave-5)*.028*S().eliteMul))aff=AFK[Math.floor(Math.random()*AFK.length)];
@@ -738,7 +738,7 @@ function spawn(k,dist=0,noAff,rIdx){const d=ENEMIES[k];if(!d)return null;let aff
  let hp=d.hp*hpScale(game.wave)*S().eHp*(game.endless?1+(game.wave-15)*.12:1);if(aff==='giant'||aff2==='giant')hp*=2;if(aff==='hard'||aff2==='hard')hp*=1.15;const sh=d.shield?hp*d.shield:0;const p=posAt(dist,ROUTES[rI]);
  const e={r:rI,k,d,hp,maxHp:hp,shield:sh,maxSh:sh,dist,slowT:0,slow:0,stunT:0,pois:0,poisT:0,poisSrc:null,healCd:1,sumT:d.summon||0,vis:!d.stealth,enr:false,x:p.x,y:p.y,hitT:0,id:Math.random(),aff,aff2,mark:0,markV:0,jumpT:d.jump?2.5:0,burT:d.burrow?3:0,buried:0,phase:0,banT:4,linkId:null,haste:0};if(aff==='phase'||aff2==='phase')e.vis=false;if(aff==='link'||aff2==='link'){const o=enemies.find(x=>!x.dead&&(x.aff==='link'||x.aff2==='link')&&!x.linkId);if(o){e.linkId=o.id;o.linkId=e.id;}}if(aff)game.elites++;enemies.push(e);
  if(d.boss){$('bossbar').style.display='flex';if($('bossimg')){$('bossimg').src=src(d.img);$('bossimg').style.cssText=cssf(d.img);}snd(90,.6,'sawtooth',.08,-40);
-  const cool=!(game._bossToastAt&&performance.now()-game._bossToastAt<2800);game._bossToastAt=performance.now();if(cool)toast(pick(d.intro),(d.img||'').split('#')[0],'boss shake',3000);big('迫真','#ff3c8a',1.4);shake(10);if(navigator.vibrate&&TOUCH)try{navigator.vibrate([60,40,60])}catch(_){}}
+  game._bossToastAt=performance.now();if(!(game.card&&game.card.t>0))big('迫真','#ff3c8a',1.4);shake(10);if(navigator.vibrate&&TOUCH)try{navigator.vibrate([60,40,60])}catch(_){}}
  try{if(d.dash&&!game._seenDash){game._seenDash=1;toast('新敵：野獣ステップ後輩　被弾でサッーと加速するぞ','navy_center_face','',2600);}
   if((aff==='tipsy'||aff2==='tipsy')&&!game._seenTipsy){game._seenTipsy=1;toast('ふらふらエリート！歩幅が揺れる（減速で止めろ）','collar_face','',2200);}
   if(d.jump&&!game._seenJump){game._seenJump=1;toast('跳び後輩！壁を飛び越える（減速で止めろ）','navy_center_face','',2200);}
@@ -921,7 +921,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
  if(game.shake>0)game.shake=Math.max(0,game.shake-dt*22);
  if(game.big){game.big.t-=dt;if(game.big.t<=0)game.big=null;}
  const walls=towers.filter(t=>t.k==='wall'),jams=enemies.filter(e=>!e.dead&&e.d.jam);
- if(enemies.some(e=>e&&e.d&&e.d.boss)){game.banT-=dt;if(game.banT<=0){game.banT=7;const b=enemies.find(e=>e&&e.d&&e.d.boss);if(b&&b.d&&b.d.ban){toast(pick(b.d.ban),(b.d.img||'').split('#')[0],'boss',1800);float(b.x,b.y-b.d.r-20,'（迫真）','#ff5c8a',true);}}}
+ if(enemies.some(e=>e&&e.d&&e.d.boss)){game.banT-=dt;if(game.banT<=0){game.banT=14;if(!(game.card&&game.card.t>0)){const b=enemies.find(e=>e&&e.d&&e.d.boss);if(b&&b.d&&b.d.ban){toast(pick(b.d.ban),(b.d.img||'').split('#')[0],'boss',1800);float(b.x,b.y-b.d.r-20,'（迫真）','#ff5c8a',true);}}}}
  for(const e of enemies){if(e.dead)continue;const d=e.d;
   if(d.stealth||e.aff==='phase'||e.aff2==='phase'||e.buried)e.vis=e.buried?false:(!!s.reveal||towers.some(t=>{const dd=TOWERS[t.k];if(!dd)return false;const fly=!!(dd.flies||(t.k==='gaze'&&t.over===1));const R=fly?(tStats(t).range):92;return (!dd.onPath||fly)&& (t.x-e.x)**2+(t.y-e.y)**2<R*R;}));
   else if(s.night||game.gazeNight>0)e.vis=towers.some(t=>{const dd=TOWERS[t.k];return dd&&!dd.onPath&&(t.x-e.x)**2+(t.y-e.y)**2<150*150;});
@@ -1085,7 +1085,7 @@ const STAGE_EV=[
  {n:'消灯タイム',ok:()=>true,go(){game.gazeNight=Math.max(game.gazeNight||0,7);toast('消灯タイム！タワーから離れると見えない（見とけよ）','collar_card','bad',2400);flash();}},
  {n:'たかり襲撃',ok:()=>true,go(){const rs=ROUTES.filter(r=>r.open);for(let i=0;i<5;i++){const r=rs[i%Math.max(1,rs.length)]||ROUTES[0];const ri=Math.max(0,ROUTES.indexOf(r));const e=spawn('thief',(r.total||200)*(.12+.14*i),true,ri);if(e)float(e.x,e.y-16,'金！','#ffd36b');}toast('たかり襲撃！財布を守れ（やめちくり〜）','navy_right_face','bad shake',2400);}},
  {n:'増員コール',ok:()=>true,go(){for(let i=0;i<8;i++)spawnQ.push({k:i%3===0?'sprint':'kohai',gap:.35});toast('増員コール！後輩がおかわり（そうだよ）','navy_left_face','bad',2200);}}];
-function stageEvent(){game.stageEv='';if(game.wave<2)return;if(game.wave%5!==0&&Math.random()>.65)return;const pool=STAGE_EV.filter(e=>e.ok());const ev=pool[Math.floor(Math.random()*pool.length)];game.stageEv=ev.n;ev.go();mapCache=null;goro(W/2,H/2,null,true,2);shake(8);big(ev.n,'#ffb03a',1.1);CAM.tintT=.6;CAM.tint='#ffb03a';punch(W/2,H/2,1.08,.5,0,1);snd(330,.3,'square',.05,-120);hudDirty=true;renderPerks();try{updHud();}catch(_){}}
+function stageEvent(){game.stageEv='';if(game.wave<2)return;if(game.wave%5!==0&&Math.random()>.65)return;const pool=STAGE_EV.filter(e=>e.ok());const ev=pool[Math.floor(Math.random()*pool.length)];game.stageEv=ev.n;ev.go();mapCache=null;const quiet=game.wave%5===0;if(!quiet){goro(W/2,H/2,null,true,2);big(ev.n,'#ffb03a',1.1);}shake(8);CAM.tintT=.6;CAM.tint='#ffb03a';punch(W/2,H/2,1.08,.5,0,1);snd(330,.3,'square',.05,-120);hudDirty=true;renderPerks();try{updHud();}catch(_){}}
 function stageClear(){const had=game.stageEv;for(const r of ROUTES)r.open=!r.br;rebuildTiles();BLOCK=new Set();PUDDLE=[];game.stageEv='';game.bridgeRush=false;
  if(had==='迫真スポット移動'){}else HOT=new Set((MAP.hot||[]).map(([x,y])=>x+','+y).filter(k=>!pathTiles.has(k)));
  try{if(S()&&S().forceBridge){for(const r of ROUTES)if(r.br)r.open=true;rebuildTiles();}}catch(_){}
@@ -1146,7 +1146,7 @@ $('bEndless').onclick=()=>{$('end').classList.remove('on');game.over=false;game.
 // ---------- UI ----------
 function buildShop(){const box=$('shop');box.innerHTML='';TKEYS.forEach((k,i)=>{const d=TOWERS[k];const el=document.createElement('div');el.className='shop';el.style.setProperty('--rc',d.ring);el.dataset.k=k;
  el.innerHTML=`<img src="${src(d.img)}" style="${cssf(d.img)}"><div style="min-width:0;max-width:100%"><div class="nm"></div><div class="ds"></div></div><div class="cost"></div><div class="key">${(HOTKEYS[i]||"").toUpperCase()}</div>`;
- el.querySelector('.nm').textContent=d.short;el.querySelector('.ds').textContent=(d.role?`[${d.role}] `:'')+d.desc;el.title=d.name+'：'+(d.vs||d.desc);el.onclick=()=>selectShop(k);box.appendChild(el);});updShop();}
+ el.querySelector('.nm').textContent=d.short;el.querySelector('.ds').textContent=(d.role?`[${d.role}] `:'')+(d.onPath?'道の上':d.wall?'道の横':'道の外')+'・'+((d.vs||d.desc).split('。')[0]);el.title=d.name+'：'+(d.vs||d.desc);el.onclick=()=>selectShop(k);box.appendChild(el);});updShop();}
 function updShop(){document.querySelectorAll('.shop').forEach(el=>{const k=el.dataset.k,c=cost(k),ce=el.querySelector('.cost');ce.textContent=c?c+'G':'タダ';ce.classList.toggle('free',!c);el.classList.toggle('sel',sel===k);el.classList.toggle('poor',game.gold<c);});}
 function selectShop(k){sel=sel===k?null:k;picked=null;pending=null;showTapHint(false);updShop();renderInfo();}
 function updHud(){hudDirty=false;try{if($('gold'))$('gold').textContent=game.gold;if($('lives'))$('lives').textContent=game.lives;if($('wave'))$('wave').textContent=game.wave;const bw=$('bWave');if(bw){bw.disabled=game.inWave||game.over;bw.textContent=game.inWave?'戦闘中…':(TOUCH?'ウェーブ開始':'ウェーブ開始 (Space)');}
@@ -1191,7 +1191,7 @@ function renderInfo(){const box=$('info');if(!box)return;
   else $('bUp').onclick=()=>upgrade(t);
   $('bSell').onclick=()=>sell(t);updInfoBtns();}
  else if(sel){const d=TOWERS[sel];if(!d){sel=null;return renderInfo();}box.innerHTML=`<div class="wrapI"><div class="row"><img src="${src(d.img)}" style="border-color:${d.ring};${cssf(d.img)}"><div><b></b>　${cost(sel)?cost(sel)+'G':'タダ'}<div class="st" id="selDesc"></div><div class="hint">${d.onPath?'道の上に置く。':''}${TOUCH?'マップを2回タップで設置':'マップをクリックで設置（Escで解除）'}</div></div></div></div>`;box.querySelector('b').textContent=d.name;
-  $('selDesc').innerHTML=`${d.desc}<br><span style="color:#ff9a5a">${d.role?`役割：${d.role}`:''}${d.vs?`　${d.vs}`:''}</span><br>覚醒(Lv${S().mutLvl})：${d.muts[0].n}/${d.muts[1].n}　極(Lv${S().maxLvl})：${d.overs[0].n}/${d.overs[1].n}`;}
+  $('selDesc').innerHTML=`<span class="job">${d.role||''}</span>　${d.onPath?'道の上に置く':d.wall?'道の横に置く':'道の外に置く'}。${d.vs||''}<br><span style="color:#c9b894">覚醒：${d.muts[0].n}／${d.muts[1].n}　極：${d.overs[0].n}／${d.overs[1].n}</span>`;}
  else{const pk=game.perks.length?`パーク ${game.perks.length}枚：${[...new Set(game.perks)].join('・')}`:'';
   box.innerHTML=`<div class="wrapI"><div class="row"><img src="${ASSETS.senpai_face}"><div><b>先輩「まずタワー置こうぜ」</b><div class="hint" id="idleHint"></div></div></div></div>`;
   const base=(document.body.classList.contains('portrait')&&pk)?pk:(TOUCH?'タワーをタップ→マップを2回タップで設置。Lv5で極覚醒。':'タワーを選んでマップに設置。覚醒後Lv5で極覚醒A/B。準備ができたら「ウェーブ開始」。');
@@ -1951,6 +1951,7 @@ const V18={
   {h:'外典　v55小さな磨き',img:'senpai_face',t:'見とけよ狙撃が応援／看病／自爆を優先。覗きと応援の初出。王道を征く。'},
   {h:'外典　v56小さな磨き',img:'collar_card',t:'ホラホラ声援のコンボ金が生きる。生ビールで酔う。看病／分身の初出。王道を征く。'},
   {h:'外典　v58ボスの一手',img:'grimace_face',t:'ボスごとに配置と覚醒の使い分けが効く。迫真ボスは近くほど効く。部室の主はおかわり密集。眼光は消灯で遠い塔が半減。淫獣は後退するので中盤〜出口が要る。特定覚醒は必須ではない。敗北時は実ランの編成から一手を出す。王道を征く。'},
+  {h:'外典　v59いま何が起きてるか',img:'senpai_face',t:'要素は足さない。ボス予告はカードとbosstipに一本化。上段の一行が脅威・置く仕事・次の一手。塔を選べば役割と覚醒の効果が短く読める。淫夢の名前はタグに残す。王道を征く。'},
  ],
  goroku:[
   ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
@@ -2054,7 +2055,7 @@ const V18={
   map:()=>MAPS.map((m,i)=>ent(['title_senpai','navy_trio_card','trio_sepia_card','locker_right_face','collar_card'][i%5],esc(m.name),esc(m.desc),'攻略：'+esc(m.tip)+'　相性：'+esc(m.fav))).join(''),
   sk:()=>SK.map(s=>`<div class="ent"><div style="font-size:40px">${s.ic}</div><div><h4>${esc(s.n)} <small>(${s.k.toUpperCase()}) 気合${s.cost}／CD${s.cd}s</small></h4><div>${esc(s.d)}</div></div></div>`).join('')+(typeof SKINS!=='undefined'?'<h4 style="color:#ffd36b">塔スキン</h4>'+SKINS.map(s=>'・'+esc(s.n)+'：'+esc(s.d)).join('<br>'):''),
   gal:()=>'<div class="gal">'+Object.keys(ASSETS).filter(n=>!n.startsWith('wiki/')).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
-  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','新塔は出ない。胸ぐらアイスティー・地雷泥床・視線ハエ大群が現行の凍結／減速床／看破'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','同じ810地雷の覚醒差。爆発は一発、泥床は何度でも踏める持続減速'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）'],['ランが似るのは？','シチュ・舞台・曜日デイリー・野獣ステップ後輩・ふらふら。上段HUDにシチュ名が出る（v48）'],['ボスで詰む','特定覚醒は必須じゃない。配置を変えるか別の覚醒でも対処できる。敗北画面の一手を読め（王道を征く）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
+  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','新塔は出ない。胸ぐらアイスティー・地雷泥床・視線ハエ大群が現行の凍結／減速床／看破'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','同じ810地雷の覚醒差。爆発は一発、泥床は何度でも踏める持続減速'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）'],['ランが似るのは？','シチュ・舞台・曜日デイリー・野獣ステップ後輩・ふらふら。上段HUDにシチュ名が出る（v48）'],['ボスで詰む','上段の一行とボス下の短文がいまの対処。特定覚醒は必須じゃない。敗北画面の一手を読め（王道を征く）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
  };
  const jumpLore=id=>{show('lore');requestAnimationFrame(()=>{const el=$(id);if(el)el.scrollIntoView({block:'start',behavior:'smooth'});});};
  const show=k=>{o.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.k===k));const c=$('cdx');c.innerHTML=R[k]();c.scrollTop=0;
@@ -2078,7 +2079,7 @@ const V19={dmg:LS('yajuuTD_dmgnum',false),clear:LS('yajuuTD_clear',false),log:[]
 #v19log.on{display:block}#v19log div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast .n19{background:#ff3c3c;color:#fff;border-radius:10px;padding:0 6px;margin-left:6px;font-size:12px}
 .toast.pin{outline:2px solid #fff6}
-body.portrait #v19i,body.compact #v19i{font-size:11px}body.portrait #v19i .r{max-width:200px}
+body.portrait #v19i,body.compact #v19i{display:none!important}
 `;document.head.appendChild(st);
 const stg=$('stage');const i=document.createElement('div');i.id='v19i';stg.appendChild(i);const lg=document.createElement('div');lg.id='v19log';stg.appendChild(lg);
 const ctl=document.querySelector('#hud .ctl');const mk=(id,t,f)=>{const b=document.createElement('button');b.id=id;b.title=t;b.onclick=f;ctl.insertBefore(b,ctl.firstChild);return b;};
@@ -2119,8 +2120,8 @@ function drawV19(){if(!game)return;const sc=view.k*view.dpr,_z=CAM.z;const [vx,v
  // route entry warnings: count queued per open route
  if(game.inWave&&spawnQ.length){ROUTES.forEach((r,i)=>{if(r.open===false||!r.wp||!r.wp.length)return;const a=r.wp[0],b=r.wp[1]||a;const px=Math.max(14,Math.min(W-14,a.x!=null?a.x:a[0])),py=Math.max(14,Math.min(H-14,a.y!=null?a.y:a[1]));const [x,y]=P(px,py);ctx.globalAlpha=.6+.4*Math.sin(tt*6+i);ctx.fillStyle='#ff3c3c';ctx.beginPath();ctx.arc(x,y,13,0,7);ctx.fill();ctx.globalAlpha=1;ctx.fillStyle='#fff';ctx.font=`900 ${fs(12)} sans-serif`;ctx.fillText('▶',x,y);});}
  // selected tower status card
- if(picked&&towers.includes(picked)){const t=picked,d=TOWERS[t.k],[x,y]=P(t.x,t.y);const aw=[t.mut!=null&&d.muts[t.mut]?d.muts[t.mut].n:'',t.over!=null&&d.overs[t.over]?d.overs[t.over].n:''].filter(Boolean).join('／');const ln=[`${d.name} Lv${t.lvl}${aw?' ・'+aw:''}`];
-  if(d.wall)ln.push(`HP ${Math.ceil(t.hp)}/${Math.round(tStats(t).maxHp)}`);else if(t.thp!=null)ln.push(`耐久 ${Math.ceil(t.thp)}/${t.tmax}`);ln.push(`撃破 ${t.kills||0}${t.stunT>0?'・停止中':''}`);if(d.role)ln.push(`役割:${d.role}`);
+ if(picked&&towers.includes(picked)){const t=picked,d=TOWERS[t.k],[x,y]=P(t.x,t.y);const aw=[t.mut!=null&&d.muts[t.mut]?d.muts[t.mut].n:'',t.over!=null&&d.overs[t.over]?d.overs[t.over].n:''].filter(Boolean).join('／');const job=(window.__yajuu&&window.__yajuu.jobLine)?window.__yajuu.jobLine(t):(d.role||'');const ln=[`${d.name} Lv${t.lvl}`];
+  if(job)ln.push(job);if(aw)ln.push(aw);if(d.wall)ln.push(`HP ${Math.ceil(t.hp)}/${Math.round(tStats(t).maxHp)}`);else if(t.thp!=null)ln.push(`耐久 ${Math.ceil(t.thp)}/${t.tmax}`);ln.push(`撃破 ${t.kills||0}${t.stunT>0?'・停止中':''}`);
   ctx.font=`bold ${fs(11)} sans-serif`;const w=Math.max(...ln.map(s=>ctx.measureText(s).width))+14,h=ln.length*14+8;let bx=x+28,by=y-h/2;if(bx+w>VW())bx=x-28-w;by=Math.max(2,Math.min(VH()-h-2,by));
   ctx.fillStyle='rgba(15,10,5,.9)';ctx.strokeStyle='#ffd36b';ctx.lineWidth=2;ctx.fillRect(bx,by,w,h);ctx.strokeRect(bx,by,w,h);ctx.textAlign='left';ln.forEach((s,i)=>{ctx.fillStyle=i?'#e8dcc0':'#ffd36b';ctx.fillText(s,bx+7,by+11+i*14);});}
  ctx.restore();}
@@ -2498,13 +2499,38 @@ function injectLoseAdvice(){const a=loseAdvice();if(!a.length||!$('eText'))retur
 const _hurt58=hurt;hurt=function(e,dmg,srcT,o){o=o||{};let mul=1;try{mul=bossTacticMul(e,srcT,o);if(mul!==1)dmg*=mul;recBossHit(e,srcT,o,mul);}catch(_){}return _hurt58(e,dmg,srcT,o);};
 const _reset58=reset;reset=function(){_reset58();try{if(game)game.rec=recInit();}catch(_){}};
 const _wc58=waveCard;waveCard=function(){_wc58();try{applyBossCard();}catch(_){}};
-const _sw58=startWave;startWave=function(){const w0=game?game.wave:0;_sw58();try{if(game&&game.wave>w0&&game.wave%5===0){const bk=BOSSES[(game.wave/5-1)%4],t=BOSS_TACT[bk];if(t)toast(`${ENEMIES[bk].name}：${t.hint}`,'grimace_face','boss',2800);}}catch(_){}};
 const _sp58=spawn;spawn=function(k,dist,noAff,rIdx){const e=_sp58(k,dist,noAff,rIdx);try{if(e&&e.d&&e.d.boss)showBossTip(e.k);}catch(_){}return e;};
 const _upd58=update;update=function(dt){_upd58(dt);try{const el=$('bosstip');if(!el)return;const b=enemies.find(x=>x&&x.d&&x.d.boss&&!x.dead);if(!b){el.style.display='none';return;}const t=BOSS_TACT[b.k];if(!t){el.style.display='none';return;}el.textContent=(b.k==='boss3'&&game.gazeNight>0)?t.hint+'（消灯中）':t.hint;el.style.display='block';}catch(_){}};
 const _go58=gameOver;gameOver=function(){const was=game&&game.over;_go58();if(!was)try{injectLoseAdvice();}catch(_){}};
 if(game&&!game.rec)game.rec=recInit();
 
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,V27,SKINS,TITLES,recordRun,runScore,meta,hurt,BOSS_TACT,bossTacticMul,loseAdvice,noteLeak,isAoe,recInit};
+/* ===== v59: いま何が起きてるか ===== */
+function slimUI(){return document.body.classList.contains('portrait')||document.body.classList.contains('compact');}
+function placeHint(d){if(!d)return'';if(d.onPath)return'道の上';if(d.wall)return'道の横';return'道の外';}
+function jobLine(t){if(!t)return'';const k=t.k||t,d=TOWERS[k];if(!d)return'';const mut=t.k!=null?t.mut:null,over=t.k!=null?t.over:null;
+ const J0={senpai:'道の外の火力',trio:'周囲の塔を強化',collar:'範囲で敵を止める',cannon:'爆風で密集処理',bank:'金を稼ぐ',wall:'道の横の壁',mine:'道に置く罠',gaze:'敵を弱体化'};
+ const J={senpai:['クリで硬い敵を削る','連射で雑魚を倒す'],trio:['周囲の強化が広い','全体の攻撃を底上げ'],collar:['敵を押し戻す','凍らせて止める'],cannon:['着弾地点を燃やす','同心円で叩く'],bank:['所持金から利息','攻撃して集金'],wall:['触れた敵にトゲ','ゆっくり自己回復'],mine:['踏むと爆発','何度でも減速'],gaze:['被ダメを増やす','毒で削る']};
+ const O={senpai:['遠くの大物を先に撃つ','弾が貫通する'],trio:['周囲のクリを上げる','周囲を回復する'],collar:['押し戻し＋スタン','泡で酔わせる'],cannon:['焦土を長く燃やす','連鎖で盾を剥がす'],bank:['利息の上限アップ','集金が倍'],wall:['壊れるとき爆発','隣の壁とHP分担'],mine:['爆風が広がる','泥で掴む'],gaze:['バフを消して減速','見えない敵を看破']};
+ if(over!=null&&O[k])return O[k][over];if(mut!=null&&J[k])return J[k][mut];return J0[k]||d.role||'';}
+function nowLine(){if(!game)return'';const slim=slimUI();const left=(typeof spawnQ!=='undefined'?spawnQ.length:0)+enemies.filter(e=>e&&!e.dead).length;
+ if(sel&&TOWERS[sel]){const d=TOWERS[sel];return`置く:${d.short}（${d.role}） ${placeHint(d)}`;}
+ if(picked&&TOWERS[picked.k]){const d=TOWERS[picked.k],job=jobLine(picked),next=canOver(picked)?'極覚醒できる':canMut(picked)?'覚醒できる':picked.lvl<S().maxLvl?'強化できる':'売却できる';return slim?job:`${d.short} ${job}　${next}`;}
+ if(game.inWave){if(game.wave%5===0){const bk=BOSSES[(game.wave/5-1)%4],t=BOSS_TACT[bk],h=t?t.hint.split('。')[0]:'ボス';return slim?`${h} 残${left}`:`ボス:${h} 残${left}`;}return(game.combo>=3?game.combo+'連撃・':'')+'残'+left;}
+ const nw=game.wave+1,eco=(typeof bankTot==='function'?bankTot():0)+(typeof estInterest==='function'?estInterest():0);
+ if(nw%5===0){const bk=BOSSES[(nw/5-1)%4],t=BOSS_TACT[bk],h=t?t.hint.split('。')[0]:'ボス';return`次:ボス ${h}`+(slim&&eco?` +${eco}G`:'')+(slim||TOUCH?'':'　Space');}
+ return'次:W'+nw+(slim&&eco?` +${eco}G`:'')+(slim||TOUCH?'':'　Space');}
+function pickTower(t){if(!t||!towers.includes(t)){picked=null;sel=null;pending=null;try{showTapHint(false);}catch(_){}updShop();renderInfo();updHud();return;}picked=t;sel=null;pending=null;try{showTapHint(false);}catch(_){}updShop();renderInfo();updHud();}
+function fillJobInfo(){try{const slim=slimUI();
+  if(picked&&TOWERS[picked.k]){const sl=$('stl');if(sl){const job=jobLine(picked);sl.innerHTML=(job?`<span class="job">${job}</span>`:'')+(slim?'':((job?'<br>':'')+statLine(picked)));}
+   if(slim){[0,1].forEach(i=>{const bM=$('bM'+i),bO=$('bO'+i),b=bO||bM;if(!b)return;const over=!!bO,hint=getAwakenHint(picked.k,over?picked.mut:null,i),lab=over?'極':'覚醒',costN=over?overCost(picked):mutCost(picked);b.innerHTML=`${lab}${'AB'[i]} ${costN}G<br>${hint||''}`;});}}
+  else if(sel&&TOWERS[sel]){const d=TOWERS[sel],el=$('selDesc');if(el){const job=jobLine({k:sel});el.innerHTML=slim?`<span class="job">${job}</span>　${placeHint(d)}`:`<span class="job">${job}</span>　${placeHint(d)}。<br><span style="color:#ff9a5a">役割：${d.role}　${d.vs||''}</span><br>覚醒：${d.muts[0].n}／${d.muts[1].n}　極：${d.overs[0].n}／${d.overs[1].n}`;}}
+ }catch(_){}}
+const _ri59=renderInfo;renderInfo=function(){_ri59();fillJobInfo();try{if($('nextinfo'))$('nextinfo').textContent=nowLine();}catch(_){}};
+const _uib59=updInfoBtns;updInfoBtns=function(){_uib59();fillJobInfo();};
+const _uh59=updHud;updHud=function(){_uh59();try{if($('nextinfo'))$('nextinfo').textContent=nowLine();}catch(_){}};
+try{updHud();renderInfo();}catch(_){}
+
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,V27,SKINS,TITLES,recordRun,runScore,meta,hurt,BOSS_TACT,bossTacticMul,loseAdvice,noteLeak,isAoe,recInit,jobLine,nowLine,pickTower,placeHint};
 const _drawSafe=draw;draw=function(){try{_drawSafe();}catch(err){try{console.warn('yajuu draw',err);if(ctx){ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;}}catch(_){}}};
 })();
 
