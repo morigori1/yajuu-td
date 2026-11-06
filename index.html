@@ -131,7 +131,7 @@ body.portrait #hud{padding:4px 8px;gap:6px}
 body.portrait #hud .stats{flex-basis:100%;gap:10px}
 body.portrait #hud .avatar{width:34px;height:34px}
 body.portrait #hud .stat{font-size:16px}
-body.portrait #nextinfo{flex:1;text-align:right;min-width:0;white-space:normal;line-height:1.15;max-height:2.4em;overflow:hidden;text-overflow:clip}
+body.portrait #nextinfo{flex:1 1 9em;min-width:9em;text-align:right;white-space:normal;line-height:1.15;max-height:2.4em;overflow:hidden}
 body.portrait #dailyInfo,body.compact #dailyInfo{max-height:3.9em}
 body.portrait #hud .ctl{flex-basis:100%}
 body.portrait #bWave{flex:1;font-size:16px}
@@ -199,6 +199,8 @@ body:not(.portrait):not(.compact) #info .btns button.mut{flex:1 1 100%;min-heigh
 body.compact #shop{flex:1 1 auto;min-height:100px;overflow-y:auto;grid-auto-rows:max-content;align-content:start;touch-action:pan-y;-webkit-overflow-scrolling:touch}
 body.compact #info{flex-shrink:0;overflow:hidden}
 body.compact #info .st,body.portrait #info .st{overflow:hidden;max-height:2.8em;line-height:1.3}
+body.compact #info.peek .st,body.portrait #info.peek .st{max-height:5.6em;overflow:auto;-webkit-overflow-scrolling:touch}
+#info .btns button.mut.pend{outline:2px solid #ffd36b;background:#5a3a10}
 body.portrait #info .btns{width:100%;flex-wrap:nowrap}
 body.portrait #info .btns button.mut{flex:1 1 0;min-width:0;max-width:none;white-space:normal;overflow-wrap:anywhere;line-height:1.2}
 body.portrait #info .btns #bSell{flex:0 0 auto;min-width:72px;max-width:90px;font-size:11px;white-space:normal;line-height:1.15;overflow:hidden}
@@ -2519,18 +2521,26 @@ function nowLine(){if(!game)return'';const slim=slimUI();const left=(typeof spaw
  const nw=game.wave+1,eco=(typeof bankTot==='function'?bankTot():0)+(typeof estInterest==='function'?estInterest():0);
  if(nw%5===0){const bk=BOSSES[(nw/5-1)%4],t=BOSS_TACT[bk],h=t?t.hint.split('。')[0]:'ボス';return`次:ボス ${h}`+(slim&&eco?` +${eco}G`:'')+(slim||TOUCH?'':'　Space');}
  return'次:W'+nw+(slim&&eco?` +${eco}G`:'')+(slim||TOUCH?'':'　Space');}
-function pickTower(t){if(!t||!towers.includes(t)){picked=null;sel=null;pending=null;try{showTapHint(false);}catch(_){}updShop();renderInfo();updHud();return;}picked=t;sel=null;pending=null;try{showTapHint(false);}catch(_){}updShop();renderInfo();updHud();}
-function fillJobInfo(){try{const slim=slimUI();
-  if(picked&&TOWERS[picked.k]){const sl=$('stl');if(sl){const job=jobLine(picked);sl.innerHTML=(job?`<span class="job">${job}</span>`:'')+(slim?'':((job?'<br>':'')+statLine(picked)));}
-   if(slim){[0,1].forEach(i=>{const bM=$('bM'+i),bO=$('bO'+i),b=bO||bM;if(!b)return;const over=!!bO,hint=getAwakenHint(picked.k,over?picked.mut:null,i),lab=over?'極':'覚醒',costN=over?overCost(picked):mutCost(picked);b.innerHTML=`${lab}${'AB'[i]} ${costN}G<br>${hint||''}`;});}}
-  else if(sel&&TOWERS[sel]){const d=TOWERS[sel],el=$('selDesc');if(el){const job=jobLine({k:sel});el.innerHTML=slim?`<span class="job">${job}</span>　${placeHint(d)}`:`<span class="job">${job}</span>　${placeHint(d)}。<br><span style="color:#ff9a5a">役割：${d.role}　${d.vs||''}</span><br>覚醒：${d.muts[0].n}／${d.muts[1].n}　極：${d.overs[0].n}／${d.overs[1].n}`;}}
+let mutPend=null;
+function needMutPeek(){return slimUI();}
+function mutSpec(t,over,i){const d=TOWERS[t&&t.k];if(!d)return null;const m=over?d.overs[i]:d.muts[i];if(!m)return null;return{n:m.n,d:m.d,hint:getAwakenHint(t.k,over?t.mut:null,i),lab:(over?'極':'覚醒')+'AB'[i]};}
+function askMut(t,i,over){if(!t||!TOWERS[t.k])return;over=!!over;
+ if(!needMutPeek()){over?overwake(t,i):mutate(t,i);return;}
+ if(mutPend&&mutPend.t===t&&mutPend.i===i&&!!mutPend.over===over){const before=over?t.over:t.mut;if(over)overwake(t,i);else mutate(t,i);if((over?t.over:t.mut)!==before)mutPend=null;fillJobInfo();return;}
+ mutPend={t,i,over};try{snd(400,.03,'triangle',.03);}catch(_){}fillJobInfo();}
+function pickTower(t){if(!t||!towers.includes(t)){picked=null;sel=null;pending=null;mutPend=null;try{showTapHint(false);}catch(_){}updShop();renderInfo();updHud();return;}if(mutPend&&mutPend.t!==t)mutPend=null;picked=t;sel=null;pending=null;try{showTapHint(false);}catch(_){}updShop();renderInfo();updHud();}
+function fillJobInfo(){try{const slim=slimUI();if(mutPend&&(!picked||mutPend.t!==picked))mutPend=null;const box=$('info');if(box)box.classList.toggle('peek',!!(mutPend&&picked&&mutPend.t===picked));
+  if(picked&&TOWERS[picked.k]){const sl=$('stl');const peek=mutPend&&mutPend.t===picked;if(sl){if(peek){const sp=mutSpec(picked,mutPend.over,mutPend.i);sl.innerHTML=sp?`<span class="job">${sp.n}</span> ${sp.d}<div class="hint">もう一度タップで確定（まだ覚醒しない）</div>`:'';}
+    else{const job=jobLine(picked);sl.innerHTML=(job?`<span class="job">${job}</span>`:'')+(slim?'':((job?'<br>':'')+statLine(picked)));}}
+   if(slim){[0,1].forEach(i=>{const bM=$('bM'+i),bO=$('bO'+i),b=bO||bM;if(!b)return;const over=!!bO,hint=getAwakenHint(picked.k,over?picked.mut:null,i),lab=over?'極':'覚醒',costN=over?overCost(picked):mutCost(picked),pending=mutPend&&mutPend.t===picked&&mutPend.i===i&&!!mutPend.over===over;b.innerHTML=pending?`${lab}${'AB'[i]} 確定<br><small>まだしない</small>`:`${lab}${'AB'[i]} ${costN}G<br>${hint||''}`;b.classList.toggle('pend',pending);b.disabled=false;b.onclick=()=>askMut(picked,i,over);});}}
+  else if(sel&&TOWERS[sel]){mutPend=null;if(box)box.classList.remove('peek');const d=TOWERS[sel],el=$('selDesc');if(el){const job=jobLine({k:sel});el.innerHTML=slim?`<span class="job">${job}</span>　${placeHint(d)}`:`<span class="job">${job}</span>　${placeHint(d)}。<br><span style="color:#ff9a5a">役割：${d.role}　${d.vs||''}</span><br>覚醒：${d.muts[0].n}／${d.muts[1].n}　極：${d.overs[0].n}／${d.overs[1].n}`;}}
  }catch(_){}}
 const _ri59=renderInfo;renderInfo=function(){_ri59();fillJobInfo();try{if($('nextinfo'))$('nextinfo').textContent=nowLine();}catch(_){}};
 const _uib59=updInfoBtns;updInfoBtns=function(){_uib59();fillJobInfo();};
 const _uh59=updHud;updHud=function(){_uh59();try{if($('nextinfo'))$('nextinfo').textContent=nowLine();}catch(_){}};
 try{updHud();renderInfo();}catch(_){}
 
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,V27,SKINS,TITLES,recordRun,runScore,meta,hurt,BOSS_TACT,bossTacticMul,loseAdvice,noteLeak,isAoe,recInit,jobLine,nowLine,pickTower,placeHint};
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,V27,SKINS,TITLES,recordRun,runScore,meta,hurt,BOSS_TACT,bossTacticMul,loseAdvice,noteLeak,isAoe,recInit,jobLine,nowLine,pickTower,placeHint,askMut,get mutPend(){return mutPend}};
 const _drawSafe=draw;draw=function(){try{_drawSafe();}catch(err){try{console.warn('yajuu draw',err);if(ctx){ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;}}catch(_){}}};
 })();
 
