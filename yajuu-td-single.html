@@ -81,6 +81,12 @@ body.compact #bWave.go:not(:disabled),body.portrait #bWave.go:not(:disabled){min
 #end img{width:min(200px,45vw);aspect-ratio:1;object-fit:cover;border-radius:50%;border:5px solid #ffd36b;margin:8px}
 #end .eb{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;position:sticky;bottom:0;padding-top:8px}
 #eText{max-width:min(640px,94vw);overflow-wrap:anywhere;line-height:1.45}
+#eTip{max-width:min(640px,94vw);margin:8px auto 10px;padding:10px 12px;border:2px solid #ffd36b;border-radius:10px;background:#2b2219;color:#f3ead8;font-size:15px;line-height:1.45;text-align:left;overflow-wrap:anywhere}
+#eTip div+div{margin-top:8px}
+body.portrait #eText,body.compact #eText{font-size:14px}
+body.portrait #eTip,body.compact #eTip{font-size:14px;padding:8px 10px}
+#bosstip{position:absolute;left:50%;transform:translateX(-50%);bottom:54px;width:min(420px,86%);display:none;z-index:14;pointer-events:none;text-align:center;font-size:12px;font-weight:800;color:#ffd36b;text-shadow:0 1px 2px #000;background:#000a;border:1px solid #c46bff;border-radius:8px;padding:3px 8px;overflow-wrap:anywhere}
+body.portrait #bosstip,body.compact #bosstip{bottom:144px;width:min(420px,78%);font-size:11px;padding:3px 6px}
 #best{max-width:min(720px,92vw);font-size:13px;line-height:1.45;overflow-wrap:anywhere}
 /* toasts & boss bar live in stage */
 #toasts{position:absolute;left:8px;top:8px;display:flex;flex-direction:column;gap:6px;z-index:15;pointer-events:none;max-width:calc(100% - 16px)}
@@ -298,6 +304,7 @@ body.tut-lock #draft,body.tut-lock #story,body.tut-lock #explore,body.tut-lock #
       <div id="flash"></div>
       <div id="tapHint">もう一度タップで設置</div>
       <div id="bossbar"><img id="bossimg" alt=""><div class="bar"><div class="fill" id="bossfill"></div></div></div>
+      <div id="bosstip"></div>
     </div>
     <div id="side">
       <h3>🏗 タワー（先輩部室）</h3>
@@ -944,7 +951,7 @@ function update(dt){game.t+=dt;const s=S(),g0=game.gold,l0=game.lives;if(game.ga
      if(Math.random()<dt*4)sweat(e,1);break;}}
    e.dist+=sp;}
   const p=posAt(e.dist,rtOf(e));e.x=p.x;e.y=p.y;
-  if(e.dist>=rtOf(e).total&&!e.dead){e.dead=true;e.leaked=true;const dmg=d.boss?5:1;game.lives-=dmg;snd(140,.25,'sawtooth',.07,-60);shake(d.boss?14:6);game.combo=0;game.comboT=0;
+  if(e.dist>=rtOf(e).total&&!e.dead){e.dead=true;e.leaked=true;try{noteLeak(e);}catch(_){}const dmg=d.boss?5:1;game.lives-=dmg;snd(140,.25,'sawtooth',.07,-60);shake(d.boss?14:6);game.combo=0;game.comboT=0;
    if(navigator.vibrate&&TOUCH)try{navigator.vibrate(d.boss?120:40)}catch(_){}
    if(d.steal&&!s.noSteal){const st=Math.min(game.gold,Math.max(20,Math.floor(game.gold*d.steal)));game.gold-=st;game.stolen+=st;game._leakNow=performance.now();toast(`たかり後輩に ${st}G 盗まれた！（やめちくり〜）（あっ、そっかぁ）`,'navy_right_face','bad shake',1600);}
    else{const waveEnd=!spawnQ.length&&!enemies.some(x=>x!==e&&!x.dead);const msg=d.boss?`ボスが下北沢に到達！ -${dmg}（入って、どうぞ）`:`${pick(L.leak)} ライフ -1`;
@@ -1473,8 +1480,10 @@ function draw(){if(!mapCache)buildMapCache();ctx.setTransform(1,0,0,1,0,0);const
   if((low||hot>.15)&&!RM&&Math.random()<.45&&fx.length<FX_CAP-20){const edge=Math.random();const px=edge<.25?Math.random()*W:edge<.5?Math.random()*W:edge<.75?-8:W+8,py=edge<.25?-8:edge<.5?H+8:Math.random()*H;pushFx({x:px,y:py,vx:(Math.random()-.5)*40,vy:edge<.5?80+Math.random()*120:(Math.random()-.5)*60,t:2.4,c:Math.random()<.5?'#9fd8ff':'#c9b08a',drop:true,sticky:true,sz:2.5});}}
  if(CAM.bars>.01){const bh=VH()*.09*CAM.bars;ctx.fillStyle='#000';ctx.fillRect(0,0,VW(),bh);ctx.fillRect(0,VH()-bh,VW(),bh);}
  if(game.card&&game.card.t>0){const c=game.card,cT=c.T||2.4,k=1-c.t/cT,a=Math.min(1,c.t*2,k*6),sl=k<.15?(1-k/.15)*VW():0;ctx.save();ctx.globalAlpha=a;ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(0,VH()*.3,VW(),VH()*.4);if(c.img&&ASSETS[c.img]){try{const img=document.createElement('img');img.src=ASSETS[c.img];const imgS=Math.min(VW()*.28,VH()*.32),imgX=(VW()-imgS)/2-VW()*.15,imgY=VH()*.38;ctx.save();ctx.globalAlpha=a*.6;ctx.shadowColor=c.c;ctx.shadowBlur=20;ctx.drawImage(img,imgX,imgY,imgS,imgS);ctx.restore();}catch(_){}}ctx.globalAlpha=a;ctx.fillStyle=c.c;ctx.shadowColor=c.c;ctx.shadowBlur=15;ctx.fillRect(0,VH()*.36,VW(),3);ctx.fillRect(0,VH()*.64-3,VW(),3);ctx.shadowBlur=0;
-  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${fs(48)} sans-serif`;ctx.lineWidth=8;ctx.strokeStyle='#000';ctx.strokeText(c.title,VW()/2+sl,VH()*.46);ctx.fillStyle=c.c;ctx.shadowColor=c.c;ctx.shadowBlur=12;ctx.fillText(c.title,VW()/2+sl,VH()*.46);ctx.shadowBlur=0;
-  ctx.font=`bold ${fs(19)} sans-serif`;ctx.fillStyle='#ffd36b';ctx.fillText(c.sub,VW()/2-sl,VH()*.545);if(c.ev){ctx.fillStyle=Math.sin(game.t*14)>0?'#ffb03a':'#ff3c3c';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=8;ctx.fillText(c.ev,VW()/2+sl*.5,VH()*.6);}ctx.restore();ctx.textBaseline='alphabetic';}
+  ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${fs(portrait?36:48)} sans-serif`;ctx.lineWidth=8;ctx.strokeStyle='#000';ctx.strokeText(c.title,VW()/2+sl,VH()*.46);ctx.fillStyle=c.c;ctx.shadowColor=c.c;ctx.shadowBlur=12;ctx.fillText(c.title,VW()/2+sl,VH()*.46);ctx.shadowBlur=0;
+  const _cardFit=(txt,mw)=>{if(!txt)return[];if(ctx.measureText(txt).width<=mw)return[txt];const br=txt.search(/[。／・]/);if(br>0&&ctx.measureText(txt.slice(0,br+1)).width<=mw){const a=txt.slice(0,br+1),b=txt.slice(br+1);return b?[a,b]:[a];}const o=[];let cur='';for(const ch of txt){if(cur&&ctx.measureText(cur+ch).width>mw){o.push(cur);cur=ch;}else cur+=ch;}if(cur)o.push(cur);return o.slice(0,2);};
+  const _mw=VW()-20;ctx.font=`bold ${fs(portrait?14:19)} sans-serif`;ctx.fillStyle='#ffd36b';_cardFit(c.sub,_mw).forEach((ln,i)=>{ctx.strokeStyle='#000';ctx.lineWidth=4;ctx.strokeText(ln,VW()/2-sl,VH()*.535+i*16);ctx.fillText(ln,VW()/2-sl,VH()*.535+i*16);});
+  if(c.ev){ctx.fillStyle=Math.sin(game.t*14)>0?'#ffb03a':'#ff3c3c';ctx.shadowColor=ctx.fillStyle;ctx.shadowBlur=6;_cardFit(c.ev,_mw).forEach((ln,i)=>{ctx.strokeStyle='#000';ctx.lineWidth=4;ctx.strokeText(ln,VW()/2+sl*.5,VH()*.585+i*16);ctx.fillText(ln,VW()/2+sl*.5,VH()*.585+i*16);});}ctx.restore();ctx.textBaseline='alphabetic';}
  if(game.streak&&game.streak.t>0){const st=game.streak,k=st.t/st.T;ctx.save();ctx.globalAlpha=Math.min(1,st.t*2);ctx.translate(VW()-12,VH()*.2);ctx.rotate(-.08);ctx.scale(1+(k>.85?(k-.85)*3:0),1+(k>.85?(k-.85)*3:0));ctx.textAlign='right';ctx.font=`900 ${fs(24)} sans-serif`;ctx.lineWidth=6;ctx.strokeStyle='#000';ctx.strokeText(st.txt,0,0);ctx.fillStyle=st.col;ctx.fillText(st.txt,0,0);ctx.restore();}
  for(const p of splats){const k=p.t/(p.T||1),x=p.x*VW(),y=p.y*VH(),pr=Math.max(.2,p.r||8);ctx.globalAlpha=Math.min(.7,k*.95);ctx.fillStyle=p.c;ctx.beginPath();ctx.ellipse(x,y,pr,pr*.8,p.s||0,0,7);ctx.fill();
   for(let i=0;i<p.n;i++){const a=p.s+i*2.1,dx=Math.cos(a)*p.r*1.2,dy=Math.sin(a)*p.r*1.0;ctx.beginPath();ctx.ellipse(x+dx,y+dy,p.r*.28,p.r*.35,a,0,7);ctx.fill();ctx.fillRect(x+dx*.55-2,y+dy*.55,5,(1-k)*p.r*1.7);}}
@@ -1941,6 +1950,7 @@ const V18={
   {h:'外典　v54小さな磨き',img:'locker_right_face',t:'ハエ大群が本当に看破する。くっさガスに毒。もぐり／妨害の初出。王道を征く。'},
   {h:'外典　v55小さな磨き',img:'senpai_face',t:'見とけよ狙撃が応援／看病／自爆を優先。覗きと応援の初出。王道を征く。'},
   {h:'外典　v56小さな磨き',img:'collar_card',t:'ホラホラ声援のコンボ金が生きる。生ビールで酔う。看病／分身の初出。王道を征く。'},
+  {h:'外典　v58ボスの一手',img:'grimace_face',t:'ボスごとに配置と覚醒の使い分けが効く。迫真ボスは近くほど効く。部室の主はおかわり密集。眼光は消灯で遠い塔が半減。淫獣は後退するので中盤〜出口が要る。特定覚醒は必須ではない。敗北時は実ランの編成から一手を出す。王道を征く。'},
  ],
  goroku:[
   ['いいよ！こいよ！','開戦の号令。士気+114%（体感）','No.001'],
@@ -2044,7 +2054,7 @@ const V18={
   map:()=>MAPS.map((m,i)=>ent(['title_senpai','navy_trio_card','trio_sepia_card','locker_right_face','collar_card'][i%5],esc(m.name),esc(m.desc),'攻略：'+esc(m.tip)+'　相性：'+esc(m.fav))).join(''),
   sk:()=>SK.map(s=>`<div class="ent"><div style="font-size:40px">${s.ic}</div><div><h4>${esc(s.n)} <small>(${s.k.toUpperCase()}) 気合${s.cost}／CD${s.cd}s</small></h4><div>${esc(s.d)}</div></div></div>`).join('')+(typeof SKINS!=='undefined'?'<h4 style="color:#ffd36b">塔スキン</h4>'+SKINS.map(s=>'・'+esc(s.n)+'：'+esc(s.d)).join('<br>'):''),
   gal:()=>'<div class="gal">'+Object.keys(ASSETS).filter(n=>!n.startsWith('wiki/')).map((n,i)=>`<figure data-n="${n}">${im(n)}<figcaption><small>資料${String(i+1).padStart(3,'0')}　${esc(n)}</small></figcaption></figure>`).join('')+'</div>',
-  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','新塔は出ない。胸ぐらアイスティー・地雷泥床・視線ハエ大群が現行の凍結／減速床／看破'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','同じ810地雷の覚醒差。爆発は一発、泥床は何度でも踏める持続減速'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）'],['ランが似るのは？','シチュ・舞台・曜日デイリー・野獣ステップ後輩・ふらふら。上段HUDにシチュ名が出る（v48）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
+  faq:()=>[['先輩は実在しますか？','資料館は回答を差し控えます（迫真）'],['なぜ114514なのですか？','それはそう'],['アイスティーの成分は？','機密です。飲むと塔が強くなる気がする'],['公式ですか？','非公認の公式です'],['勝てません','気合スキルと合体を使え。あと汗をかけ'],['新しい塔は？','新塔は出ない。胸ぐらアイスティー・地雷泥床・視線ハエ大群が現行の凍結／減速床／看破'],['新マップは？','十字交差口・汗だくサウナ・下北沢駅前。資料館の地図タブ参照'],['泥と地雷の違いは？','同じ810地雷の覚醒差。爆発は一発、泥床は何度でも踏める持続減速'],['v29で何が追加された？','語録100件・聖地12箇所・神器12種・名場面18枚（Wiki提供）'],['ランが似るのは？','シチュ・舞台・曜日デイリー・野獣ステップ後輩・ふらふら。上段HUDにシチュ名が出る（v48）'],['ボスで詰む','特定覚醒は必須じゃない。配置を変えるか別の覚醒でも対処できる。敗北画面の一手を読め（王道を征く）']].map(([q,a])=>ent('',`Q. ${esc(q)}`,`A. ${esc(a)}`)).join('')+'<p><small>'+V18.bans.join('<br>')+'</small></p>',
  };
  const jumpLore=id=>{show('lore');requestAnimationFrame(()=>{const el=$(id);if(el)el.scrollIntoView({block:'start',behavior:'smooth'});});};
  const show=k=>{o.querySelectorAll('.tabs button').forEach(x=>x.classList.toggle('on',x.dataset.k===k));const c=$('cdx');c.innerHTML=R[k]();c.scrollTop=0;
@@ -2430,7 +2440,71 @@ const hb=document.createElement('button');hb.id='b28';hb.title='設定 (O)';hb.t
 addEventListener('keydown',e=>{if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')return;if(e.key.toLowerCase()==='o')open();else if(e.key==='Escape')d.classList.remove('on');});
 window.__v28={dump,load};})();
 
-window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,V27,SKINS,TITLES,recordRun,runScore,meta};
+/* ===== v58: ボス仕掛け＋敗北の一手 ===== */
+const BOSS_TACT={
+ boss:{n:'顔前',hint:'近くほど効く。入口だけだと後半薄い',tip:'道の途中に置け。胸ぐらで顔前に止めてもいい'},
+ boss2:{n:'おかわり密集',hint:'後輩はボス周囲に密集。範囲か剥がし',tip:'114514砲／地雷でまとめて、または胸ぐらで引き剥がせ'},
+ boss3:{n:'消灯',hint:'消灯中は遠い塔が半減',tip:'道沿いに置け。ハエ大群なら看破。減速で手元に留めろ'},
+ boss4:{n:'ンアッー後退',hint:'後退する。入口だけだと薄い',tip:'中盤〜出口に一基／地雷。胸ぐらで押し戻してもいい'}
+};
+function recInit(){return{leaks:[],livesBoss:0,livesOther:0,near:0,far:0,aoe:0,single:0,nightFar:0,nightNear:0,packAoe:0,packSingle:0,cover:0,behind:0};}
+function noteLeak(e){if(!game)return;if(!game.rec)game.rec=recInit();const row={k:e.k,boss:!!(e.d&&e.d.boss),w:game.wave,name:e.d?e.d.name:e.k};game.rec.leaks.push(row);if(game.rec.leaks.length>12)game.rec.leaks.shift();if(e.d&&e.d.boss)game.rec.livesBoss+=5;else game.rec.livesOther+=1;}
+function isAoe(srcT,o){if(o&&(o.aoe||o.splash))return true;if(!srcT)return false;return srcT.k==='cannon'||srcT.k==='collar'||srcT.k==='mine';}
+function towerAlong(t){if(!t)return 0;if(t.pd!=null&&t.pd>-100)return t.pd;if(t.pds){const vs=Object.values(t.pds);if(vs.length)return vs[0];}try{return distOf(t.x,t.y,ROUTES[0]).d;}catch(_){return 0;}}
+function packNear(e){if(!e||e.dead||!e.d||e.d.boss)return false;const b=enemies.find(x=>x&&!x.dead&&x.d&&x.k==='boss2');if(!b)return false;return (e.x-b.x)**2+(e.y-b.y)**2<90*90;}
+function bossTacticMul(e,srcT,o={}){if(!e||!e.d)return 1;
+ if(e.d.boss&&e.k==='boss'&&srcT){const dd=Math.hypot((srcT.x||0)-(e.x||0),(srcT.y||0)-(e.y||0));if(dd<=80)return 1.3;if(dd>=240)return .7;return 1.3-(dd-80)*(0.6/160);}
+ if(e.k!=='boss2'&&packNear(e))return isAoe(srcT,o)?1.35:.7;
+ if(e.d.boss&&e.k==='boss3'&&game&&game.gazeNight>0&&srcT){if(srcT.k==='gaze'&&srcT.over===1)return 1;const dd=Math.hypot((srcT.x||0)-(e.x||0),(srcT.y||0)-(e.y||0));if(dd>150)return .5;}
+ if(e.d.boss&&e.k==='boss4'&&(e.phase||0)>=1&&srcT){const tp=towerAlong(srcT);if(tp>=(e.dist||0)-40)return 1.2;if(tp<(e.dist||0)-140)return .75;}
+ return 1;}
+function recBossHit(e,srcT,o,mul){if(!game||!game.rec||!e||!e.d)return;const aoe=isAoe(srcT,o);
+ if(e.d.boss){if(aoe)game.rec.aoe++;else game.rec.single++;if(e.k==='boss'){if(mul>=1.15)game.rec.near++;else if(mul<=.85)game.rec.far++;}if(e.k==='boss3'&&game.gazeNight>0){if(mul<=.6)game.rec.nightFar++;else game.rec.nightNear++;}if(e.k==='boss4'&&(e.phase||0)>=1){if(mul>=1.1)game.rec.cover++;else if(mul<=.85)game.rec.behind++;}}
+ else if(packNear(e)){if(aoe)game.rec.packAoe++;else game.rec.packSingle++;}}
+function haveK(k){return towers.some(t=>t.k===k);}
+function canBuyK(k){try{return !!(TOWERS[k]&&game&&game.gold>=cost(k));}catch(_){return false;}}
+function askUse(k,how){if(haveK(k))return how;if(canBuyK(k))return how;return null;}
+function loseAdvice(){const out=[];const push=t=>{if(t&&out.length<2&&!out.includes(t))out.push(t);};
+ if(!game)return out;const rec=game.rec||recInit();const leakNow=rec.leaks.filter(x=>x.w===game.wave);const leakBoss=leakNow.filter(x=>x.boss);const cnt={};for(const x of leakNow)cnt[x.k]=(cnt[x.k]||0)+1;
+ const banks=towers.filter(t=>t.k==='bank').length;const dps=towers.filter(t=>t.k==='senpai'||t.k==='cannon'||t.k==='gaze'||t.k==='collar').length;
+ const bk=leakBoss[0]?leakBoss[0].k:(game.wave%5===0?BOSSES[(game.wave/5-1)%4]:null);
+ const mutOk=k=>towers.some(t=>t.k===k&&t.mut==null&&t.lvl>=S().mutLvl&&game.gold>=mutCost(t));
+ const overOk=k=>towers.some(t=>t.k===k&&t.mut!=null&&t.over==null&&t.lvl>=S().maxLvl&&game.gold>=overCost(t));
+ if(bk==='boss'&&(leakBoss.length||rec.far+rec.near>=3)){
+  if(rec.far>rec.near&&rec.far+rec.near>=3){push(askUse('collar','迫真ボスは近くほど効く。遠距離の被弾が多かった。胸ぐらで顔前に止めるか、道沿いに寄せろ')||askUse('mine','迫真ボスは近くほど効く。遠距離の被弾が多かった。道の地雷は顔前。火力を道沿いに寄せろ')||(haveK('senpai')||haveK('cannon')?'迫真ボスは近くほど効く。遠距離の被弾が多かった。道沿いに置け':null));}
+  else if(leakBoss.length&&rec.far+rec.near<3)push(BOSS_TACT.boss.tip+'（配置を疑え。断定はしない）');
+  if(mutOk('collar'))push('Lv4の胸ぐらがある。ふっとばし／アイスティーに覚醒できる（必須ではない）');}
+ if(bk==='boss2'&&(leakBoss.length||rec.packSingle>=3)){
+  if(rec.packSingle>rec.packAoe&&rec.packSingle>=3){push(askUse('cannon','おかわりは密集している。単発が多く当たっていた。114514砲でまとめるか、胸ぐらで引き剥がせ')||askUse('mine','おかわりは密集している。道に地雷を置くか、胸ぐらで引き剥がせ')||askUse('collar','おかわりは密集している。胸ぐらのふっとばしで引き剥がせ')||'おかわりは密集。範囲か引き剥がしを疑え（断定はしない）');}
+  else if(leakBoss.length)push(BOSS_TACT.boss2.tip);}
+ if(bk==='boss3'&&(leakBoss.length||rec.nightFar>=2)){
+  if(rec.nightFar>rec.nightNear&&rec.nightFar>=2){push(askUse('gaze',overOk('gaze')?'消灯中は遠い塔が半減。道沿いに置くか、視線塔をハエ大群へ極覚醒できる':'消灯中は遠い塔が半減。道沿いに置け。ハエ大群なら看破')||askUse('collar','消灯中は遠い塔が半減。胸ぐらで手元に留めるか、道沿いに寄せろ')||'消灯中は遠い塔が半減。道沿いの配置を疑え');}
+  else if(leakBoss.length)push(BOSS_TACT.boss3.tip);}
+ if(bk==='boss4'&&(leakBoss.length||rec.behind>=3)){
+  if(rec.behind>rec.cover&&rec.behind>=3){push(askUse('mine','淫獣は後退する。入口側の被弾が多かった。中盤〜出口に地雷か塔を置け')||askUse('collar','淫獣は後退する。入口側の被弾が多かった。胸ぐらで押し戻すか、中盤に一基置け')||(haveK('senpai')||haveK('cannon')?'淫獣は後退する。入口側の被弾が多かった。中盤〜出口に一基寄せろ':null));}
+  else if(leakBoss.length)push(BOSS_TACT.boss4.tip);}
+ if(leakBoss.length&&banks>=2&&dps<=1)push('810銀行が厚い。売却して道沿いに先輩砲台か114514砲を置け');
+ const sprint=(cnt.sprint||0)+(cnt.thief||0)+(cnt.dash||0)+(cnt.ngm||0);
+ if(!leakBoss.length&&sprint>=2){push(askUse('collar','俊足がゴールした。胸ぐらを道の終盤に')||askUse('mine','俊足がゴールした。泥床を出口寄りに')||(haveK('senpai')?'俊足がゴールした。持てる減速が少ないので終盤に火力を寄せろ':null));}
+ if(!leakBoss.length&&(cnt.jumper||0)>=2){push(askUse('collar','跳び後輩が壁を越えた。胸ぐらか地雷で止めろ')||askUse('mine','跳び後輩が壁を越えた。地雷を道に')||'跳び後輩がゴールした。壁だけでは足りない（断定はしない）');}
+ if(!leakBoss.length&&(cnt.cheer||0)>=2){push(haveK('senpai')||haveK('gaze')?'応援後輩が残った。見とけよ狙撃か視線で先に潰せ':null);}
+ if(!out.length&&leakNow.length){const last=leakNow[leakNow.length-1];push(`ウェーブ${game.wave}で${last.name||last.k}がゴールした。配置か減速を疑え（断定はしない）`);}
+ return out;}
+function showBossTip(k){const el=$('bosstip');if(!el)return;const t=BOSS_TACT[k];if(!t){el.style.display='none';return;}el.textContent=t.hint;el.style.display='block';}
+function applyBossCard(){if(!game||!game.card)return;const w=game.wave,bossW=w%5===0,next=(w+1)%5===0&&w<game.maxWave;
+ if(bossW){const bk=BOSSES[(w/5-1)%4],t=BOSS_TACT[bk];if(t){game.card.ev='⚠ '+t.hint;const nm=ENEMIES[bk]?ENEMIES[bk].name:'ボス';game.card.sub=nm+'　'+t.n+(MAP&&MAP.name?'　'+MAP.name:'');}}
+ else if(next){const bk=BOSSES[((w+1)/5-1)%4],t=BOSS_TACT[bk];if(t)game.card.ev='⚠ 次は'+t.hint;}}
+function injectLoseAdvice(){const a=loseAdvice();if(!a.length||!$('eText'))return;const box=`<div id="eTip">${a.map(t=>`<div>一手：${t}</div>`).join('')}</div>`;$('eText').innerHTML=box+$('eText').innerHTML;}
+const _hurt58=hurt;hurt=function(e,dmg,srcT,o){o=o||{};let mul=1;try{mul=bossTacticMul(e,srcT,o);if(mul!==1)dmg*=mul;recBossHit(e,srcT,o,mul);}catch(_){}return _hurt58(e,dmg,srcT,o);};
+const _reset58=reset;reset=function(){_reset58();try{if(game)game.rec=recInit();}catch(_){}};
+const _wc58=waveCard;waveCard=function(){_wc58();try{applyBossCard();}catch(_){}};
+const _sw58=startWave;startWave=function(){const w0=game?game.wave:0;_sw58();try{if(game&&game.wave>w0&&game.wave%5===0){const bk=BOSSES[(game.wave/5-1)%4],t=BOSS_TACT[bk];if(t)toast(`${ENEMIES[bk].name}：${t.hint}`,'grimace_face','boss',2800);}}catch(_){}};
+const _sp58=spawn;spawn=function(k,dist,noAff,rIdx){const e=_sp58(k,dist,noAff,rIdx);try{if(e&&e.d&&e.d.boss)showBossTip(e.k);}catch(_){}return e;};
+const _upd58=update;update=function(dt){_upd58(dt);try{const el=$('bosstip');if(!el)return;const b=enemies.find(x=>x&&x.d&&x.d.boss&&!x.dead);if(!b){el.style.display='none';return;}const t=BOSS_TACT[b.k];if(!t){el.style.display='none';return;}el.textContent=(b.k==='boss3'&&game.gazeNight>0)?t.hint+'（消灯中）':t.hint;el.style.display='block';}catch(_){}};
+const _go58=gameOver;gameOver=function(){const was=game&&game.over;_go58();if(!was)try{injectLoseAdvice();}catch(_){}};
+if(game&&!game.rec)game.rec=recInit();
+
+window.__yajuu={get game(){return game},get towers(){return towers},get enemies(){return enemies},place,startWave,update,spawn,openCards,openDraft,openSitu,win,gameOver,playStory,playScene,stAdvance,stClose,get stQ(){return stQ},STORY,epiKey,mutate,overwake,upgrade,canMut,canOver,canPlace,sell,splat,AFFIX,S,get gibs(){return gibs},get splats(){return splats},TOWERS,PERKS,SITU,ENEMIES,layout,get ROUTES(){return ROUTES},get MAP(){return MAP},V19,setMap,shiftAct,stageEvent,stageClear,STAGE_EV,get BLOCK(){return BLOCK},get portrait(){return portrait},pathTiles,fuse,fuseCands,CHALS,V16,V17,V22,V23,V24,V25,V27,SKINS,TITLES,recordRun,runScore,meta,hurt,BOSS_TACT,bossTacticMul,loseAdvice,noteLeak,isAoe,recInit};
 const _drawSafe=draw;draw=function(){try{_drawSafe();}catch(err){try{console.warn('yajuu draw',err);if(ctx){ctx.setTransform(1,0,0,1,0,0);ctx.globalAlpha=1;}}catch(_){}}};
 })();
 
